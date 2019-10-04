@@ -15,6 +15,10 @@ enum Character {
     Character(int name) {
         this.name = name;
     }
+
+    public int getName() {
+        return name;
+    }
 }
 
 class Player {
@@ -24,5 +28,13 @@ class Player {
     public Player(Character character) {
         this.character = character;
         this.status = new Status(StatusType.NONE);
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public int getCharacterName() {
+        return character.getName();
     }
 }

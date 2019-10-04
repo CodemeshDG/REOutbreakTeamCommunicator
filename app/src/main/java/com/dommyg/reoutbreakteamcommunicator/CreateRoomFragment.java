@@ -18,13 +18,16 @@ public class CreateRoomFragment extends Fragment {
     private Button buttonCreateRoom;
 
     private RadioGroup radioGroupScenario;
+    private boolean scenarioSelected;
     private RadioGroup radioGroupCharacter;
+    private boolean playerSelected;
 
     private EditText editTextRoomName;
     private EditText editTextPassword;
 
-    private Player player;
-    private Scenario scenario;
+    private int selectedPlayer;
+    private int selectedScenario;
+
     private String roomName;
     private String password;
 
@@ -41,15 +44,41 @@ public class CreateRoomFragment extends Fragment {
         buttonCreateRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = ControlPanelActivity.newIntent(getContext());
-                startActivity(new Intent(getContext(), ControlPanelActivity.class));
+                if (editTextRoomName.getText().toString().equals("") || editTextPassword.getText().toString().equals("")) {
+                    return;
+                }
+                if (!playerSelected || !scenarioSelected) {
+                    return;
+                }
+                roomName = editTextRoomName.getText().toString();
+                password = editTextPassword.getText().toString();
+                Intent intent = ControlPanelActivity.newIntent(getContext(), selectedPlayer, selectedScenario, roomName, password);
+                startActivity(intent);
             }
         });
 
-        return v;
-    }
+        radioGroupCharacter = v.findViewById(R.id.radioGroupCharacter);
+        radioGroupCharacter.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                selectedPlayer = radioGroup.getCheckedRadioButtonId();
+                playerSelected = true;
+            }
+        });
 
-    private void createRoom() {
+        radioGroupScenario = v.findViewById(R.id.radioGroupScenario);
+        radioGroupScenario.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                selectedScenario = radioGroup.getCheckedRadioButtonId();
+                scenarioSelected = true;
+            }
+        });
+
+        editTextRoomName = v.findViewById(R.id.editTextSetRoomName);
+        editTextPassword = v.findViewById(R.id.editTextSetPassword);
+
+        return v;
     }
 
 }

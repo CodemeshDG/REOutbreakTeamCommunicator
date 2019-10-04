@@ -1,21 +1,49 @@
 package com.dommyg.reoutbreakteamcommunicator;
 
 class Room {
-    Player player1;
-    Player player2;
-    Player player3;
-    Player player4;
-    String name;
-    String password;
-    Scenario scenario;
+    private Player player1;
+    private Player player2;
+    private Player player3;
+    private Player player4;
+    private Scenario scenario;
+    private String name;
+    private String password;
 
-    public Room(Player player1, String name, String password, Scenario scenario) {
+    public Room(Player player1, Scenario scenario, String name, String password) {
         this.player1 = player1;
         this.player2 = null;
         this.player3 = null;
         this.player4 = null;
+        this.scenario = scenario;
         this.name = name;
         this.password = password;
-        this.scenario = scenario;
+    }
+
+    public Player getPlayer1() {
+        return player1;
+    }
+
+    public Player getPlayer2() {
+        return player2;
+    }
+
+    public Player getPlayer3() {
+        return player3;
+    }
+
+    public Player getPlayer4() {
+        return player4;
+    }
+
+    public Scenario getScenario() {
+        return scenario;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

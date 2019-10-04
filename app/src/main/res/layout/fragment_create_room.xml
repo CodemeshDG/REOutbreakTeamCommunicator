@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:orientation="vertical" android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -65,6 +65,7 @@
             android:textStyle="bold" />
 
         <RadioGroup
+            android:id="@+id/radioGroupScenario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
@@ -111,6 +112,7 @@
             android:textStyle="bold" />
 
         <RadioGroup
+            android:id="@+id/radioGroupCharacter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
