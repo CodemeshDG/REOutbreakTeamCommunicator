@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/heading_create_room"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/subheading_room_name"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/editTextSetRoomName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:ems="10"
+            android:hint="@string/hint_create_room"
+            android:inputType="textPersonName" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/subheading_password"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/editTextSetPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:ems="10"
+            android:hint="@string/hint_set_password"
+            android:inputType="textPersonName" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/subheading_scenario"
+            android:textStyle="bold" />
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp">
+
+            <RadioButton
+                android:id="@+id/radioButtonScenario1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/scenario_1_1" />
+
+            <RadioButton
+                android:id="@+id/radioButtonScenario2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/scenario_1_2" />
+
+            <RadioButton
+                android:id="@+id/radioButtonScenario3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/scenario_1_3" />
+
+            <RadioButton
+                android:id="@+id/radioButtonScenario4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/scenario_1_4" />
+
+            <RadioButton
+                android:id="@+id/radioButtonScenario5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/scenario_1_5" />
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/subheading_your_character"
+            android:textStyle="bold" />
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp">
+
+            <RadioButton
+                android:id="@+id/radioButtonCharacter1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/character_alyssa" />
+
+            <RadioButton
+                android:id="@+id/radioButtonCharacter2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/character_cindy" />
+
+            <RadioButton
+                android:id="@+id/radioButtonCharacter3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/character_david" />
+
+            <RadioButton
+                android:id="@+id/radioButtonCharacter4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/character_george" />
+
+            <RadioButton
+                android:id="@+id/radioButtonCharacter5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/character_jim" />
+
+            <RadioButton
+                android:id="@+id/radioButtonCharacter6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/character_kevin" />
+
+            <RadioButton
+                android:id="@+id/radioButtonCharacter7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/character_mark" />
+
+            <RadioButton
+                android:id="@+id/radioButtonCharacter8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/character_yoko" />
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/buttonCreateRoom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/heading_create_room" />
+
+    </LinearLayout>
+
+</ScrollView>

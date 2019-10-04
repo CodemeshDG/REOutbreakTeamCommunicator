@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">RE Outbreak Team Communicator</string>
+
+    <string name="character_alyssa">Alyssa</string>
+    <string name="character_cindy">Cindy</string>
+    <string name="character_david">David</string>
+    <string name="character_george">George</string>
+    <string name="character_jim">Jim</string>
+    <string name="character_kevin">Kevin</string>
+    <string name="character_mark">Mark</string>
+    <string name="character_yoko">Yoko</string>
+
+    <string name="scenario_1_1">Outbreak</string>
+    <string name="scenario_1_2">Below Freezing Point</string>
+    <string name="scenario_1_3">The Hive</string>
+    <string name="scenario_1_4">Hellfire</string>
+    <string name="scenario_1_5">Decisions, Decisions</string>
+
+    <string name="heading_create_room">CREATE ROOM</string>
+    <string name="subheading_room_name">Room Name</string>
+    <string name="subheading_password">Password</string>
+    <string name="subheading_scenario">Scenario</string>
+    <string name="subheading_your_character">Your Character</string>
+    <string name="hint_create_room">Name your room&#8230;</string>
+    <string name="hint_set_password">Set a password&#8230;</string>
+
+    <string name="heading_team_status">TEAM STATUS</string>
+    <string name="heading_your_status">YOUR STATUS:</string>
+    <string name="heading_scenario_tasks">SCENARIO TASKS:</string>
+    <string name="button_status_panic">PANIC</string>
+    <string name="button_status_need">NEED</string>
+    <string name="button_status_dead">DEAD</string>
+</resources>
