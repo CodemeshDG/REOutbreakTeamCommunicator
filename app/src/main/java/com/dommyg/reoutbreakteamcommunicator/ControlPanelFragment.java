@@ -1,17 +1,26 @@
 package com.dommyg.reoutbreakteamcommunicator;
 
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 public class ControlPanelFragment extends Fragment {
+    private static final String TAG = "ControlPanelFragment";
 
     private Room room;
     private Player myCharacter;
@@ -21,6 +30,9 @@ public class ControlPanelFragment extends Fragment {
     private TextView textViewScenarioName;
 
     private TextView textViewPlayer3Status;
+    private ImageView imageViewHeadshotPlayer1;
+    private ImageView imageViewHeadshotPlayer2;
+    private ImageView imageViewHeadshotPlayer3;
 
     private Button buttonStatusPanic;
     private Button buttonStatusNeed;
@@ -81,6 +93,9 @@ public class ControlPanelFragment extends Fragment {
         });
 
         textViewPlayer3Status = v.findViewById(R.id.textViewPlayer3Status);
+        imageViewHeadshotPlayer1 = v.findViewById(R.id.imageViewHeadshotPlayer1);
+        imageViewHeadshotPlayer2 = v.findViewById(R.id.imageViewHeadshotPlayer2);
+        imageViewHeadshotPlayer3 = v.findViewById(R.id.imageViewHeadshotPlayer3);
 
         setUpViews();
 
@@ -131,5 +146,20 @@ public class ControlPanelFragment extends Fragment {
         textViewRoomName.setText("ROOM: " + room.getName() + " | PASSWORD: " + room.getPassword());
         textViewCharacterName.setText(myCharacter.getCharacterName());
         textViewScenarioName.setText(room.getScenario().getScenarioName());
+        AssetManager assetManager = getContext().getAssets();
+        try {
+            InputStream inputStream = assetManager.open(myCharacter.getHeadshot());
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+            imageViewHeadshotPlayer3.setImageBitmap(bitmap);
+            inputStream = assetManager.open(Character.CINDY.getHeadshotPath());
+            bitmap = BitmapFactory.decodeStream(inputStream);
+            imageViewHeadshotPlayer1.setImageBitmap(bitmap);
+            inputStream = assetManager.open(Character.JIM.getHeadshotPath());
+            bitmap = BitmapFactory.decodeStream(inputStream);
+            imageViewHeadshotPlayer2.setImageBitmap(bitmap);
+
+        } catch (IOException e) {
+            Log.e(TAG, "setUpViews: ", e);
+        }
     }
 }

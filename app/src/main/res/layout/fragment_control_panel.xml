@@ -57,6 +57,7 @@
                 android:orientation="horizontal">
 
                 <ImageView
+                    android:id="@+id/imageViewHeadshotPlayer1"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     tools:srcCompat="@tools:sample/avatars[12]" />
@@ -77,6 +78,7 @@
                 android:orientation="horizontal">
 
                 <ImageView
+                    android:id="@+id/imageViewHeadshotPlayer2"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     tools:srcCompat="@tools:sample/avatars[10]" />
@@ -97,6 +99,7 @@
                 android:orientation="horizontal">
 
                 <ImageView
+                    android:id="@+id/imageViewHeadshotPlayer3"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     tools:srcCompat="@tools:sample/avatars[7]" />
