@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="DEAD STATUS"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:text="OPTIONAL: Let your teammates know the items you have..."
+        android:textStyle="bold"/>
+
+    <CheckBox
+        android:id="@+id/checkBoxDeadItem1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="16dp"
+        android:text="Item 1" />
+
+    <AutoCompleteTextView
+        android:id="@+id/autoCompleteTextViewItem1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:hint="Start typing to see possible options..."
+        android:visibility="gone" />
+
+    <CheckBox
+        android:id="@+id/checkBoxDeadItem2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="16dp"
+        android:text="Item 2" />
+
+    <AutoCompleteTextView
+        android:id="@+id/autoCompleteTextViewItem2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:hint="Start typing to see possible options..."
+        android:visibility="gone" />
+
+    <CheckBox
+        android:id="@+id/checkBoxDeadItem3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="16dp"
+        android:text="Item 3" />
+
+    <AutoCompleteTextView
+        android:id="@+id/autoCompleteTextViewItem3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:hint="Start typing to see possible options..."
+        android:visibility="gone" />
+
+    <CheckBox
+        android:id="@+id/checkBoxDeadItem4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="16dp"
+        android:text="Item 4" />
+
+    <AutoCompleteTextView
+        android:id="@+id/autoCompleteTextViewItem4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:hint="Start typing to see possible options..."
+        android:visibility="gone" />
+
+    <CheckBox
+        android:id="@+id/checkBoxDeadItem5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="16dp"
+        android:text="Item 5"
+        android:visibility="gone"/>
+
+    <AutoCompleteTextView
+        android:id="@+id/autoCompleteTextViewItem5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:hint="Start typing to see possible options..."
+        android:visibility="gone" />
+
+    <CheckBox
+        android:id="@+id/checkBoxDeadItem6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="16dp"
+        android:text="Item 6"
+        android:visibility="gone"/>
+
+    <AutoCompleteTextView
+        android:id="@+id/autoCompleteTextViewItem6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:hint="Start typing to see possible options..."
+        android:visibility="gone" />
+
+    <CheckBox
+        android:id="@+id/checkBoxDeadItem7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="16dp"
+        android:text="Item 7"
+        android:visibility="gone"/>
+
+    <AutoCompleteTextView
+        android:id="@+id/autoCompleteTextViewItem7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:hint="Start typing to see possible options..."
+        android:visibility="gone" />
+
+    <CheckBox
+        android:id="@+id/checkBoxDeadItem8"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="16dp"
+        android:text="Item 8"
+        android:visibility="gone"/>
+
+    <AutoCompleteTextView
+        android:id="@+id/autoCompleteTextViewItem8"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:hint="Start typing to see possible options..."
+        android:visibility="gone" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:text="OPTIONAL: Provide your body's location..."
+        android:textStyle="bold"/>
+
+    <AutoCompleteTextView
+        android:id="@+id/autoCompleteTextViewLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:hint="Start typing to see possible options..." />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp">
+
+        <Button
+            android:id="@+id/buttonCancel"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="CANCEL" />
+
+        <Button
+            android:id="@+id/buttonSubmit"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="SUBMIT"
+            android:textColor="@color/colorPrimary" />
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
