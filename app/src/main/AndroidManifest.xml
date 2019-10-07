@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CreateRoomActivity">
+        <activity android:name=".CreateRoomActivity"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -17,6 +18,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ControlPanelActivity"/>
+        <activity android:name=".ChangeStatusActivity"/>
     </application>
 
 </manifest>

@@ -31,4 +31,36 @@
     <string name="button_status_need">NEED</string>
     <string name="button_status_dead">DEAD</string>
     <string name="test_status">%s - %s</string>
+
+    <string name="heading_panic_status">PANIC STATUS</string>
+    <string name="subheading_provide_info">OPTIONAL: Provide additional info&#8230;</string>
+    <string name="hint_typing_options">Start typing to see possible options&#8230;</string>
+    <string name="checkbox_panic_downed">I\'m downed!</string>
+    <string name="checkbox_panic_danger">I\'m in danger status!</string>
+    <string name="checkbox_panic_viral">I have a high viral load!</string>
+    <string name="checkbox_panic_trapped">I\'m trapped by enemies!</string>
+
+    <string name="heading_need_status">NEED STATUS</string>
+    <string name="subheading_need_query">What do you need?</string>
+    <string name="checkbox_need_healing">Healing item</string>
+    <string name="checkbox_need_weapon">Weapon</string>
+    <string name="checkbox_need_ammo">Ammo</string>
+    <string name="checkbox_need_key">Key item</string>
+
+    <string name="heading_dead_status">DEAD STATUS</string>
+    <string name="subheading_teammates_items">OPTIONAL: Let your teammates know the items you have&#8230;</string>
+    <string name="checkbox_dead_item_1">Item 1</string>
+    <string name="checkbox_dead_item_2">Item 2</string>
+    <string name="checkbox_dead_item_3">Item 3</string>
+    <string name="checkbox_dead_item_4">Item 4</string>
+    <string name="checkbox_dead_item_5">Item 5</string>
+    <string name="checkbox_dead_item_6">Item 6</string>
+    <string name="checkbox_dead_item_7">Item 7</string>
+    <string name="checkbox_dead_item_8">Item 8</string>
+
+    <string name="subheading_provide_location">OPTIONAL: Provide your location&#8230;</string>
+    <string name="subheading_provide_body_location">OPTIONAL: Provide your body\'s location&#8230;</string>
+
+    <string name="button_status_cancel">CANCEL</string>
+    <string name="button_status_submit">SUBMIT</string>
 </resources>

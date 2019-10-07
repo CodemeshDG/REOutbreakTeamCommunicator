@@ -17,6 +17,10 @@ enum StatusType {
     public int getName() {
         return name;
     }
+
+    public int getType() {
+        return type;
+    }
 }
 
 class Status {

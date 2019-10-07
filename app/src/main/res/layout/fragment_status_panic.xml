@@ -9,7 +9,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:text="PANIC STATUS"
+        android:text="@string/heading_panic_status"
         android:textSize="20sp"
         android:textStyle="bold"/>
 
@@ -19,7 +19,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="OPTIONAL: Provide additional info..."
+        android:text="@string/subheading_provide_info"
         android:textStyle="bold"/>
 
     <CheckBox
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="16dp"
-        android:text="I'm downed!" />
+        android:text="@string/checkbox_panic_downed" />
 
     <CheckBox
         android:id="@+id/checkBoxPanicDanger"
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="16dp"
-        android:text="I'm in danger status!" />
+        android:text="@string/checkbox_panic_danger" />
 
     <CheckBox
         android:id="@+id/checkBoxPanicViralLoad"
@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="16dp"
-        android:text="I have a high viral load!" />
+        android:text="@string/checkbox_panic_viral" />
 
     <CheckBox
         android:id="@+id/checkBoxPanicTrapped"
@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="16dp"
-        android:text="I'm trapped by enemies!" />
+        android:text="@string/checkbox_panic_trapped" />
 
     <TextView
         android:layout_width="match_parent"
@@ -60,7 +60,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="OPTIONAL: Provide your location..."
+        android:text="@string/subheading_provide_location"
         android:textStyle="bold"/>
 
     <AutoCompleteTextView
@@ -69,7 +69,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:hint="Start typing to see possible options..." />
+        android:hint="@string/hint_typing_options" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -85,7 +85,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="CANCEL" />
+            android:text="@string/button_status_cancel" />
 
         <Button
             android:id="@+id/buttonSubmit"
@@ -93,7 +93,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="SUBMIT"
+            android:text="@string/button_status_submit"
             android:textColor="@color/colorPrimary" />
 
     </LinearLayout>

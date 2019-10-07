@@ -9,7 +9,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:text="DEAD STATUS"
+        android:text="@string/heading_dead_status"
         android:textSize="20sp"
         android:textStyle="bold"/>
 
@@ -19,7 +19,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="OPTIONAL: Let your teammates know the items you have..."
+        android:text="@string/subheading_teammates_items"
         android:textStyle="bold"/>
 
     <CheckBox
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="16dp"
-        android:text="Item 1" />
+        android:text="@string/checkbox_dead_item_1" />
 
     <AutoCompleteTextView
         android:id="@+id/autoCompleteTextViewItem1"
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:hint="Start typing to see possible options..."
+        android:hint="@string/hint_typing_options"
         android:visibility="gone" />
 
     <CheckBox
@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="16dp"
-        android:text="Item 2" />
+        android:text="@string/checkbox_dead_item_2" />
 
     <AutoCompleteTextView
         android:id="@+id/autoCompleteTextViewItem2"
@@ -53,7 +53,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:hint="Start typing to see possible options..."
+        android:hint="@string/hint_typing_options"
         android:visibility="gone" />
 
     <CheckBox
@@ -62,7 +62,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="16dp"
-        android:text="Item 3" />
+        android:text="@string/checkbox_dead_item_3" />
 
     <AutoCompleteTextView
         android:id="@+id/autoCompleteTextViewItem3"
@@ -70,7 +70,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:hint="Start typing to see possible options..."
+        android:hint="@string/hint_typing_options"
         android:visibility="gone" />
 
     <CheckBox
@@ -79,7 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="16dp"
-        android:text="Item 4" />
+        android:text="@string/checkbox_dead_item_4" />
 
     <AutoCompleteTextView
         android:id="@+id/autoCompleteTextViewItem4"
@@ -87,7 +87,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:hint="Start typing to see possible options..."
+        android:hint="@string/hint_typing_options"
         android:visibility="gone" />
 
     <CheckBox
@@ -96,7 +96,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="16dp"
-        android:text="Item 5"
+        android:text="@string/checkbox_dead_item_5"
         android:visibility="gone"/>
 
     <AutoCompleteTextView
@@ -105,7 +105,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:hint="Start typing to see possible options..."
+        android:hint="@string/hint_typing_options"
         android:visibility="gone" />
 
     <CheckBox
@@ -114,7 +114,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="16dp"
-        android:text="Item 6"
+        android:text="@string/checkbox_dead_item_6"
         android:visibility="gone"/>
 
     <AutoCompleteTextView
@@ -123,7 +123,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:hint="Start typing to see possible options..."
+        android:hint="@string/hint_typing_options"
         android:visibility="gone" />
 
     <CheckBox
@@ -132,7 +132,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="16dp"
-        android:text="Item 7"
+        android:text="@string/checkbox_dead_item_7"
         android:visibility="gone"/>
 
     <AutoCompleteTextView
@@ -141,7 +141,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:hint="Start typing to see possible options..."
+        android:hint="@string/hint_typing_options"
         android:visibility="gone" />
 
     <CheckBox
@@ -150,7 +150,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="16dp"
-        android:text="Item 8"
+        android:text="@string/checkbox_dead_item_8"
         android:visibility="gone"/>
 
     <AutoCompleteTextView
@@ -159,7 +159,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:hint="Start typing to see possible options..."
+        android:hint="@string/hint_typing_options"
         android:visibility="gone" />
 
     <TextView
@@ -168,7 +168,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="OPTIONAL: Provide your body's location..."
+        android:text="@string/subheading_provide_body_location"
         android:textStyle="bold"/>
 
     <AutoCompleteTextView
@@ -177,7 +177,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:hint="Start typing to see possible options..." />
+        android:hint="@string/hint_typing_options" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -193,7 +193,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="CANCEL" />
+            android:text="@string/button_status_cancel" />
 
         <Button
             android:id="@+id/buttonSubmit"
@@ -201,7 +201,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="SUBMIT"
+            android:text="@string/button_status_submit"
             android:textColor="@color/colorPrimary" />
 
     </LinearLayout>

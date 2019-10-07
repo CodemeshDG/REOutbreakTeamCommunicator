@@ -1,5 +1,6 @@
 package com.dommyg.reoutbreakteamcommunicator;
 
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -60,11 +61,14 @@ public class ControlPanelFragment extends Fragment {
         buttonStatusPanic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                myCharacter.getStatus().setStatusType(StatusType.PANIC);
-                String updateStatus = getString(R.string.test_status);
-                String characterName = getString(myCharacter.getCharacterName()).toUpperCase();
-                String status = getString(myCharacter.getStatus().getStatusType());
-                textViewPlayer3Status.setText(String.format(updateStatus, characterName, status));
+                int statusType = StatusType.PANIC.getType();
+                Intent intent = ChangeStatusActivity.newIntent(getContext(), statusType);
+                startActivityForResult(intent, statusType);
+//                myCharacter.getStatus().setStatusType(StatusType.PANIC);
+//                String updateStatus = getString(R.string.test_status);
+//                String characterName = getString(myCharacter.getCharacterName()).toUpperCase();
+//                String status = getString(myCharacter.getStatus().getStatusType());
+//                textViewPlayer3Status.setText(String.format(updateStatus, characterName, status));
             }
         });
 
@@ -72,11 +76,14 @@ public class ControlPanelFragment extends Fragment {
         buttonStatusNeed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                myCharacter.getStatus().setStatusType(StatusType.NEED);
-                String updateStatus = getString(R.string.test_status);
-                String characterName = getString(myCharacter.getCharacterName()).toUpperCase();
-                String status = getString(myCharacter.getStatus().getStatusType());
-                textViewPlayer3Status.setText(String.format(updateStatus, characterName, status));
+                int statusType = StatusType.NEED.getType();
+                Intent intent = ChangeStatusActivity.newIntent(getContext(), statusType);
+                startActivityForResult(intent, statusType);
+//                myCharacter.getStatus().setStatusType(StatusType.NEED);
+//                String updateStatus = getString(R.string.test_status);
+//                String characterName = getString(myCharacter.getCharacterName()).toUpperCase();
+//                String status = getString(myCharacter.getStatus().getStatusType());
+//                textViewPlayer3Status.setText(String.format(updateStatus, characterName, status));
             }
         });
 
@@ -84,15 +91,20 @@ public class ControlPanelFragment extends Fragment {
         buttonStatusDead.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                myCharacter.getStatus().setStatusType(StatusType.DEAD);
-                String updateStatus = getString(R.string.test_status);
-                String characterName = getString(myCharacter.getCharacterName()).toUpperCase();
-                String status = getString(myCharacter.getStatus().getStatusType());
-                textViewPlayer3Status.setText(String.format(updateStatus, characterName, status));
+                int statusType = StatusType.DEAD.getType();
+                Intent intent = ChangeStatusActivity.newIntent(getContext(), statusType);
+                startActivityForResult(intent, statusType);
+//                myCharacter.getStatus().setStatusType(StatusType.DEAD);
+//                String updateStatus = getString(R.string.test_status);
+//                String characterName = getString(myCharacter.getCharacterName()).toUpperCase();
+//                String status = getString(myCharacter.getStatus().getStatusType());
+//                textViewPlayer3Status.setText(String.format(updateStatus, characterName, status));
             }
         });
 
         textViewPlayer3Status = v.findViewById(R.id.textViewPlayer3Status);
+
+        // These are for testing purposes.
         imageViewHeadshotPlayer1 = v.findViewById(R.id.imageViewHeadshotPlayer1);
         imageViewHeadshotPlayer2 = v.findViewById(R.id.imageViewHeadshotPlayer2);
         imageViewHeadshotPlayer3 = v.findViewById(R.id.imageViewHeadshotPlayer3);
@@ -100,6 +112,11 @@ public class ControlPanelFragment extends Fragment {
         setUpViews();
 
         return v;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private Player initializeCharacter(int selectedPlayer) {
@@ -148,6 +165,7 @@ public class ControlPanelFragment extends Fragment {
         textViewScenarioName.setText(room.getScenario().getScenarioName());
         AssetManager assetManager = getContext().getAssets();
         try {
+            // These are for testing purposes and must be changed later.
             InputStream inputStream = assetManager.open(myCharacter.getHeadshot());
             Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
             imageViewHeadshotPlayer3.setImageBitmap(bitmap);

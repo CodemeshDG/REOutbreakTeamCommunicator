@@ -9,9 +9,4 @@ public class CreateRoomActivity extends SingleFragmentActivity {
         return CreateRoomFragment.newInstance();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        finish();
-    }
 }

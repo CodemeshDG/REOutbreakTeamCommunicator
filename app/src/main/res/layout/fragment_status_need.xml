@@ -9,7 +9,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:text="NEED STATUS"
+        android:text="@string/heading_need_status"
         android:textSize="20sp"
         android:textStyle="bold"/>
 
@@ -19,7 +19,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="What do you need?"
+        android:text="@string/subheading_need_query"
         android:textStyle="bold"/>
 
     <CheckBox
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="16dp"
-        android:text="Healing item" />
+        android:text="@string/checkbox_need_healing" />
 
     <AutoCompleteTextView
         android:id="@+id/autoCompleteTextViewHealing"
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:hint="Start typing to see possible options..."
+        android:hint="@string/hint_typing_options"
         android:visibility="gone" />
 
     <CheckBox
@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="16dp"
-        android:text="Weapon" />
+        android:text="@string/checkbox_need_weapon" />
 
     <AutoCompleteTextView
         android:id="@+id/autoCompleteTextViewWeapon"
@@ -53,7 +53,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:hint="Start typing to see possible options..."
+        android:hint="@string/hint_typing_options"
         android:visibility="gone" />
 
     <CheckBox
@@ -62,7 +62,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="16dp"
-        android:text="Ammo" />
+        android:text="@string/checkbox_need_ammo" />
 
     <AutoCompleteTextView
         android:id="@+id/autoCompleteTextViewAmmo"
@@ -70,7 +70,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:hint="Start typing to see possible options..."
+        android:hint="@string/hint_typing_options"
         android:visibility="gone" />
 
     <CheckBox
@@ -79,7 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="16dp"
-        android:text="Key item" />
+        android:text="@string/checkbox_need_key" />
 
     <AutoCompleteTextView
         android:id="@+id/autoCompleteTextViewKey"
@@ -87,7 +87,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:hint="Start typing to see possible options..."
+        android:hint="@string/hint_typing_options"
         android:visibility="gone" />
 
     <TextView
@@ -96,7 +96,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="OPTIONAL: Provide your location..."
+        android:text="@string/subheading_provide_location"
         android:textStyle="bold"/>
 
     <AutoCompleteTextView
@@ -105,7 +105,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:hint="Start typing to see possible options..." />
+        android:hint="@string/hint_typing_options" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -121,7 +121,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="CANCEL" />
+            android:text="@string/button_status_cancel" />
 
         <Button
             android:id="@+id/buttonSubmit"
@@ -129,7 +129,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="SUBMIT"
+            android:text="@string/button_status_submit"
             android:textColor="@color/colorPrimary" />
 
     </LinearLayout>
