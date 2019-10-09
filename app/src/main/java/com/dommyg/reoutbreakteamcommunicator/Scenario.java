@@ -1,5 +1,6 @@
 package com.dommyg.reoutbreakteamcommunicator;
 
+import android.content.Context;
 import android.content.res.Resources;
 
 enum ScenarioName {
@@ -30,9 +31,9 @@ class Scenario {
     private ScenarioName scenarioName;
     private String [] locations;
 
-    public Scenario(ScenarioName scenarioName) {
+    public Scenario(ScenarioName scenarioName, Resources resources) {
         this.scenarioName = scenarioName;
-        loadLocations(scenarioName.getLevel());
+        loadLocations(scenarioName.getLevel(), resources);
     }
 
     public int getScenarioName() {
@@ -43,22 +44,22 @@ class Scenario {
         return locations;
     }
 
-    private void loadLocations(int scenario) {
+    private void loadLocations(int scenario, Resources resources) {
         switch (scenario) {
             case 0:
-                locations = Resources.getSystem().getStringArray(R.array.locations_1_1);
+                locations = resources.getStringArray(R.array.locations_1_1);
                 break;
             case 1:
-                locations = Resources.getSystem().getStringArray(R.array.locations_1_2);
+                locations = resources.getStringArray(R.array.locations_1_2);
                 break;
             case 2:
-                locations = Resources.getSystem().getStringArray(R.array.locations_1_3);
+                locations = resources.getStringArray(R.array.locations_1_3);
                 break;
             case 3:
-                locations = Resources.getSystem().getStringArray(R.array.locations_1_4);
+                locations = resources.getStringArray(R.array.locations_1_4);
                 break;
             case 4:
-                locations = Resources.getSystem().getStringArray(R.array.locations_1_5);
+                locations = resources.getStringArray(R.array.locations_1_5);
                 break;
         }
     }

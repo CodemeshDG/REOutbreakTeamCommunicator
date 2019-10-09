@@ -2,6 +2,7 @@ package com.dommyg.reoutbreakteamcommunicator;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 
 import androidx.fragment.app.Fragment;
 
@@ -13,11 +14,12 @@ public class ControlPanelActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment() {
+        Resources resources = getApplicationContext().getResources();
         int selectedPlayer = getIntent().getIntExtra(EXTRA_SELECTED_PLAYER,0);
         int selectedScenario = getIntent().getIntExtra(EXTRA_SELECTED_SCENARIO, 0);
         String roomName = getIntent().getStringExtra(EXTRA_ROOM_NAME);
         String password = getIntent().getStringExtra(EXTRA_PASSWORD);
-        return ControlPanelFragment.newInstance(selectedPlayer, selectedScenario, roomName, password);
+        return ControlPanelFragment.newInstance(selectedPlayer, selectedScenario, roomName, password, resources);
     }
 
     public static Intent newIntent(Context packageContext, int selectedPlayer, int selectedScenario, String roomName, String password) {
@@ -28,4 +30,6 @@ public class ControlPanelActivity extends SingleFragmentActivity {
         intent.putExtra(EXTRA_PASSWORD, password);
         return intent;
     }
+
+
 }

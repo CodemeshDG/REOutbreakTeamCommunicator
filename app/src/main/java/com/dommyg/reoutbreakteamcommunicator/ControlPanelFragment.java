@@ -2,6 +2,7 @@ package com.dommyg.reoutbreakteamcommunicator;
 
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -39,12 +40,12 @@ public class ControlPanelFragment extends Fragment {
     private Button buttonStatusNeed;
     private Button buttonStatusDead;
 
-    public static ControlPanelFragment newInstance(int selectedPlayer, int selectedScenario, String roomName, String password) {
-        return new ControlPanelFragment(selectedPlayer, selectedScenario, roomName, password);
+    public static ControlPanelFragment newInstance(int selectedPlayer, int selectedScenario, String roomName, String password, Resources resources) {
+        return new ControlPanelFragment(selectedPlayer, selectedScenario, roomName, password, resources);
     }
 
-    private ControlPanelFragment(int selectedPlayer, int selectedScenario, String roomName, String password) {
-        this.room = new Room(initializeCharacter(selectedPlayer), initializeScenario(selectedScenario), roomName, password);
+    private ControlPanelFragment(int selectedPlayer, int selectedScenario, String roomName, String password, Resources resources) {
+        this.room = new Room(initializeCharacter(selectedPlayer), initializeScenario(selectedScenario, resources), roomName, password);
         this.myCharacter = room.getPlayer1();
     }
 
@@ -145,18 +146,18 @@ public class ControlPanelFragment extends Fragment {
         }
     }
 
-    private Scenario initializeScenario(int selectedScenario) {
+    private Scenario initializeScenario(int selectedScenario, Resources resources) {
         switch (selectedScenario) {
             case R.id.radioButtonScenario1:
-                return new Scenario(ScenarioName.OUTBREAK);
+                return new Scenario(ScenarioName.OUTBREAK, resources);
             case R.id.radioButtonScenario2:
-                return new Scenario(ScenarioName.BELOW_FREEZING_POINT);
+                return new Scenario(ScenarioName.BELOW_FREEZING_POINT, resources);
             case R.id.radioButtonScenario3:
-                return new Scenario(ScenarioName.THE_HIVE);
+                return new Scenario(ScenarioName.THE_HIVE, resources);
             case R.id.radioButtonScenario4:
-                return new Scenario(ScenarioName.HELLFIRE);
+                return new Scenario(ScenarioName.HELLFIRE, resources);
             case R.id.radioButtonScenario5:
-                return new Scenario(ScenarioName.DECISIONS_DECISIONS);
+                return new Scenario(ScenarioName.DECISIONS_DECISIONS, resources);
             default:
                 return null;
         }
