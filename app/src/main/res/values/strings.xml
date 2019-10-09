@@ -63,4 +63,257 @@
 
     <string name="button_status_cancel">CANCEL</string>
     <string name="button_status_submit">SUBMIT</string>
+
+    <string name="task_set_1_1_1">Escaping J\'s Bar</string>
+    <string name="task_set_1_1_2">Evacuating the area</string>
+    <string name="task_set_1_1_3">Blowing up Main Street</string>
+
+    <string name="task_1_1_1_1">Barricade the entrance</string>
+    <string name="task_1_1_1_2">Unlock the 1F/2F stairway door</string>
+    <string name="task_1_1_1_3">Barricade the 2F staff room</string>
+    <string name="task_1_1_1_4">Unlock the 2F/3F stairway door</string>
+    <string name="task_1_1_1_5">Raise the forklift</string>
+
+    <string name="task_1_1_2_1">Move the cop car in front of J\'s Bar</string>
+    <string name="task_1_1_2_2">Move the cop car in front of the apartments</string>
+    <string name="task_1_1_2_3">Pour the fuel</string>
+    <string name="task_1_1_2_4">Ignite the fuel</string>
+
+    <string name="task_1_1_3_1">Use the detonator</string>
+    <string name="task_1_1_3_2">Provide defense</string>
+
+    <string name="task_set_1_2_1">Starting on B7F</string>
+    <string name="task_set_1_2_2">Starting on B6F</string>
+    <string name="task_set_1_2_3">Escaping the facility</string>
+
+    <string name="task_1_2_1_1">Obtain VP-017</string>
+    <string name="task_1_2_1_2">Obtain UMB-03</string>
+    <string name="task_1_2_1_3">Use V-JOLT on the plant</string>
+
+    <string name="task_1_2_2_1">Defrost the wrench</string>
+    <string name="task_1_2_2_2">Open the Security Center door</string>
+    <string name="task_1_2_2_3">Raise the ladder in the Duct</string>
+
+    <string name="task_1_2_3_1">Unlock Computer Room with lab cardkey</string>
+    <string name="task_1_2_3_2">Unlock Computer Room with code</string>
+    <string name="task_1_2_3_3">Register a fingerprint</string>
+    <string name="task_1_2_3_4">Defrost B4F Turn Table</string>
+    <string name="task_1_2_3_5">Activate B4F Turn Table</string>
+
+    <string name="task_set_1_3_1">Gaining access</string>
+    <string name="task_set_1_3_2">Escaping the hospital</string>
+
+    <string name="task_1_3_1_1">Open the F1 shutters</string>
+    <string name="task_1_3_1_2">Unlock B1F Passage door</string>
+    <string name="task_1_3_1_3">Enter passcode for B2F elevator access</string>
+    <string name="task_1_3_1_4">Enter passcode for rooftop elevator access</string>
+
+    <string name="task_1_3_2_1">Melt Leechman</string>
+    <string name="task_1_3_2_2">Unlock B2F Passage door</string>
+    <string name="task_1_3_2_3">Unlock boat</string>
+
+    <string name="task_set_1_4_1">Gaining access</string>
+    <string name="task_set_1_4_2">Escaping Apple Inn</string>
+
+    <string name="task_1_4_1_1">Unlock Northwest Passage 1 door with silver key</string>
+    <string name="task_1_4_1_2">Unlock Power Supply Room with gold key</string>
+    <string name="task_1_4_1_3">Unlock Security Office with card key</string>
+    <string name="task_1_4_1_4">Unlock Security Office with passcode</string>
+
+    <string name="task_1_4_2_1">Unlock hidden door with red jewel</string>
+    <string name="task_1_4_2_2">Activate power for ladder</string>
+
+    <string name="task_set_1_5_1">Gaining access</string>
+    <string name="task_set_1_5_2">Obtaining vaccine ingredients</string>
+    <string name="task_set_1_5_3">Creating the vaccine and escaping</string>
+
+    <string name="task_1_5_1_1">Obtain and place blue jewel</string>
+    <string name="task_1_5_1_2">Obtain and place red jewel</string>
+    <string name="task_1_5_1_3">Unlock Testing Passage A</string>
+    <string name="task_1_5_1_4">Unlock elevator</string>
+    <string name="task_1_5_1_5">Unlock Back Square door</string>
+
+    <string name="task_1_5_2_1">Unlock Water Tank door</string>
+    <string name="task_1_5_2_2">Fill sealed test tube with P-Base</string>
+    <string name="task_1_5_2_3">Activate power for Emission Tower Elevator</string>
+    <string name="task_1_5_2_4">Obtain V-Poison</string>
+    <string name="task_1_5_2_5">Obtain T-Blood</string>
+
+    <string name="task_1_5_3_1">Place P-Base</string>
+    <string name="task_1_5_3_2">Place V-Poison</string>
+    <string name="task_1_5_3_3">Place T-Blood</string>
+    <string name="task_1_5_3_4">Reactivate the machine\'s power</string>
+    <string name="task_1_5_3_5">Take extra vial(s) of vaccine</string>
+    
+    <string-array name="locations_1_1">
+        <item>1F of Apartment</item>
+        <item>3F to Rooftop Stairway</item>
+        <item>Behind the Apartment</item>
+        <item>Behind the Residential Area</item>
+        <item>Break Room</item>
+        <item>Drawing Room</item>
+        <item>Footbridge</item>
+        <item>In Front of Apple Inn</item>
+        <item>In Front of J\'s Bar</item>
+        <item>J\'s Bar</item>
+        <item>Liquor Room</item>
+        <item>Locker Room</item>
+        <item>Main Street</item>
+        <item>Men\'s Bathroom</item>
+        <item>Owner\'s Room</item>
+        <item>Rooftop</item>
+        <item>Slope Along the Canal</item>
+        <item>Staff Room</item>
+        <item>Stairs Between 1F and 2F</item>
+        <item>Storage Room</item>
+        <item>Top Floor of Apartment</item>
+        <item>Tunnel</item>
+        <item>Wine Room</item>
+        <item>Women\'s Bathroom</item>
+    </string-array>
+
+    <string-array name="locations_1_2">
+        <item>B4F Duct</item>
+        <item>B4F East Area Passage</item>
+        <item>B4F West Area Passage</item>
+        <item>B5F Area B Passage</item>
+        <item>B5F Area C Passage</item>
+        <item>B5F Duct</item>
+        <item>B5F Emergency Passage</item>
+        <item>B6F Duct</item>
+        <item>B6F North Passage</item>
+        <item>B6F South Passage</item>
+        <item>B7F Duct</item>
+        <item>B7F North Passage</item>
+        <item>B7F South Passage</item>
+        <item>Break Room</item>
+        <item>Chemical Disposal Room</item>
+        <item>Chemical Storage Room</item>
+        <item>Computer Room</item>
+        <item>Culture Room</item>
+        <item>Elevator</item>
+        <item>Laboratory</item>
+        <item>Low Temperature Laboratory</item>
+        <item>Main Shaft</item>
+        <item>Marshaling Yard</item>
+        <item>Platform</item>
+        <item>Security Center</item>
+        <item>Turntable</item>
+        <item>Underground Tunnel</item>
+    </string-array>
+
+    <string-array name="locations_1_3">
+        <item>1F Passage</item>
+        <item>2F Nurses\' Station</item>
+        <item>2F Passage</item>
+        <item>3F Nurses\' Center</item>
+        <item>3F Passage</item>
+        <item>B1F Passage</item>
+        <item>B1F Passage</item>
+        <item>B1F South Passage</item>
+        <item>B2F Passage</item>
+        <item>B2F Underpass Entrance</item>
+        <item>Central Waiting Room</item>
+        <item>Doctor Station</item>
+        <item>Elevator Control Room</item>
+        <item>Examination Room</item>
+        <item>Fixed Temperature Laboratory</item>
+        <item>Hall</item>
+        <item>Laboratory</item>
+        <item>Locker Room</item>
+        <item>Night Reception</item>
+        <item>Office</item>
+        <item>Reposing Room</item>
+        <item>Rooftop</item>
+        <item>Room 202</item>
+        <item>Room 302</item>
+        <item>Room 303</item>
+        <item>Treatment Room</item>
+        <item>Waste Liquid Disposal Room</item>
+    </string-array>
+
+    <string-array name="locations_1_4">
+        <item>1F Apple Inn Square</item>
+        <item>1F Boiler Room</item>
+        <item>2F Boiler Room</item>
+        <item>2F Corridor</item>
+        <item>3F Apple Inn Square</item>
+        <item>3F Boiler Room</item>
+        <item>Apple Inn Front Lobby</item>
+        <item>Boiler Management Room</item>
+        <item>Linen Room</item>
+        <item>Lounge Stairs</item>
+        <item>Northwest Passage 1</item>
+        <item>Northwest Passage 2</item>
+        <item>Northwest Passage 3</item>
+        <item>Owner\'s Room</item>
+        <item>Power Supply Room</item>
+        <item>Room 101</item>
+        <item>Room 102</item>
+        <item>Room 103</item>
+        <item>Room 104</item>
+        <item>Room 201</item>
+        <item>Room 202</item>
+        <item>Room 204</item>
+        <item>Room 301</item>
+        <item>Room 306</item>
+        <item>Room 30X</item>
+        <item>Security Office</item>
+        <item>Storeroom</item>
+    </string-array>
+
+    <string-array name="locations_1_5">
+        <item>1F Passage A</item>
+        <item>1F Passage B</item>
+        <item>1F Passage Elevator</item>
+        <item>2F Passage</item>
+        <item>3F Passage Elevator</item>
+        <item>Access Water Way</item>
+        <item>Art Gallery</item>
+        <item>B2F Passage Elevator</item>
+        <item>B2F Pier</item>
+        <item>B3F Passage A</item>
+        <item>B3F Passage B</item>
+        <item>B3F Storeroom</item>
+        <item>B3F Underground Tunnel</item>
+        <item>B4F Corridor</item>
+        <item>B4F Storeroom</item>
+        <item>Back Square</item>
+        <item>Drawing Room</item>
+        <item>East Waterway</item>
+        <item>Emission Tower Access Passage</item>
+        <item>Emission Tower B1</item>
+        <item>Emission Tower Elevator</item>
+        <item>Emission Tower Inside Wall</item>
+        <item>Emission Tower Lower Part</item>
+        <item>Emission Tower Station</item>
+        <item>Entrance Hall</item>
+        <item>Experiment Preparation Room</item>
+        <item>Front Square</item>
+        <item>General Manager\'s Room</item>
+        <item>Laboratory</item>
+        <item>Machine Storage Room</item>
+        <item>North Car</item>
+        <item>Old Subway Track</item>
+        <item>Old Subway Tunnel</item>
+        <item>Presidents\' Room</item>
+        <item>Quality Assurance Testing Room</item>
+        <item>Restroom</item>
+        <item>Second Hall</item>
+        <item>Shed</item>
+        <item>South Car</item>
+        <item>Spare Power Supply Room</item>
+        <item>Student Affairs Office</item>
+        <item>Study Room</item>
+        <item>T-Shaped Passage</item>
+        <item>Testing Passage A</item>
+        <item>Testing Passage B</item>
+        <item>Underground Tunnel</item>
+        <item>Unloading Passage</item>
+        <item>Waiting Room</item>
+        <item>Water Purifying Facility</item>
+        <item>Water Tank</item>
+        <item>Water Works Management Office</item>
+        <item>West Waterway</item>
+    </string-array>
 </resources>

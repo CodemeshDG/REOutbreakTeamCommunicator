@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -18,8 +20,12 @@ public class ChangeStatusPanicFragment extends Fragment {
     private CheckBox checkBoxViral;
     private CheckBox checkBoxTrapped;
 
+    private AutoCompleteTextView textViewLocation;
+
     private Button buttonCancel;
     private Button buttonSubmit;
+
+    private String[] locations;
 
     private boolean downed;
     private boolean danger;
@@ -27,8 +33,12 @@ public class ChangeStatusPanicFragment extends Fragment {
     private boolean trapped;
 
 
-    public static ChangeStatusPanicFragment newInstance() {
-        return new ChangeStatusPanicFragment();
+    public static ChangeStatusPanicFragment newInstance(String[] locations) {
+        return new ChangeStatusPanicFragment(locations);
+    }
+
+    private ChangeStatusPanicFragment(String[] locations) {
+        this.locations = locations;
     }
 
     @Nullable
@@ -67,6 +77,12 @@ public class ChangeStatusPanicFragment extends Fragment {
                 trapped = b;
             }
         });
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
+                android.R.layout.simple_dropdown_item_1line, locations);
+        textViewLocation = v.findViewById(R.id.autoCompleteTextViewLocation);
+        textViewLocation.setAdapter(adapter);
+        textViewLocation.setThreshold(0);
 
         buttonSubmit = v.findViewById(R.id.buttonSubmit);
         buttonSubmit.setOnClickListener(new View.OnClickListener() {

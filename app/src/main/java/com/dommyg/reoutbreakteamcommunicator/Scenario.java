@@ -1,5 +1,7 @@
 package com.dommyg.reoutbreakteamcommunicator;
 
+import android.content.res.Resources;
+
 enum ScenarioName {
     OUTBREAK (0, R.string.scenario_1_1),
     BELOW_FREEZING_POINT (1, R.string.scenario_1_2),
@@ -25,13 +27,39 @@ enum ScenarioName {
 }
 
 class Scenario {
-    ScenarioName scenarioName;
+    private ScenarioName scenarioName;
+    private String [] locations;
 
     public Scenario(ScenarioName scenarioName) {
         this.scenarioName = scenarioName;
+        loadLocations(scenarioName.getLevel());
     }
 
     public int getScenarioName() {
         return scenarioName.getName();
+    }
+
+    public String[] getLocations() {
+        return locations;
+    }
+
+    private void loadLocations(int scenario) {
+        switch (scenario) {
+            case 0:
+                locations = Resources.getSystem().getStringArray(R.array.locations_1_1);
+                break;
+            case 1:
+                locations = Resources.getSystem().getStringArray(R.array.locations_1_2);
+                break;
+            case 2:
+                locations = Resources.getSystem().getStringArray(R.array.locations_1_3);
+                break;
+            case 3:
+                locations = Resources.getSystem().getStringArray(R.array.locations_1_4);
+                break;
+            case 4:
+                locations = Resources.getSystem().getStringArray(R.array.locations_1_5);
+                break;
+        }
     }
 }

@@ -62,7 +62,8 @@ public class ControlPanelFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 int statusType = StatusType.PANIC.getType();
-                Intent intent = ChangeStatusActivity.newIntent(getContext(), statusType);
+                String[] locations = room.getScenario().getLocations();
+                Intent intent = ChangeStatusActivity.newIntent(getContext(), statusType, locations);
                 startActivityForResult(intent, statusType);
 //                myCharacter.getStatus().setStatusType(StatusType.PANIC);
 //                String updateStatus = getString(R.string.test_status);
@@ -77,7 +78,8 @@ public class ControlPanelFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 int statusType = StatusType.NEED.getType();
-                Intent intent = ChangeStatusActivity.newIntent(getContext(), statusType);
+                String[] locations = room.getScenario().getLocations();
+                Intent intent = ChangeStatusActivity.newIntent(getContext(), statusType, locations);
                 startActivityForResult(intent, statusType);
 //                myCharacter.getStatus().setStatusType(StatusType.NEED);
 //                String updateStatus = getString(R.string.test_status);
@@ -92,7 +94,8 @@ public class ControlPanelFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 int statusType = StatusType.DEAD.getType();
-                Intent intent = ChangeStatusActivity.newIntent(getContext(), statusType);
+                String[] locations = room.getScenario().getLocations();
+                Intent intent = ChangeStatusActivity.newIntent(getContext(), statusType, locations);
                 startActivityForResult(intent, statusType);
 //                myCharacter.getStatus().setStatusType(StatusType.DEAD);
 //                String updateStatus = getString(R.string.test_status);
