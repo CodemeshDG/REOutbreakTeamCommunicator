@@ -64,7 +64,13 @@ public class ControlPanelFragment extends Fragment {
             public void onClick(View view) {
                 int statusType = StatusType.PANIC.getType();
                 String[] locations = room.getScenario().getLocations();
-                Intent intent = ChangeStatusActivity.newIntent(getContext(), statusType, locations, false);
+                String[] itemsHealing = room.getScenario().getItemsHealing();
+                String[] itemsWeapon = room.getScenario().getItemsWeapon();
+                String[] itemsAmmo = room.getScenario().getItemsAmmo();
+                String[] itemsKey = room.getScenario().getItemsKey();
+
+                Intent intent = ChangeStatusActivity.newIntent(getContext(), statusType, locations,
+                        itemsHealing, itemsWeapon, itemsAmmo, itemsKey, false);
                 startActivityForResult(intent, statusType);
 //                myCharacter.getStatus().setStatusType(StatusType.PANIC);
 //                String updateStatus = getString(R.string.test_status);
@@ -80,7 +86,13 @@ public class ControlPanelFragment extends Fragment {
             public void onClick(View view) {
                 int statusType = StatusType.NEED.getType();
                 String[] locations = room.getScenario().getLocations();
-                Intent intent = ChangeStatusActivity.newIntent(getContext(), statusType, locations, false);
+                String[] itemsHealing = room.getScenario().getItemsHealing();
+                String[] itemsWeapon = room.getScenario().getItemsWeapon();
+                String[] itemsAmmo = room.getScenario().getItemsAmmo();
+                String[] itemsKey = room.getScenario().getItemsKey();
+
+                Intent intent = ChangeStatusActivity.newIntent(getContext(), statusType, locations,
+                        itemsHealing, itemsWeapon, itemsAmmo, itemsKey, false);
                 startActivityForResult(intent, statusType);
 //                myCharacter.getStatus().setStatusType(StatusType.NEED);
 //                String updateStatus = getString(R.string.test_status);
@@ -96,8 +108,14 @@ public class ControlPanelFragment extends Fragment {
             public void onClick(View view) {
                 int statusType = StatusType.DEAD.getType();
                 String[] locations = room.getScenario().getLocations();
+                String[] itemsHealing = room.getScenario().getItemsHealing();
+                String[] itemsWeapon = room.getScenario().getItemsWeapon();
+                String[] itemsAmmo = room.getScenario().getItemsAmmo();
+                String[] itemsKey = room.getScenario().getItemsKey();
                 boolean isYoko = (myCharacter.getCharacterName() == Character.YOKO.getName());
-                Intent intent = ChangeStatusActivity.newIntent(getContext(), statusType, locations, isYoko);
+
+                Intent intent = ChangeStatusActivity.newIntent(getContext(), statusType, locations,
+                        itemsHealing, itemsWeapon, itemsAmmo, itemsKey, isYoko);
                 startActivityForResult(intent, statusType);
 //                myCharacter.getStatus().setStatusType(StatusType.DEAD);
 //                String updateStatus = getString(R.string.test_status);

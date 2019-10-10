@@ -29,11 +29,16 @@ enum ScenarioName {
 
 class Scenario {
     private ScenarioName scenarioName;
-    private String [] locations;
+    private String[] locations;
+    private String[] itemsHealing;
+    private String[] itemsWeapon;
+    private String[] itemsAmmo;
+    private String[] itemsKey;
 
     public Scenario(ScenarioName scenarioName, Resources resources) {
         this.scenarioName = scenarioName;
         loadLocations(scenarioName.getLevel(), resources);
+        loadItems(scenarioName.getLevel(), resources);
     }
 
     public int getScenarioName() {
@@ -42,6 +47,22 @@ class Scenario {
 
     public String[] getLocations() {
         return locations;
+    }
+
+    public String[] getItemsHealing() {
+        return itemsHealing;
+    }
+
+    public String[] getItemsWeapon() {
+        return itemsWeapon;
+    }
+
+    public String[] getItemsAmmo() {
+        return itemsAmmo;
+    }
+
+    public String[] getItemsKey() {
+        return itemsKey;
     }
 
     private void loadLocations(int scenario, Resources resources) {
@@ -60,6 +81,30 @@ class Scenario {
                 break;
             case 4:
                 locations = resources.getStringArray(R.array.locations_1_5);
+                break;
+        }
+    }
+
+    private void loadItems(int scenario, Resources resources) {
+        itemsHealing = resources.getStringArray(R.array.items_healing);
+        itemsWeapon = resources.getStringArray(R.array.items_weapon);
+        itemsAmmo = resources.getStringArray(R.array.items_ammo);
+
+        switch (scenario) {
+            case 0:
+                itemsKey = resources.getStringArray(R.array.items_key_1_1);
+                break;
+            case 1:
+                itemsKey = resources.getStringArray(R.array.items_key_1_2);
+                break;
+            case 2:
+                itemsKey = resources.getStringArray(R.array.items_key_1_3);
+                break;
+            case 3:
+                itemsKey = resources.getStringArray(R.array.items_key_1_4);
+                break;
+            case 4:
+                itemsKey = resources.getStringArray(R.array.items_key_1_5);
                 break;
         }
     }

@@ -316,4 +316,138 @@
         <item>Water Works Management Office</item>
         <item>West Waterway</item>
     </string-array>
+    
+    <string-array name="items_healing">
+        <item>Anti-Virus</item>
+        <item>Anti-Virus (L)</item>
+        <item>Antidote</item>
+        <item>Blue Herb</item>
+        <item>First Aid Spray</item>
+        <item>Green Herb</item>
+        <item>Hemostat</item>
+        <item>Mixed Herb (B+R)</item>
+        <item>Mixed Herb (G+B)</item>
+        <item>Mixed Herb (G+B+R)</item>
+        <item>Mixed Herb (G+G)</item>
+        <item>Mixed Herb (G+G+B)</item>
+        <item>Mixed Herb (G+G+G)</item>
+        <item>Mixed Herb (G+R)</item>
+        <item>Recovery Pill</item>
+        <item>Recovery Pill (L)</item>
+        <item>Red Herb</item>
+    </string-array>
+
+    <string-array name="items_weapon">
+        <item>Ampule Shooter</item>
+        <item>Assault Rifle</item>
+        <item>Battery</item>
+        <item>Bent Iron Pipe</item>
+        <item>Broken Crutch</item>
+        <item>Broken Handgun SG</item>
+        <item>Broken Shotgun</item>
+        <item>Butcher Knife</item>
+        <item>Concrete Piece</item>
+        <item>Crutch</item>
+        <item>Curved Iron Pipe</item>
+        <item>Custom Handgun</item>
+        <item>Flame Spray</item>
+        <item>Folding Knife</item>
+        <item>Gray Chemical Bottle</item>
+        <item>Grenade Launcher</item>
+        <item>Hammer</item>
+        <item>Handgun</item>
+        <item>Handgun SG</item>
+        <item>Iron Pipe</item>
+        <item>Lighter</item>
+        <item>Magnum Handgun</item>
+        <item>Magnum Revolver</item>
+        <item>Molotov Cocktail</item>
+        <item>Nail Gun</item>
+        <item>Newspaper</item>
+        <item>Pesticide Spray</item>
+        <item>Scrub Brush</item>
+        <item>Shotgun</item>
+        <item>Spear</item>
+        <item>Stick</item>
+        <item>Stun Rod</item>
+        <item>Sub Machine Gun</item>
+        <item>Survival Knife</item>
+        <item>Wooden Pole</item>
+        <item>Yellow Chemical Bottle</item>
+    </string-array>
+
+    <string-array name="items_ammo">
+        <item>.45 Auto Bullets</item>
+        <item>9mm Handgun Rounds</item>
+        <item>Acid Rounds</item>
+        <item>Assault Rifle Magazine</item>
+        <item>Burst Rounds</item>
+        <item>Handgun Magazine</item>
+        <item>Magnum Revolver Rounds</item>
+        <item>Shotgun Shells</item>
+    </string-array>
+
+    <string-array name="items_key_1_1">
+        <item>Alcohol Bottle</item>
+        <item>Detonator</item>
+        <item>Detonator Handle</item>
+        <item>Detonator Main Unit</item>
+        <item>Forklift Key</item>
+        <item>Key with Blue Tag</item>
+        <item>Lighter</item>
+        <item>Nail Gun</item>
+        <item>Newspaper</item>
+        <item>Newspaper + Bottle</item>
+        <item>Staff Room Key</item>
+        <item>Storage Room Key</item>
+    </string-array>
+
+    <string-array name="items_key_1_2">
+        <item>Blowtorch</item>
+        <item>Broken Handgun SG</item>
+        <item>Broken Shotgun</item>
+        <item>Frozen Wrench</item>
+        <item>Lab Cardkey</item>
+        <item>Turn Table Key</item>
+        <item>UMB No.3</item>
+        <item>V-JOLT</item>
+        <item>VP-017</item>
+        <item>Valve Handle</item>
+        <item>Wrench</item>
+    </string-array>
+
+    <string-array name="items_key_1_3">
+        <item>Blood Pack</item>
+        <item>Card Key Level 1</item>
+        <item>Card Key Level 2</item>
+        <item>Male Nurse\'s Diary</item>
+        <item>Padlock Key</item>
+    </string-array>
+
+    <string-array name="items_key_1_4">
+        <item>Battery</item>
+        <item>Charlie\'s ID Tag</item>
+        <item>Gold Key</item>
+        <item>Len\'s ID Tag</item>
+        <item>Red Jewel</item>
+        <item>Security Office Card Key</item>
+        <item>Silver Key</item>
+    </string-array>
+
+    <string-array name="items_key_1_5">
+        <item>Blue Jewel</item>
+        <item>Brass Spectacles</item>
+        <item>Card Key</item>
+        <item>Daylight</item>
+        <item>Key with a Red Tag</item>
+        <item>P-Base</item>
+        <item>P-Base (Depleted)</item>
+        <item>P-Base (Sealed)</item>
+        <item>Reagent Case</item>
+        <item>Red Jewel</item>
+        <item>Sealed Reagent Case</item>
+        <item>T-Blood</item>
+        <item>V-Poison</item>
+    </string-array>
+
 </resources>

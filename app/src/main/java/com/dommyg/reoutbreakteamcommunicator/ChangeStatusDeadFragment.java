@@ -38,6 +38,10 @@ public class ChangeStatusDeadFragment extends Fragment {
     private Button buttonSubmit;
 
     private String[] locations;
+    private String[] itemsHealing;
+    private String[] itemsWeapon;
+    private String[] itemsAmmo;
+    private String[] itemsKey;
 
     private boolean item1;
     private boolean item2;
@@ -50,12 +54,20 @@ public class ChangeStatusDeadFragment extends Fragment {
 
     private boolean isYoko;
 
-    public static ChangeStatusDeadFragment newInstance(String[] locations, boolean isYoko) {
-        return new ChangeStatusDeadFragment(locations, isYoko);
+    public static ChangeStatusDeadFragment newInstance(String[] locations, String[] itemsHealing,
+                                                       String[] itemsWeapon, String[] itemsAmmo,
+                                                       String[] itemsKey, boolean isYoko) {
+        return new ChangeStatusDeadFragment(locations, itemsHealing, itemsWeapon, itemsAmmo,
+                itemsKey, isYoko);
     }
 
-    public ChangeStatusDeadFragment(String[] locations, boolean isYoko) {
+    public ChangeStatusDeadFragment(String[] locations, String[] itemsHealing,  String[] itemsWeapon,
+                                    String[] itemsAmmo, String[] itemsKey, boolean isYoko) {
         this.locations = locations;
+        this.itemsHealing = itemsHealing;
+        this.itemsWeapon = itemsWeapon;
+        this.itemsAmmo = itemsAmmo;
+        this.itemsKey = itemsKey;
         this.isYoko = isYoko;
     }
 
