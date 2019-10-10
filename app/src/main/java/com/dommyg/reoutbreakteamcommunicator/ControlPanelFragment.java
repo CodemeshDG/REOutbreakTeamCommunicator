@@ -64,7 +64,7 @@ public class ControlPanelFragment extends Fragment {
             public void onClick(View view) {
                 int statusType = StatusType.PANIC.getType();
                 String[] locations = room.getScenario().getLocations();
-                Intent intent = ChangeStatusActivity.newIntent(getContext(), statusType, locations);
+                Intent intent = ChangeStatusActivity.newIntent(getContext(), statusType, locations, false);
                 startActivityForResult(intent, statusType);
 //                myCharacter.getStatus().setStatusType(StatusType.PANIC);
 //                String updateStatus = getString(R.string.test_status);
@@ -80,7 +80,7 @@ public class ControlPanelFragment extends Fragment {
             public void onClick(View view) {
                 int statusType = StatusType.NEED.getType();
                 String[] locations = room.getScenario().getLocations();
-                Intent intent = ChangeStatusActivity.newIntent(getContext(), statusType, locations);
+                Intent intent = ChangeStatusActivity.newIntent(getContext(), statusType, locations, false);
                 startActivityForResult(intent, statusType);
 //                myCharacter.getStatus().setStatusType(StatusType.NEED);
 //                String updateStatus = getString(R.string.test_status);
@@ -96,7 +96,8 @@ public class ControlPanelFragment extends Fragment {
             public void onClick(View view) {
                 int statusType = StatusType.DEAD.getType();
                 String[] locations = room.getScenario().getLocations();
-                Intent intent = ChangeStatusActivity.newIntent(getContext(), statusType, locations);
+                boolean isYoko = (myCharacter.getCharacterName() == Character.YOKO.getName());
+                Intent intent = ChangeStatusActivity.newIntent(getContext(), statusType, locations, isYoko);
                 startActivityForResult(intent, statusType);
 //                myCharacter.getStatus().setStatusType(StatusType.DEAD);
 //                String updateStatus = getString(R.string.test_status);
