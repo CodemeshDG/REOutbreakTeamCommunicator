@@ -1,5 +1,6 @@
 package com.dommyg.reoutbreakteamcommunicator;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 public class ChangeStatusPanicFragment extends Fragment {
+    private OnDataPass dataPasser;
+
     private CheckBox checkBoxDowned;
     private CheckBox checkBoxDanger;
     private CheckBox checkBoxViral;
@@ -32,6 +35,9 @@ public class ChangeStatusPanicFragment extends Fragment {
     private boolean viral;
     private boolean trapped;
 
+    public interface OnDataPass {
+        void onDataPass(boolean data);
+    }
 
     public static ChangeStatusPanicFragment newInstance(String[] locations) {
         return new ChangeStatusPanicFragment(locations);
@@ -39,6 +45,14 @@ public class ChangeStatusPanicFragment extends Fragment {
 
     private ChangeStatusPanicFragment(String[] locations) {
         this.locations = locations;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnDataPass) {
+            dataPasser = (OnDataPass) context;
+        }
     }
 
     @Nullable
@@ -88,7 +102,7 @@ public class ChangeStatusPanicFragment extends Fragment {
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                passData(downed);
             }
         });
 
@@ -96,10 +110,15 @@ public class ChangeStatusPanicFragment extends Fragment {
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                getActivity().finish();
             }
         });
 
         return v;
     }
+
+    private void passData(boolean data) {
+        dataPasser.onDataPass(data);
+    }
+
 }

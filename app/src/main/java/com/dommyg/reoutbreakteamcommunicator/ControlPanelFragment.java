@@ -32,6 +32,7 @@ public class ControlPanelFragment extends Fragment {
     private TextView textViewScenarioName;
 
     private TextView textViewPlayer3Status;
+    private TextView textViewPlayer3SubStatus;
     private ImageView imageViewHeadshotPlayer1;
     private ImageView imageViewHeadshotPlayer2;
     private ImageView imageViewHeadshotPlayer3;
@@ -72,11 +73,6 @@ public class ControlPanelFragment extends Fragment {
                 Intent intent = ChangeStatusActivity.newIntent(getContext(), statusType, locations,
                         itemsHealing, itemsWeapon, itemsAmmo, itemsKey, false);
                 startActivityForResult(intent, statusType);
-//                myCharacter.getStatus().setStatusType(StatusType.PANIC);
-//                String updateStatus = getString(R.string.test_status);
-//                String characterName = getString(myCharacter.getCharacterName()).toUpperCase();
-//                String status = getString(myCharacter.getStatus().getStatusType());
-//                textViewPlayer3Status.setText(String.format(updateStatus, characterName, status));
             }
         });
 
@@ -94,11 +90,6 @@ public class ControlPanelFragment extends Fragment {
                 Intent intent = ChangeStatusActivity.newIntent(getContext(), statusType, locations,
                         itemsHealing, itemsWeapon, itemsAmmo, itemsKey, false);
                 startActivityForResult(intent, statusType);
-//                myCharacter.getStatus().setStatusType(StatusType.NEED);
-//                String updateStatus = getString(R.string.test_status);
-//                String characterName = getString(myCharacter.getCharacterName()).toUpperCase();
-//                String status = getString(myCharacter.getStatus().getStatusType());
-//                textViewPlayer3Status.setText(String.format(updateStatus, characterName, status));
             }
         });
 
@@ -117,15 +108,13 @@ public class ControlPanelFragment extends Fragment {
                 Intent intent = ChangeStatusActivity.newIntent(getContext(), statusType, locations,
                         itemsHealing, itemsWeapon, itemsAmmo, itemsKey, isYoko);
                 startActivityForResult(intent, statusType);
-//                myCharacter.getStatus().setStatusType(StatusType.DEAD);
-//                String updateStatus = getString(R.string.test_status);
-//                String characterName = getString(myCharacter.getCharacterName()).toUpperCase();
-//                String status = getString(myCharacter.getStatus().getStatusType());
-//                textViewPlayer3Status.setText(String.format(updateStatus, characterName, status));
             }
         });
 
         textViewPlayer3Status = v.findViewById(R.id.textViewPlayer3Status);
+        textViewPlayer3SubStatus = v.findViewById(R.id.textViewPlayer3SubStatus);
+        String name = getString(myCharacter.getCharacterName()).toUpperCase();
+        textViewPlayer3Status.setText(name);
 
         // These are for testing purposes.
         imageViewHeadshotPlayer1 = v.findViewById(R.id.imageViewHeadshotPlayer1);
@@ -139,7 +128,16 @@ public class ControlPanelFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        boolean panic = data.getBooleanExtra(ChangeStatusActivity.EXTRA_PANIC, false);
+        if (panic) {
+            myCharacter.getStatus().setStatusType(StatusType.PANIC);
+            String updateStatus = getString(R.string.test_status);
+            String characterName = getString(myCharacter.getCharacterName()).toUpperCase();
+            String status = getString(myCharacter.getStatus().getStatusType());
+            String subStatus = "DOWNED!";
+            textViewPlayer3Status.setText(String.format(updateStatus, characterName, status));
+            textViewPlayer3SubStatus.setText(subStatus);
+        }
     }
 
     private Player initializeCharacter(int selectedPlayer) {
