@@ -1,5 +1,8 @@
 package com.dommyg.reoutbreakteamcommunicator;
 
+/**
+ * Contains a numerical "type" (starting at zero) and a String name for each status.
+ */
 enum StatusType {
     NONE (0, 0),
     PANIC (1, R.string.button_status_panic),
@@ -23,6 +26,9 @@ enum StatusType {
     }
 }
 
+/**
+ * Contains information about a player's status to be displayed on the Control Panel.
+ */
 class Status {
     StatusType statusType;
     String location;

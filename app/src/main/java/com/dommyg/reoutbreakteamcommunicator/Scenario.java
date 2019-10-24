@@ -1,8 +1,10 @@
 package com.dommyg.reoutbreakteamcommunicator;
 
-import android.content.Context;
 import android.content.res.Resources;
 
+/**
+ * Contains a numerical level value (starting at zero) for each scenario and its name.
+ */
 enum ScenarioName {
     OUTBREAK (0, R.string.scenario_1_1),
     BELOW_FREEZING_POINT (1, R.string.scenario_1_2),
@@ -27,6 +29,9 @@ enum ScenarioName {
     }
 }
 
+/**
+ * Contains information about a scenario, including locations and items.
+ */
 class Scenario {
     private ScenarioName scenarioName;
     private String[] locations;
@@ -90,6 +95,7 @@ class Scenario {
         itemsWeapon = resources.getStringArray(R.array.items_weapon);
         itemsAmmo = resources.getStringArray(R.array.items_ammo);
 
+        // Unlike other items, key items are specialized to each scenario level.
         switch (scenario) {
             case 0:
                 itemsKey = resources.getStringArray(R.array.items_key_1_1);

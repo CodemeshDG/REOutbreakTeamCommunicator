@@ -40,13 +40,23 @@ public class CreateRoomFragment extends Fragment {
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_create_room, container, false);
 
+        setUpRadioGroups(v);
+        setUpRoomNameAndPasswordFields(v);
+        setUpButtonCreateRoom(v);
+
+        return v;
+    }
+
+    private void setUpButtonCreateRoom(View v) {
         buttonCreateRoom = v.findViewById(R.id.buttonCreateRoom);
         buttonCreateRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Check if room name and password fields are filled out, else do not create room.
                 if (editTextRoomName.getText().toString().equals("") || editTextPassword.getText().toString().equals("")) {
                     return;
                 }
+                // Check if a scenario and player are selected, else do not create room.
                 if (!playerSelected || !scenarioSelected) {
                     return;
                 }
@@ -56,7 +66,9 @@ public class CreateRoomFragment extends Fragment {
                 startActivity(intent);
             }
         });
+    }
 
+    private void setUpRadioGroups(View v) {
         radioGroupCharacter = v.findViewById(R.id.radioGroupCharacter);
         radioGroupCharacter.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -74,11 +86,11 @@ public class CreateRoomFragment extends Fragment {
                 scenarioSelected = true;
             }
         });
+    }
 
+    private void setUpRoomNameAndPasswordFields(View v){
         editTextRoomName = v.findViewById(R.id.editTextSetRoomName);
         editTextPassword = v.findViewById(R.id.editTextSetPassword);
-
-        return v;
     }
 
 }

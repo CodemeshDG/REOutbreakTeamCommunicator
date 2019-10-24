@@ -76,6 +76,18 @@ public class ChangeStatusDeadFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_status_dead, container, false);
 
+        setUpCheckBoxes(v);
+        setUpLocations(v);
+        setUpButtons(v);
+
+        return v;
+    }
+
+    /**
+     * Finds views for the check boxes, sets up their listeners and the adapters for their
+     * autoCompleteTextViews.
+     */
+    private void setUpCheckBoxes(View v) {
         textViewItem1 = v.findViewById(R.id.autoCompleteTextViewItem1);
         checkBoxItem1 = v.findViewById(R.id.checkBoxDeadItem1);
         checkBoxItem1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -161,13 +173,24 @@ public class ChangeStatusDeadFragment extends Fragment {
                 }
             });
         }
+    }
 
+    /**
+     * Finds the view for the location field and sets up the adapter for the autoCompleteTextView.
+     */
+    private void setUpLocations(View v) {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_dropdown_item_1line, locations);
+
         textViewLocation = v.findViewById(R.id.autoCompleteTextViewLocation);
         textViewLocation.setAdapter(adapter);
         textViewLocation.setThreshold(0);
+    }
 
+    /**
+     * Finds views for the buttons and sets them and their listeners.
+     */
+    private void setUpButtons(View v) {
         buttonSubmit = v.findViewById(R.id.buttonSubmit);
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,10 +206,13 @@ public class ChangeStatusDeadFragment extends Fragment {
 
             }
         });
-
-        return v;
     }
 
+    /**
+     * Controls an autoCompleteTextView's visibility based upon its associated check box's status.
+     * @param variable If the check box is checked.
+     * @param textView The autoCompleteTextView to be modified.
+     */
     private void checkIfShowAutoCompleteTextView(boolean variable, AutoCompleteTextView textView) {
         if (variable) {
             textView.setVisibility(View.VISIBLE);

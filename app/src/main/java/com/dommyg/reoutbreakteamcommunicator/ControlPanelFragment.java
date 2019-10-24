@@ -55,73 +55,11 @@ public class ControlPanelFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_control_panel, container, false);
 
-        textViewRoomName = v.findViewById(R.id.textViewRoomName);
-        textViewCharacterName = v.findViewById(R.id.textViewPlayerCharacterName);
-        textViewScenarioName = v.findViewById(R.id.textViewScenarioName);
+        setUpRoom(v);
+        setUpTeammates(v);
+        setUpStatusButtons(v);
 
-        buttonStatusPanic = v.findViewById(R.id.buttonStatusPanic);
-        buttonStatusPanic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int statusType = StatusType.PANIC.getType();
-                String[] locations = room.getScenario().getLocations();
-                String[] itemsHealing = room.getScenario().getItemsHealing();
-                String[] itemsWeapon = room.getScenario().getItemsWeapon();
-                String[] itemsAmmo = room.getScenario().getItemsAmmo();
-                String[] itemsKey = room.getScenario().getItemsKey();
-
-                Intent intent = ChangeStatusActivity.newIntent(getContext(), statusType, locations,
-                        itemsHealing, itemsWeapon, itemsAmmo, itemsKey, false);
-                startActivityForResult(intent, statusType);
-            }
-        });
-
-        buttonStatusNeed = v.findViewById(R.id.buttonStatusNeed);
-        buttonStatusNeed.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int statusType = StatusType.NEED.getType();
-                String[] locations = room.getScenario().getLocations();
-                String[] itemsHealing = room.getScenario().getItemsHealing();
-                String[] itemsWeapon = room.getScenario().getItemsWeapon();
-                String[] itemsAmmo = room.getScenario().getItemsAmmo();
-                String[] itemsKey = room.getScenario().getItemsKey();
-
-                Intent intent = ChangeStatusActivity.newIntent(getContext(), statusType, locations,
-                        itemsHealing, itemsWeapon, itemsAmmo, itemsKey, false);
-                startActivityForResult(intent, statusType);
-            }
-        });
-
-        buttonStatusDead = v.findViewById(R.id.buttonStatusDead);
-        buttonStatusDead.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int statusType = StatusType.DEAD.getType();
-                String[] locations = room.getScenario().getLocations();
-                String[] itemsHealing = room.getScenario().getItemsHealing();
-                String[] itemsWeapon = room.getScenario().getItemsWeapon();
-                String[] itemsAmmo = room.getScenario().getItemsAmmo();
-                String[] itemsKey = room.getScenario().getItemsKey();
-                boolean isYoko = (myCharacter.getCharacterName() == Character.YOKO.getName());
-
-                Intent intent = ChangeStatusActivity.newIntent(getContext(), statusType, locations,
-                        itemsHealing, itemsWeapon, itemsAmmo, itemsKey, isYoko);
-                startActivityForResult(intent, statusType);
-            }
-        });
-
-        textViewPlayer3Status = v.findViewById(R.id.textViewPlayer3Status);
-        textViewPlayer3SubStatus = v.findViewById(R.id.textViewPlayer3SubStatus);
-        String name = getString(myCharacter.getCharacterName()).toUpperCase();
-        textViewPlayer3Status.setText(name);
-
-        // These are for testing purposes.
-        imageViewHeadshotPlayer1 = v.findViewById(R.id.imageViewHeadshotPlayer1);
-        imageViewHeadshotPlayer2 = v.findViewById(R.id.imageViewHeadshotPlayer2);
-        imageViewHeadshotPlayer3 = v.findViewById(R.id.imageViewHeadshotPlayer3);
-
-        setUpViews();
+        setUpTestingCharacter(v);
 
         return v;
     }
@@ -140,6 +78,11 @@ public class ControlPanelFragment extends Fragment {
         }
     }
 
+    /**
+     * Creates a new Player, which will be the user's, for the room.
+     * @param selectedPlayer Selection made by the user with CreateRoomFragment's character radio
+     *                       group.
+     */
     private Player initializeCharacter(int selectedPlayer) {
         switch (selectedPlayer) {
             case R.id.radioButtonCharacter1:
@@ -163,6 +106,11 @@ public class ControlPanelFragment extends Fragment {
         }
     }
 
+    /**
+     * Creates a new Scenario for the room.
+     * @param selectedScenario Selection made by the user with CreateRoomFragment's scenario radio
+     *                         group.
+     */
     private Scenario initializeScenario(int selectedScenario, Resources resources) {
         switch (selectedScenario) {
             case R.id.radioButtonScenario1:
@@ -180,10 +128,66 @@ public class ControlPanelFragment extends Fragment {
         }
     }
 
-    private void setUpViews() {
+    /**
+     * Finds views related to the three status buttons and sets them and their listeners.
+     */
+    private void setUpStatusButtons(View v) {
+        buttonStatusPanic = v.findViewById(R.id.buttonStatusPanic);
+        buttonStatusPanic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int statusType = StatusType.PANIC.getType();
+                Intent intent = createIntentForChangeStatusActivity(statusType);
+
+                startActivityForResult(intent, statusType);
+            }
+        });
+
+        buttonStatusNeed = v.findViewById(R.id.buttonStatusNeed);
+        buttonStatusNeed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int statusType = StatusType.NEED.getType();
+                Intent intent = createIntentForChangeStatusActivity(statusType);
+
+                startActivityForResult(intent, statusType);
+            }
+        });
+
+        buttonStatusDead = v.findViewById(R.id.buttonStatusDead);
+        buttonStatusDead.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int statusType = StatusType.DEAD.getType();
+                Intent intent = createIntentForChangeStatusActivity(statusType);
+
+                startActivityForResult(intent, statusType);
+            }
+        });
+    }
+
+    /**
+     * Finds views related to room name, character name, and scenario name and sets them.
+     */
+    private void setUpRoom(View v) {
+        textViewRoomName = v.findViewById(R.id.textViewRoomName);
         textViewRoomName.setText("ROOM: " + room.getName() + " | PASSWORD: " + room.getPassword());
+
+        textViewCharacterName = v.findViewById(R.id.textViewPlayerCharacterName);
         textViewCharacterName.setText(myCharacter.getCharacterName());
+
+        textViewScenarioName = v.findViewById(R.id.textViewScenarioName);
         textViewScenarioName.setText(room.getScenario().getScenarioName());
+    }
+
+    /**
+     * Finds views related to teammates' info displayed in the Team Status section and sets them.
+     */
+    private void setUpTeammates(View v) {
+        imageViewHeadshotPlayer1 = v.findViewById(R.id.imageViewHeadshotPlayer1);
+        imageViewHeadshotPlayer2 = v.findViewById(R.id.imageViewHeadshotPlayer2);
+        imageViewHeadshotPlayer3 = v.findViewById(R.id.imageViewHeadshotPlayer3);
+
         AssetManager assetManager = getContext().getAssets();
         try {
             // These are for testing purposes and must be changed later.
@@ -200,5 +204,28 @@ public class ControlPanelFragment extends Fragment {
         } catch (IOException e) {
             Log.e(TAG, "setUpViews: ", e);
         }
+    }
+
+    /**
+     * Used for testing. Displays user's character and status in the third teammate's spot on the
+     * Team Status section. Not for use in final version.
+     */
+    private void setUpTestingCharacter(View v) {
+        textViewPlayer3Status = v.findViewById(R.id.textViewPlayer3Status);
+        textViewPlayer3SubStatus = v.findViewById(R.id.textViewPlayer3SubStatus);
+        String name = getString(myCharacter.getCharacterName()).toUpperCase();
+        textViewPlayer3Status.setText(name);
+    }
+
+    private Intent createIntentForChangeStatusActivity(int statusType) {
+        String[] locations = room.getScenario().getLocations();
+        String[] itemsHealing = room.getScenario().getItemsHealing();
+        String[] itemsWeapon = room.getScenario().getItemsWeapon();
+        String[] itemsAmmo = room.getScenario().getItemsAmmo();
+        String[] itemsKey = room.getScenario().getItemsKey();
+        boolean isYoko = (myCharacter.getCharacterName() == Character.YOKO.getName());
+
+        return ChangeStatusActivity.newIntent(getContext(), statusType, locations,
+                itemsHealing, itemsWeapon, itemsAmmo, itemsKey, isYoko);
     }
 }

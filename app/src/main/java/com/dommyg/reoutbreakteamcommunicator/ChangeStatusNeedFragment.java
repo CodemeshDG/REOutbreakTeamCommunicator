@@ -60,8 +60,28 @@ public class ChangeStatusNeedFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_status_need, container, false);
 
+        setUpCheckBoxes(v);
+        setUpLocations(v);
+        setUpButtons(v);
+
+        return v;
+    }
+
+    /**
+     * Finds views for the check boxes, sets up their listeners and the adapters for their
+     * autoCompleteTextViews.
+     */
+    private void setUpCheckBoxes(View v) {
+        setUpHealing(v);
+        setUpWeapon(v);
+        setUpAmmo(v);
+        setUpKey(v);
+    }
+
+    private void setUpHealing(View v) {
         ArrayAdapter<String> healingAdapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_dropdown_item_1line, itemsHealing);
+
         textViewHealing = v.findViewById(R.id.autoCompleteTextViewHealing);
         textViewHealing.setAdapter(healingAdapter);
         textViewHealing.setThreshold(0);
@@ -74,9 +94,12 @@ public class ChangeStatusNeedFragment extends Fragment {
                 checkIfShowAutoCompleteTextView(healing, textViewHealing);
             }
         });
+    }
 
+    private void setUpWeapon(View v) {
         ArrayAdapter<String> weaponAdapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_dropdown_item_1line, itemsWeapon);
+
         textViewWeapon = v.findViewById(R.id.autoCompleteTextViewWeapon);
         textViewWeapon.setAdapter(weaponAdapter);
         textViewWeapon.setThreshold(0);
@@ -89,9 +112,12 @@ public class ChangeStatusNeedFragment extends Fragment {
                 checkIfShowAutoCompleteTextView(weapon, textViewWeapon);
             }
         });
+    }
 
+    private void setUpAmmo(View v) {
         ArrayAdapter<String> ammoAdapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_dropdown_item_1line, itemsAmmo);
+
         textViewAmmo = v.findViewById(R.id.autoCompleteTextViewAmmo);
         textViewAmmo.setAdapter(ammoAdapter);
         textViewAmmo.setThreshold(0);
@@ -104,9 +130,12 @@ public class ChangeStatusNeedFragment extends Fragment {
                 checkIfShowAutoCompleteTextView(ammo, textViewAmmo);
             }
         });
+    }
 
+    private void setUpKey(View v) {
         ArrayAdapter<String> keyAdapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_dropdown_item_1line, itemsKey);
+
         textViewKey = v.findViewById(R.id.autoCompleteTextViewKey);
         textViewKey.setAdapter(keyAdapter);
         textViewKey.setThreshold(0);
@@ -119,13 +148,24 @@ public class ChangeStatusNeedFragment extends Fragment {
                 checkIfShowAutoCompleteTextView(key, textViewKey);
             }
         });
+    }
 
+    /**
+     * Finds the view for the location field and sets up the adapter for the autoCompleteTextView.
+     */
+    private void setUpLocations(View v) {
         ArrayAdapter<String> locationAdapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_dropdown_item_1line, locations);
+
         textViewLocation = v.findViewById(R.id.autoCompleteTextViewLocation);
         textViewLocation.setAdapter(locationAdapter);
         textViewLocation.setThreshold(0);
+    }
 
+    /**
+     * Finds views for the buttons and sets them and their listeners.
+     */
+    private void setUpButtons(View v) {
         buttonSubmit = v.findViewById(R.id.buttonSubmit);
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,10 +181,13 @@ public class ChangeStatusNeedFragment extends Fragment {
 
             }
         });
-
-        return v;
     }
 
+    /**
+     * Controls an autoCompleteTextView's visibility based upon its associated check box's status.
+     * @param variable If the check box is checked.
+     * @param textView The autoCompleteTextView to be modified.
+     */
     private void checkIfShowAutoCompleteTextView(boolean variable, AutoCompleteTextView textView) {
         if (variable) {
             textView.setVisibility(View.VISIBLE);

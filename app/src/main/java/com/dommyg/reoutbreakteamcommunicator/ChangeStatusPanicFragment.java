@@ -60,6 +60,21 @@ public class ChangeStatusPanicFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_status_panic, container, false);
 
+        setUpCheckBoxes(v);
+        setUpLocations(v);
+        setUpButtons(v);
+
+        return v;
+    }
+
+    private void passData(boolean data) {
+        dataPasser.onDataPass(data);
+    }
+
+    /**
+     * Finds views for the check boxes and sets them and their listeners.
+     */
+    private void setUpCheckBoxes(View v) {
         checkBoxDowned = v.findViewById(R.id.checkBoxPanicDowned);
         checkBoxDowned.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -91,13 +106,24 @@ public class ChangeStatusPanicFragment extends Fragment {
                 trapped = b;
             }
         });
+    }
 
+    /**
+     * Finds the view for the location field and sets up the adapter for the autoCompleteTextView.
+     */
+    private void setUpLocations(View v) {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_dropdown_item_1line, locations);
+
         textViewLocation = v.findViewById(R.id.autoCompleteTextViewLocation);
         textViewLocation.setAdapter(adapter);
         textViewLocation.setThreshold(0);
+    }
 
+    /**
+     * Finds views for the buttons and sets them and their listeners.
+     */
+    private void setUpButtons(View v) {
         buttonSubmit = v.findViewById(R.id.buttonSubmit);
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,12 +139,5 @@ public class ChangeStatusPanicFragment extends Fragment {
                 getActivity().finish();
             }
         });
-
-        return v;
     }
-
-    private void passData(boolean data) {
-        dataPasser.onDataPass(data);
-    }
-
 }

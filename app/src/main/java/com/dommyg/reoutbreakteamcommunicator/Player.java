@@ -1,5 +1,8 @@
 package com.dommyg.reoutbreakteamcommunicator;
 
+/**
+ * Contains each character's name and headshot file name.
+ */
 enum Character {
     ALYSSA (R.string.character_alyssa, "headshot_alyssa.jpg"),
     CINDY (R.string.character_cindy, "headshot_cindy.jpg"),
@@ -28,6 +31,9 @@ enum Character {
     }
 }
 
+/**
+ * Contains information about a user's character and their status.
+ */
 class Player {
     private Status status;
     private Character character;

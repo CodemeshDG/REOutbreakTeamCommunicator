@@ -1,5 +1,8 @@
 package com.dommyg.reoutbreakteamcommunicator;
 
+/**
+ * Contains all the information used to create a room and maintain the Control Panel displays.
+ */
 class Room {
     private Player player1;
     private Player player2;
@@ -19,6 +22,9 @@ class Room {
         this.password = password;
     }
 
+    /**
+     * The user's player.
+     */
     public Player getPlayer1() {
         return player1;
     }
