@@ -5,7 +5,9 @@ import android.content.Intent;
 
 import androidx.fragment.app.Fragment;
 
-public class ChangeStatusActivity extends SingleFragmentActivity implements ChangeStatusPanicFragment.OnDataPass {
+public class ChangeStatusActivity extends SingleFragmentActivity
+        implements ChangeStatusPanicFragment.OnDataPass, ChangeStatusNeedFragment.OnDataPass,
+        ChangeStatusDeadFragment.OnDataPass{
     private static final String EXTRA_SELECTED_STATUS = "com.dommyg.reoutbreakteamcommunicator.selected_status";
     private static final String EXTRA_LOCATIONS = "com.dommyg.reoutbreakteamcommunicator.locations";
     private static final String EXTRA_ITEMS_HEALING = "com.dommyg.reoutbreakteamcommunicator.items_healing";
@@ -14,7 +16,9 @@ public class ChangeStatusActivity extends SingleFragmentActivity implements Chan
     private static final String EXTRA_ITEMS_KEY = "com.dommyg.reoutbreakteamcommunicator.items_key";
     private static final String EXTRA_IS_YOKO = "com.dommyg.reoutbreakteamcommunicator.is_yoko";
 
-    static final String EXTRA_PANIC = "com.dommyg.reoutbreakteamcommunicator.panic";
+    static final String EXTRA_SELECTED_CHECKBOXES = "com.dommyg.reoutbreakteamcommunicator.selected_checkboxes";
+    static final String EXTRA_SELECTED_ITEMS = "com.dommyg.reoutbreakteamcommunicator.selected_items";
+    static final String EXTRA_SELECTED_LOCATION = "com.dommyg.reoutbreakteamcommunicator.selected_location";
 
     @Override
     protected Fragment createFragment() {
@@ -57,10 +61,21 @@ public class ChangeStatusActivity extends SingleFragmentActivity implements Chan
     }
 
     @Override
-    public void onDataPass(boolean data) {
+    public void onDataPass(boolean[] data, String location, int resultCode) {
         Intent intent = new Intent();
-        intent.putExtra(EXTRA_PANIC, data);
-        setResult(1, intent);
+        intent.putExtra(EXTRA_SELECTED_CHECKBOXES, data);
+        intent.putExtra(EXTRA_SELECTED_LOCATION, location);
+        setResult(resultCode, intent);
+        finish();
+    }
+
+    @Override
+    public void onDataPass(boolean[] data, String[] items, String location, int resultCode) {
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_SELECTED_CHECKBOXES, data);
+        intent.putExtra(EXTRA_SELECTED_ITEMS, items);
+        intent.putExtra(EXTRA_SELECTED_LOCATION, location);
+        setResult(resultCode, intent);
         finish();
     }
 }

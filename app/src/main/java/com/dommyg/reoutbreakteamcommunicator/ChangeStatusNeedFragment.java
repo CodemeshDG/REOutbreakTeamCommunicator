@@ -1,5 +1,6 @@
 package com.dommyg.reoutbreakteamcommunicator;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 public class ChangeStatusNeedFragment extends Fragment {
+    private OnDataPass dataPasser;
+
     private CheckBox checkBoxHealing;
     private CheckBox checkBoxWeapon;
     private CheckBox checkBoxAmmo;
@@ -40,6 +43,10 @@ public class ChangeStatusNeedFragment extends Fragment {
     private boolean ammo;
     private boolean key;
 
+    public interface OnDataPass {
+        void onDataPass(boolean[] data, String[] items, String location, int resultCode);
+    }
+
     public static ChangeStatusNeedFragment newInstance(String[] locations, String[] itemsHealing,
                                                        String[] itemsWeapon, String[] itemsAmmo,
                                                        String[] itemsKey) {
@@ -55,6 +62,14 @@ public class ChangeStatusNeedFragment extends Fragment {
         this.itemsKey = itemsKey;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnDataPass) {
+            dataPasser = (OnDataPass) context;
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -65,6 +80,10 @@ public class ChangeStatusNeedFragment extends Fragment {
         setUpButtons(v);
 
         return v;
+    }
+
+    private void passData(boolean[] data, String[] selectedItems, String selectedLocation) {
+        dataPasser.onDataPass(data, selectedItems, selectedLocation, StatusType.NEED.getType());
     }
 
     /**
@@ -170,7 +189,13 @@ public class ChangeStatusNeedFragment extends Fragment {
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                boolean[] data = {healing, weapon, ammo, key};
+                String[] selectedItems = {textViewHealing.getText().toString(),
+                textViewWeapon.getText().toString(),
+                textViewAmmo.getText().toString(),
+                textViewKey.getText().toString()};
+                String selectedLocation = textViewLocation.getText().toString();
+                passData(data, selectedItems, selectedLocation);
             }
         });
 
@@ -178,7 +203,7 @@ public class ChangeStatusNeedFragment extends Fragment {
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                getActivity().finish();
             }
         });
     }
