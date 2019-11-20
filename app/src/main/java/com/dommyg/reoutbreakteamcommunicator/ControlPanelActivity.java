@@ -19,10 +19,12 @@ public class ControlPanelActivity extends SingleFragmentActivity {
         int selectedScenario = getIntent().getIntExtra(EXTRA_SELECTED_SCENARIO, 0);
         String roomName = getIntent().getStringExtra(EXTRA_ROOM_NAME);
         String password = getIntent().getStringExtra(EXTRA_PASSWORD);
-        return ControlPanelFragment.newInstance(selectedPlayer, selectedScenario, roomName, password, resources);
+        return ControlPanelFragment.newInstance(selectedPlayer, selectedScenario, roomName,
+                password, resources);
     }
 
-    public static Intent newIntent(Context packageContext, int selectedPlayer, int selectedScenario, String roomName, String password) {
+    public static Intent newIntent(Context packageContext, int selectedPlayer, int selectedScenario,
+                                   String roomName, String password) {
         Intent intent = new Intent(packageContext, ControlPanelActivity.class);
         intent.putExtra(EXTRA_SELECTED_PLAYER, selectedPlayer);
         intent.putExtra(EXTRA_SELECTED_SCENARIO, selectedScenario);

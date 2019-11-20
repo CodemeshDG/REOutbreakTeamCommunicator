@@ -34,15 +34,15 @@ class Status {
     String location;
     String item;
 
-    public Status(StatusType statusType) {
+    Status(StatusType statusType) {
         this.statusType = statusType;
     }
 
-    public int getStatusType() {
+    int getStatusType() {
         return statusType.getName();
     }
 
-    public void setStatusType(StatusType statusType) {
+    void setStatusType(StatusType statusType) {
         this.statusType = statusType;
     }
 }

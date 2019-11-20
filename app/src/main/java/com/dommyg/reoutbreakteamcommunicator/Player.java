@@ -38,20 +38,20 @@ class Player {
     private Status status;
     private Character character;
 
-    public Player(Character character) {
+    Player(Character character) {
         this.character = character;
         this.status = new Status(StatusType.NONE);
     }
 
-    public Status getStatus() {
+    Status getStatus() {
         return status;
     }
 
-    public int getCharacterName() {
+    int getCharacterName() {
         return character.getName();
     }
 
-    public String getHeadshot() {
+    String getHeadshot() {
         return character.getHeadshotPath();
     }
 

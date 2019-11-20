@@ -41,18 +41,22 @@ public class ControlPanelFragment extends Fragment {
     private Button buttonStatusNeed;
     private Button buttonStatusDead;
 
-    public static ControlPanelFragment newInstance(int selectedPlayer, int selectedScenario, String roomName, String password, Resources resources) {
+    static ControlPanelFragment newInstance(int selectedPlayer, int selectedScenario, String roomName,
+                                            String password, Resources resources) {
         return new ControlPanelFragment(selectedPlayer, selectedScenario, roomName, password, resources);
     }
 
-    private ControlPanelFragment(int selectedPlayer, int selectedScenario, String roomName, String password, Resources resources) {
-        this.room = new Room(initializeCharacter(selectedPlayer), initializeScenario(selectedScenario, resources), roomName, password);
+    private ControlPanelFragment(int selectedPlayer, int selectedScenario, String roomName,
+                                 String password, Resources resources) {
+        this.room = new Room(initializeCharacter(selectedPlayer), initializeScenario(selectedScenario,
+                resources), roomName, password);
         this.myCharacter = room.getPlayer1();
     }
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_control_panel, container, false);
 
         setUpRoom(v);

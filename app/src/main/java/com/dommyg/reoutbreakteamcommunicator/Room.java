@@ -12,7 +12,7 @@ class Room {
     private String name;
     private String password;
 
-    public Room(Player player1, Scenario scenario, String name, String password) {
+    Room(Player player1, Scenario scenario, String name, String password) {
         this.player1 = player1;
         this.player2 = null;
         this.player3 = null;
@@ -25,31 +25,31 @@ class Room {
     /**
      * The user's player.
      */
-    public Player getPlayer1() {
+    Player getPlayer1() {
         return player1;
     }
 
-    public Player getPlayer2() {
+    Player getPlayer2() {
         return player2;
     }
 
-    public Player getPlayer3() {
+    Player getPlayer3() {
         return player3;
     }
 
-    public Player getPlayer4() {
+    Player getPlayer4() {
         return player4;
     }
 
-    public Scenario getScenario() {
+    Scenario getScenario() {
         return scenario;
     }
 
-    public String getName() {
+    String getName() {
         return name;
     }
 
-    public String getPassword() {
+    String getPassword() {
         return password;
     }
 }

@@ -15,15 +15,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import java.util.Objects;
+
 public class ChangeStatusDeadFragment extends Fragment {
     private OnDataPass dataPasser;
 
-    private CheckBox[] checkBoxes = new CheckBox[8];
-    private AutoCompleteTextView[] autoCompleteTextViews = new AutoCompleteTextView[8];
-    private AutoCompleteTextView textViewLocation;
+    private final int NUMBER_ITEM_SLOTS = 8;
 
-    private Button buttonCancel;
-    private Button buttonSubmit;
+    private CheckBox[] checkBoxes = new CheckBox[NUMBER_ITEM_SLOTS];
+    private AutoCompleteTextView[] autoCompleteTextViews = new AutoCompleteTextView[NUMBER_ITEM_SLOTS];
+    private AutoCompleteTextView textViewLocation;
 
     private String[] locations;
     private String[] itemsAll;
@@ -34,14 +35,14 @@ public class ChangeStatusDeadFragment extends Fragment {
         void onDataPass(boolean[] data, String[] items, String location, int resultCode);
     }
 
-    public static ChangeStatusDeadFragment newInstance(String[] locations, String[] itemsHealing,
+    static ChangeStatusDeadFragment newInstance(String[] locations, String[] itemsHealing,
                                                        String[] itemsWeapon, String[] itemsAmmo,
                                                        String[] itemsKey, boolean isYoko) {
         return new ChangeStatusDeadFragment(locations, itemsHealing, itemsWeapon, itemsAmmo,
                 itemsKey, isYoko);
     }
 
-    public ChangeStatusDeadFragment(String[] locations, String[] itemsHealing,  String[] itemsWeapon,
+    private ChangeStatusDeadFragment(String[] locations, String[] itemsHealing,  String[] itemsWeapon,
                                     String[] itemsAmmo, String[] itemsKey, boolean isYoko) {
         this.locations = locations;
         this.itemsAll = compileMasterItemList(itemsHealing, itemsWeapon, itemsAmmo, itemsKey);
@@ -63,7 +64,7 @@ public class ChangeStatusDeadFragment extends Fragment {
 
         populateCheckBoxes(v);
         populateAutoCompleteTextViews(v);
-        setUpCheckBoxes(v);
+        setUpCheckBoxes();
         setUpLocations(v);
         setUpButtons(v);
 
@@ -98,14 +99,14 @@ public class ChangeStatusDeadFragment extends Fragment {
 
 
     /**
-     * Finds views for the check boxes, sets up their listeners and the adapters for their
-     * autoCompleteTextViews.
+     * Sets up the check boxes' listeners and the adapters for their autoCompleteTextViews. If the
+     * player's character is Yoko, the final four check boxes are set to visible.
      */
-    private void setUpCheckBoxes(View v) {
-        ArrayAdapter<String> itemAdapter = new ArrayAdapter<>(getActivity(),
+    private void setUpCheckBoxes() {
+        ArrayAdapter<String> itemAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()),
                 android.R.layout.simple_dropdown_item_1line, itemsAll);
 
-        for (int i = 0; i < checkBoxes.length && i < autoCompleteTextViews.length; i++) {
+        for (int i = 0; i < NUMBER_ITEM_SLOTS; i++) {
             autoCompleteTextViews[i].setAdapter(itemAdapter);
             autoCompleteTextViews[i].setThreshold(0);
 
@@ -127,7 +128,7 @@ public class ChangeStatusDeadFragment extends Fragment {
      * Finds the view for the location field and sets up the adapter for the autoCompleteTextView.
      */
     private void setUpLocations(View v) {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()),
                 android.R.layout.simple_dropdown_item_1line, locations);
 
         textViewLocation = v.findViewById(R.id.autoCompleteTextViewLocation);
@@ -139,29 +140,27 @@ public class ChangeStatusDeadFragment extends Fragment {
      * Finds views for the buttons and sets them and their listeners.
      */
     private void setUpButtons(View v) {
-        buttonSubmit = v.findViewById(R.id.buttonSubmit);
+        Button buttonSubmit = v.findViewById(R.id.buttonSubmit);
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 boolean[] data = new boolean[8];
-                for (int i = 0; i < data.length; i++) {
-                    data[i] = checkBoxes[i].isChecked();
-                }
-
                 String[] selectedItems = new String[8];
-                for (int i = 0; i < selectedItems.length; i++) {
+                for (int i = 0; i < NUMBER_ITEM_SLOTS; i++) {
+                    data[i] = checkBoxes[i].isChecked();
                     selectedItems[i] = autoCompleteTextViews[i].getText().toString();
                 }
+
                 String selectedLocation = textViewLocation.getText().toString();
                 passData(data, selectedItems, selectedLocation);
             }
         });
 
-        buttonCancel = v.findViewById(R.id.buttonCancel);
+        Button buttonCancel = v.findViewById(R.id.buttonCancel);
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().finish();
+                Objects.requireNonNull(getActivity()).finish();
             }
         });
     }

@@ -15,51 +15,39 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import java.util.Objects;
+
 public class ChangeStatusNeedFragment extends Fragment {
     private OnDataPass dataPasser;
 
-    private CheckBox checkBoxHealing;
-    private CheckBox checkBoxWeapon;
-    private CheckBox checkBoxAmmo;
-    private CheckBox checkBoxKey;
+    private final int NUMBER_ITEM_TYPES = 4;
 
-    private AutoCompleteTextView textViewHealing;
-    private AutoCompleteTextView textViewWeapon;
-    private AutoCompleteTextView textViewAmmo;
-    private AutoCompleteTextView textViewKey;
+    private CheckBox[] checkBoxes = new CheckBox[NUMBER_ITEM_TYPES];
+    private AutoCompleteTextView[] autoCompleteTextViews = new AutoCompleteTextView[NUMBER_ITEM_TYPES];
+    private ArrayAdapter[] arrayAdapters = new ArrayAdapter[NUMBER_ITEM_TYPES];
+
     private AutoCompleteTextView textViewLocation;
 
-    private Button buttonCancel;
-    private Button buttonSubmit;
-
+    private String[][] items = new String[4][];
     private String[] locations;
-    private String[] itemsHealing;
-    private String[] itemsWeapon;
-    private String[] itemsAmmo;
-    private String[] itemsKey;
-
-    private boolean healing;
-    private boolean weapon;
-    private boolean ammo;
-    private boolean key;
 
     public interface OnDataPass {
         void onDataPass(boolean[] data, String[] items, String location, int resultCode);
     }
 
-    public static ChangeStatusNeedFragment newInstance(String[] locations, String[] itemsHealing,
+    static ChangeStatusNeedFragment newInstance(String[] locations, String[] itemsHealing,
                                                        String[] itemsWeapon, String[] itemsAmmo,
                                                        String[] itemsKey) {
         return new ChangeStatusNeedFragment(locations, itemsHealing, itemsWeapon, itemsAmmo, itemsKey);
     }
 
-    public ChangeStatusNeedFragment(String[] locations, String[] itemsHealing,  String[] itemsWeapon,
+    private ChangeStatusNeedFragment(String[] locations, String[] itemsHealing,  String[] itemsWeapon,
                                     String[] itemsAmmo, String[] itemsKey) {
         this.locations = locations;
-        this.itemsHealing = itemsHealing;
-        this.itemsWeapon = itemsWeapon;
-        this.itemsAmmo = itemsAmmo;
-        this.itemsKey = itemsKey;
+        this.items[0] = itemsHealing;
+        this.items[1] = itemsWeapon;
+        this.items[2] = itemsAmmo;
+        this.items[3] = itemsKey;
     }
 
     @Override
@@ -75,7 +63,10 @@ public class ChangeStatusNeedFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_status_need, container, false);
 
-        setUpCheckBoxes(v);
+        populateCheckBoxes(v);
+        populateAutoCompleteTextViews(v);
+        populateArrayAdapters();
+        setUpCheckBoxes();
         setUpLocations(v);
         setUpButtons(v);
 
@@ -86,94 +77,58 @@ public class ChangeStatusNeedFragment extends Fragment {
         dataPasser.onDataPass(data, selectedItems, selectedLocation, StatusType.NEED.getType());
     }
 
+    private void populateCheckBoxes(View v) {
+        checkBoxes[0] = v.findViewById(R.id.checkBoxNeedHealing);
+        checkBoxes[1] = v.findViewById(R.id.checkBoxNeedWeapon);
+        checkBoxes[2] = v.findViewById(R.id.checkBoxNeedAmmo);
+        checkBoxes[3] = v.findViewById(R.id.checkBoxNeedKey);
+    }
+
+    private void populateAutoCompleteTextViews(View v) {
+        autoCompleteTextViews[0] = v.findViewById(R.id.autoCompleteTextViewHealing);
+        autoCompleteTextViews[1] = v.findViewById(R.id.autoCompleteTextViewWeapon);
+        autoCompleteTextViews[2] = v.findViewById(R.id.autoCompleteTextViewAmmo);
+        autoCompleteTextViews[3] = v.findViewById(R.id.autoCompleteTextViewKey);
+    }
+
+    private void populateArrayAdapters() {
+        arrayAdapters[0] = new ArrayAdapter<>(Objects.requireNonNull(getActivity()),
+                android.R.layout.simple_dropdown_item_1line,
+                items[0]);
+        arrayAdapters[1] = new ArrayAdapter<>(getActivity(),
+                android.R.layout.simple_dropdown_item_1line,
+                items[1]);
+        arrayAdapters[2] = new ArrayAdapter<>(getActivity(),
+                android.R.layout.simple_dropdown_item_1line,
+                items[2]);
+        arrayAdapters[3] = new ArrayAdapter<>(getActivity(),
+                android.R.layout.simple_dropdown_item_1line,
+                items[3]);
+    }
+
     /**
-     * Finds views for the check boxes, sets up their listeners and the adapters for their
-     * autoCompleteTextViews.
+     * Sets up the check boxes' listeners and the adapters for their autoCompleteTextViews.
      */
-    private void setUpCheckBoxes(View v) {
-        setUpHealing(v);
-        setUpWeapon(v);
-        setUpAmmo(v);
-        setUpKey(v);
-    }
+    private void setUpCheckBoxes() {
+        for (int i = 0; i < NUMBER_ITEM_TYPES; i++) {
+            autoCompleteTextViews[i].setAdapter(arrayAdapters[i]);
+            autoCompleteTextViews[i].setThreshold(0);
 
-    private void setUpHealing(View v) {
-        ArrayAdapter<String> healingAdapter = new ArrayAdapter<>(getActivity(),
-                android.R.layout.simple_dropdown_item_1line, itemsHealing);
-
-        textViewHealing = v.findViewById(R.id.autoCompleteTextViewHealing);
-        textViewHealing.setAdapter(healingAdapter);
-        textViewHealing.setThreshold(0);
-
-        checkBoxHealing = v.findViewById(R.id.checkBoxNeedHealing);
-        checkBoxHealing.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                healing = b;
-                checkIfShowAutoCompleteTextView(healing, textViewHealing);
-            }
-        });
-    }
-
-    private void setUpWeapon(View v) {
-        ArrayAdapter<String> weaponAdapter = new ArrayAdapter<>(getActivity(),
-                android.R.layout.simple_dropdown_item_1line, itemsWeapon);
-
-        textViewWeapon = v.findViewById(R.id.autoCompleteTextViewWeapon);
-        textViewWeapon.setAdapter(weaponAdapter);
-        textViewWeapon.setThreshold(0);
-
-        checkBoxWeapon = v.findViewById(R.id.checkBoxNeedWeapon);
-        checkBoxWeapon.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                weapon = b;
-                checkIfShowAutoCompleteTextView(weapon, textViewWeapon);
-            }
-        });
-    }
-
-    private void setUpAmmo(View v) {
-        ArrayAdapter<String> ammoAdapter = new ArrayAdapter<>(getActivity(),
-                android.R.layout.simple_dropdown_item_1line, itemsAmmo);
-
-        textViewAmmo = v.findViewById(R.id.autoCompleteTextViewAmmo);
-        textViewAmmo.setAdapter(ammoAdapter);
-        textViewAmmo.setThreshold(0);
-
-        checkBoxAmmo = v.findViewById(R.id.checkBoxNeedAmmo);
-        checkBoxAmmo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                ammo = b;
-                checkIfShowAutoCompleteTextView(ammo, textViewAmmo);
-            }
-        });
-    }
-
-    private void setUpKey(View v) {
-        ArrayAdapter<String> keyAdapter = new ArrayAdapter<>(getActivity(),
-                android.R.layout.simple_dropdown_item_1line, itemsKey);
-
-        textViewKey = v.findViewById(R.id.autoCompleteTextViewKey);
-        textViewKey.setAdapter(keyAdapter);
-        textViewKey.setThreshold(0);
-
-        checkBoxKey = v.findViewById(R.id.checkBoxNeedKey);
-        checkBoxKey.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                key = b;
-                checkIfShowAutoCompleteTextView(key, textViewKey);
-            }
-        });
+            final int elementIndex = i;
+            checkBoxes[i].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    checkIfShowAutoCompleteTextView(b, autoCompleteTextViews[elementIndex]);
+                }
+            });
+        }
     }
 
     /**
      * Finds the view for the location field and sets up the adapter for the autoCompleteTextView.
      */
     private void setUpLocations(View v) {
-        ArrayAdapter<String> locationAdapter = new ArrayAdapter<>(getActivity(),
+        ArrayAdapter<String> locationAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()),
                 android.R.layout.simple_dropdown_item_1line, locations);
 
         textViewLocation = v.findViewById(R.id.autoCompleteTextViewLocation);
@@ -185,25 +140,27 @@ public class ChangeStatusNeedFragment extends Fragment {
      * Finds views for the buttons and sets them and their listeners.
      */
     private void setUpButtons(View v) {
-        buttonSubmit = v.findViewById(R.id.buttonSubmit);
+        Button buttonSubmit = v.findViewById(R.id.buttonSubmit);
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean[] data = {healing, weapon, ammo, key};
-                String[] selectedItems = {textViewHealing.getText().toString(),
-                textViewWeapon.getText().toString(),
-                textViewAmmo.getText().toString(),
-                textViewKey.getText().toString()};
+                boolean[] data = new boolean[4];
+                String[] selectedItems = new String[4];
+                for (int i = 0; i < NUMBER_ITEM_TYPES; i++) {
+                    data[i] = checkBoxes[i].isChecked();
+                    selectedItems[i] = autoCompleteTextViews[i].getText().toString();
+                }
+
                 String selectedLocation = textViewLocation.getText().toString();
                 passData(data, selectedItems, selectedLocation);
             }
         });
 
-        buttonCancel = v.findViewById(R.id.buttonCancel);
+        Button buttonCancel = v.findViewById(R.id.buttonCancel);
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().finish();
+                Objects.requireNonNull(getActivity()).finish();
             }
         });
     }

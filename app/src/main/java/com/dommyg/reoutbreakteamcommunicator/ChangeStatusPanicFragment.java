@@ -15,15 +15,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import java.util.Objects;
+
 public class ChangeStatusPanicFragment extends Fragment {
     private OnDataPass dataPasser;
 
-    private CheckBox[] checkBoxes = new CheckBox[4];
+    private final int NUMBER_PANIC_TYPES = 4;
+
+    private CheckBox[] checkBoxes = new CheckBox[NUMBER_PANIC_TYPES];
 
     private AutoCompleteTextView textViewLocation;
-
-    private Button buttonCancel;
-    private Button buttonSubmit;
 
     private String[] locations;
 
@@ -31,7 +32,7 @@ public class ChangeStatusPanicFragment extends Fragment {
         void onDataPass(boolean[] data, String location, int resultCode);
     }
 
-    public static ChangeStatusPanicFragment newInstance(String[] locations) {
+    static ChangeStatusPanicFragment newInstance(String[] locations) {
         return new ChangeStatusPanicFragment(locations);
     }
 
@@ -53,7 +54,7 @@ public class ChangeStatusPanicFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_status_panic, container, false);
 
         populateCheckBoxes(v);
-        setUpCheckBoxes(v);
+        setUpCheckBoxes();
         setUpLocations(v);
         setUpButtons(v);
 
@@ -72,9 +73,9 @@ public class ChangeStatusPanicFragment extends Fragment {
     }
 
     /**
-     * Finds views for the check boxes and sets them and their listeners.
+     * Sets up the check boxes' listeners.
      */
-    private void setUpCheckBoxes(View v) {
+    private void setUpCheckBoxes() {
         for (CheckBox checkBox : checkBoxes) {
             checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -89,7 +90,7 @@ public class ChangeStatusPanicFragment extends Fragment {
      * Finds the view for the location field and sets up the adapter for the autoCompleteTextView.
      */
     private void setUpLocations(View v) {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()),
                 android.R.layout.simple_dropdown_item_1line, locations);
 
         textViewLocation = v.findViewById(R.id.autoCompleteTextViewLocation);
@@ -101,7 +102,7 @@ public class ChangeStatusPanicFragment extends Fragment {
      * Finds views for the buttons and sets them and their listeners.
      */
     private void setUpButtons(View v) {
-        buttonSubmit = v.findViewById(R.id.buttonSubmit);
+        Button buttonSubmit = v.findViewById(R.id.buttonSubmit);
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -114,11 +115,11 @@ public class ChangeStatusPanicFragment extends Fragment {
             }
         });
 
-        buttonCancel = v.findViewById(R.id.buttonCancel);
+        Button buttonCancel = v.findViewById(R.id.buttonCancel);
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().finish();
+                Objects.requireNonNull(getActivity()).finish();
             }
         });
     }

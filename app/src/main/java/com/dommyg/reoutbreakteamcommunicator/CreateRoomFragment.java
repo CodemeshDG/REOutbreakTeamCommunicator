@@ -37,7 +37,8 @@ public class CreateRoomFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_create_room, container, false);
 
         setUpRadioGroups(v);
@@ -53,7 +54,8 @@ public class CreateRoomFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // Check if room name and password fields are filled out, else do not create room.
-                if (editTextRoomName.getText().toString().equals("") || editTextPassword.getText().toString().equals("")) {
+                if (editTextRoomName.getText().toString().equals("") ||
+                        editTextPassword.getText().toString().equals("")) {
                     return;
                 }
                 // Check if a scenario and player are selected, else do not create room.
@@ -62,7 +64,8 @@ public class CreateRoomFragment extends Fragment {
                 }
                 roomName = editTextRoomName.getText().toString();
                 password = editTextPassword.getText().toString();
-                Intent intent = ControlPanelActivity.newIntent(getContext(), selectedPlayer, selectedScenario, roomName, password);
+                Intent intent = ControlPanelActivity.newIntent(getContext(), selectedPlayer,
+                        selectedScenario, roomName, password);
                 startActivity(intent);
             }
         });

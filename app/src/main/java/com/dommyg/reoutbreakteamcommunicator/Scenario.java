@@ -40,33 +40,33 @@ class Scenario {
     private String[] itemsAmmo;
     private String[] itemsKey;
 
-    public Scenario(ScenarioName scenarioName, Resources resources) {
+    Scenario(ScenarioName scenarioName, Resources resources) {
         this.scenarioName = scenarioName;
         loadLocations(scenarioName.getLevel(), resources);
         loadItems(scenarioName.getLevel(), resources);
     }
 
-    public int getScenarioName() {
+    int getScenarioName() {
         return scenarioName.getName();
     }
 
-    public String[] getLocations() {
+    String[] getLocations() {
         return locations;
     }
 
-    public String[] getItemsHealing() {
+    String[] getItemsHealing() {
         return itemsHealing;
     }
 
-    public String[] getItemsWeapon() {
+    String[] getItemsWeapon() {
         return itemsWeapon;
     }
 
-    public String[] getItemsAmmo() {
+    String[] getItemsAmmo() {
         return itemsAmmo;
     }
 
-    public String[] getItemsKey() {
+    String[] getItemsKey() {
         return itemsKey;
     }
 
