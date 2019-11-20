@@ -10,7 +10,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,23 +18,8 @@ import androidx.fragment.app.Fragment;
 public class ChangeStatusDeadFragment extends Fragment {
     private OnDataPass dataPasser;
 
-//    private CheckBox checkBoxItem1;
-//    private CheckBox checkBoxItem2;
-//    private CheckBox checkBoxItem3;
-//    private CheckBox checkBoxItem4;
-//    private CheckBox checkBoxItem5;
-//    private CheckBox checkBoxItem6;
-//    private CheckBox checkBoxItem7;
-//    private CheckBox checkBoxItem8;
-//
-    private AutoCompleteTextView textViewItem1;
-    private AutoCompleteTextView textViewItem2;
-    private AutoCompleteTextView textViewItem3;
-    private AutoCompleteTextView textViewItem4;
-    private AutoCompleteTextView textViewItem5;
-    private AutoCompleteTextView textViewItem6;
-    private AutoCompleteTextView textViewItem7;
-    private AutoCompleteTextView textViewItem8;
+    private CheckBox[] checkBoxes = new CheckBox[8];
+    private AutoCompleteTextView[] autoCompleteTextViews = new AutoCompleteTextView[8];
     private AutoCompleteTextView textViewLocation;
 
     private Button buttonCancel;
@@ -43,15 +27,6 @@ public class ChangeStatusDeadFragment extends Fragment {
 
     private String[] locations;
     private String[] itemsAll;
-
-//    private boolean item1;
-//    private boolean item2;
-//    private boolean item3;
-//    private boolean item4;
-//    private boolean item5;
-//    private boolean item6;
-//    private boolean item7;
-//    private boolean item8;
 
     private boolean isYoko;
 
@@ -86,6 +61,8 @@ public class ChangeStatusDeadFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_status_dead, container, false);
 
+        populateCheckBoxes(v);
+        populateAutoCompleteTextViews(v);
         setUpCheckBoxes(v);
         setUpLocations(v);
         setUpButtons(v);
@@ -97,148 +74,53 @@ public class ChangeStatusDeadFragment extends Fragment {
         dataPasser.onDataPass(data, selectedItems, selectedLocation, StatusType.DEAD.getType());
     }
 
+    private void populateCheckBoxes(View v) {
+        checkBoxes[0] = v.findViewById(R.id.checkBoxDeadItem1);
+        checkBoxes[1] = v.findViewById(R.id.checkBoxDeadItem2);
+        checkBoxes[2] = v.findViewById(R.id.checkBoxDeadItem3);
+        checkBoxes[3] = v.findViewById(R.id.checkBoxDeadItem4);
+        checkBoxes[4] = v.findViewById(R.id.checkBoxDeadItem5);
+        checkBoxes[5] = v.findViewById(R.id.checkBoxDeadItem6);
+        checkBoxes[6] = v.findViewById(R.id.checkBoxDeadItem7);
+        checkBoxes[7] = v.findViewById(R.id.checkBoxDeadItem8);
+    }
+
+    private void populateAutoCompleteTextViews(View v) {
+        autoCompleteTextViews[0] = v.findViewById(R.id.autoCompleteTextViewItem1);
+        autoCompleteTextViews[1] = v.findViewById(R.id.autoCompleteTextViewItem2);
+        autoCompleteTextViews[2] = v.findViewById(R.id.autoCompleteTextViewItem3);
+        autoCompleteTextViews[3] = v.findViewById(R.id.autoCompleteTextViewItem4);
+        autoCompleteTextViews[4] = v.findViewById(R.id.autoCompleteTextViewItem5);
+        autoCompleteTextViews[5] = v.findViewById(R.id.autoCompleteTextViewItem6);
+        autoCompleteTextViews[6] = v.findViewById(R.id.autoCompleteTextViewItem7);
+        autoCompleteTextViews[7] = v.findViewById(R.id.autoCompleteTextViewItem8);
+    }
+
+
     /**
      * Finds views for the check boxes, sets up their listeners and the adapters for their
      * autoCompleteTextViews.
      */
     private void setUpCheckBoxes(View v) {
-        textViewItem1 = setUpCheckBox(
-                v, R.id.autoCompleteTextViewItem1, R.id.checkBoxDeadItem1, 1);
-        textViewItem2 = setUpCheckBox(
-                v, R.id.autoCompleteTextViewItem2, R.id.checkBoxDeadItem2, 2);
-        textViewItem3 = setUpCheckBox(
-                v, R.id.autoCompleteTextViewItem3, R.id.checkBoxDeadItem3, 3);
-        textViewItem4 = setUpCheckBox(
-                v, R.id.autoCompleteTextViewItem4, R.id.checkBoxDeadItem4, 4);
-        textViewItem5 = setUpCheckBox(
-                v, R.id.autoCompleteTextViewItem5, R.id.checkBoxDeadItem5, 5);
-        textViewItem6 = setUpCheckBox(
-                v, R.id.autoCompleteTextViewItem6, R.id.checkBoxDeadItem6, 6);
-        textViewItem7 = setUpCheckBox(
-                v, R.id.autoCompleteTextViewItem7, R.id.checkBoxDeadItem7, 7);
-        textViewItem8 = setUpCheckBox(
-                v, R.id.autoCompleteTextViewItem8, R.id.checkBoxDeadItem8, 8);
-
-//        ArrayAdapter<String> item1Adapter = new ArrayAdapter<>(getActivity(),
-//                android.R.layout.simple_dropdown_item_1line, itemsAll);
-//
-//        textViewItem1 = v.findViewById(R.id.autoCompleteTextViewItem1);
-//        textViewItem1.setAdapter(item1Adapter);
-//        textViewItem1.setThreshold(0);
-//
-//        checkBoxItem1 = v.findViewById(R.id.checkBoxDeadItem1);
-//        checkBoxItem1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-//                item1 = b;
-//                checkIfShowAutoCompleteTextView(item1, textViewItem1);
-//            }
-//        });
-//
-//        textViewItem2 = v.findViewById(R.id.autoCompleteTextViewItem2);
-//        checkBoxItem2 = v.findViewById(R.id.checkBoxDeadItem2);
-//        checkBoxItem2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-//                item2 = b;
-//                checkIfShowAutoCompleteTextView(item2, textViewItem2);
-//            }
-//        });
-//
-//        textViewItem3 = v.findViewById(R.id.autoCompleteTextViewItem3);
-//        checkBoxItem3 = v.findViewById(R.id.checkBoxDeadItem3);
-//        checkBoxItem3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-//                item3 = b;
-//                checkIfShowAutoCompleteTextView(item3, textViewItem3);
-//            }
-//        });
-//
-//        textViewItem4 = v.findViewById(R.id.autoCompleteTextViewItem4);
-//        checkBoxItem4 = v.findViewById(R.id.checkBoxDeadItem4);
-//        checkBoxItem4.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-//                item4 = b;
-//                checkIfShowAutoCompleteTextView(item4, textViewItem4);
-//            }
-//        });
-//
-//        textViewItem5 = v.findViewById(R.id.autoCompleteTextViewItem5);
-//        checkBoxItem5 = v.findViewById(R.id.checkBoxDeadItem5);
-//        if (isYoko) {
-//            checkBoxItem5.setVisibility(View.VISIBLE);
-//        }
-//        checkBoxItem5.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-//                item5 = b;
-//                checkIfShowAutoCompleteTextView(item5, textViewItem5);
-//            }
-//        });
-//
-//        textViewItem6 = v.findViewById(R.id.autoCompleteTextViewItem6);
-//        checkBoxItem6 = v.findViewById(R.id.checkBoxDeadItem6);
-//        if (isYoko) {
-//            checkBoxItem6.setVisibility(View.VISIBLE);
-//        }
-//        checkBoxItem6.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-//                item6 = b;
-//                checkIfShowAutoCompleteTextView(item6, textViewItem6);
-//            }
-//        });
-//
-//        textViewItem7 = v.findViewById(R.id.autoCompleteTextViewItem7);
-//        checkBoxItem7 = v.findViewById(R.id.checkBoxDeadItem7);
-//        if (isYoko) {
-//            checkBoxItem7.setVisibility(View.VISIBLE);
-//        }
-//        checkBoxItem7.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-//                item7 = b;
-//                checkIfShowAutoCompleteTextView(item7, textViewItem7);
-//            }
-//        });
-//
-//        textViewItem8 = v.findViewById(R.id.autoCompleteTextViewItem8);
-//        checkBoxItem8 = v.findViewById(R.id.checkBoxDeadItem8);
-//        if (isYoko) {
-//            checkBoxItem8.setVisibility(View.VISIBLE);
-//        }
-//        checkBoxItem8.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-//                item8 = b;
-//                checkIfShowAutoCompleteTextView(item8, textViewItem8);
-//            }
-//        });
-    }
-
-    private AutoCompleteTextView setUpCheckBox(View v, int autoCompleteID, int checkBoxID, int checkBoxNumber) {
-        @SuppressWarnings("ConstantConditions")
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
+        ArrayAdapter<String> itemAdapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_dropdown_item_1line, itemsAll);
 
-        final AutoCompleteTextView autoCompleteTextView = v.findViewById(autoCompleteID);
-        autoCompleteTextView.setAdapter(adapter);
-        autoCompleteTextView.setThreshold(0);
+        for (int i = 0; i < checkBoxes.length && i < autoCompleteTextViews.length; i++) {
+            autoCompleteTextViews[i].setAdapter(itemAdapter);
+            autoCompleteTextViews[i].setThreshold(0);
 
-        CheckBox checkBox = v.findViewById(checkBoxID);
-        if (checkBoxNumber > 4 && isYoko) {
-            checkBox.setVisibility(View.VISIBLE);
-        }
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                checkIfShowAutoCompleteTextView(b, autoCompleteTextView);
+            if (i > 3 && isYoko) {
+                autoCompleteTextViews[i].setVisibility(View.VISIBLE);
             }
-        });
 
-        return autoCompleteTextView;
+            final int elementIndex = i;
+            checkBoxes[i].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    checkIfShowAutoCompleteTextView(b, autoCompleteTextViews[elementIndex]);
+                }
+            });
+        }
     }
 
     /**
@@ -261,15 +143,15 @@ public class ChangeStatusDeadFragment extends Fragment {
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean[] data = {item1, item2, item3, item4, item5, item6, item7, item8};
-                String[] selectedItems = {textViewItem1.getText().toString(),
-                textViewItem2.getText().toString(),
-                textViewItem3.getText().toString(),
-                textViewItem4.getText().toString(),
-                textViewItem5.getText().toString(),
-                textViewItem6.getText().toString(),
-                textViewItem7.getText().toString(),
-                textViewItem8.getText().toString()};
+                boolean[] data = new boolean[8];
+                for (int i = 0; i < data.length; i++) {
+                    data[i] = checkBoxes[i].isChecked();
+                }
+
+                String[] selectedItems = new String[8];
+                for (int i = 0; i < selectedItems.length; i++) {
+                    selectedItems[i] = autoCompleteTextViews[i].getText().toString();
+                }
                 String selectedLocation = textViewLocation.getText().toString();
                 passData(data, selectedItems, selectedLocation);
             }
