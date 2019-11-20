@@ -18,10 +18,7 @@ import androidx.fragment.app.Fragment;
 public class ChangeStatusPanicFragment extends Fragment {
     private OnDataPass dataPasser;
 
-    private CheckBox checkBoxDowned;
-    private CheckBox checkBoxDanger;
-    private CheckBox checkBoxViral;
-    private CheckBox checkBoxTrapped;
+    private CheckBox[] checkBoxes = new CheckBox[4];
 
     private AutoCompleteTextView textViewLocation;
 
@@ -29,11 +26,6 @@ public class ChangeStatusPanicFragment extends Fragment {
     private Button buttonSubmit;
 
     private String[] locations;
-
-    private boolean downed;
-    private boolean danger;
-    private boolean viral;
-    private boolean trapped;
 
     public interface OnDataPass {
         void onDataPass(boolean[] data, String location, int resultCode);
@@ -60,6 +52,7 @@ public class ChangeStatusPanicFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_status_panic, container, false);
 
+        populateCheckBoxes(v);
         setUpCheckBoxes(v);
         setUpLocations(v);
         setUpButtons(v);
@@ -71,41 +64,25 @@ public class ChangeStatusPanicFragment extends Fragment {
         dataPasser.onDataPass(data, selectedLocation, StatusType.PANIC.getType());
     }
 
+    private void populateCheckBoxes(View v) {
+        checkBoxes[0] = v.findViewById(R.id.checkBoxPanicDowned);
+        checkBoxes[1] = v.findViewById(R.id.checkBoxPanicDanger);
+        checkBoxes[2] = v.findViewById(R.id.checkBoxPanicViralLoad);
+        checkBoxes[3] = v.findViewById(R.id.checkBoxPanicTrapped);
+    }
+
     /**
      * Finds views for the check boxes and sets them and their listeners.
      */
     private void setUpCheckBoxes(View v) {
-        checkBoxDowned = v.findViewById(R.id.checkBoxPanicDowned);
-        checkBoxDowned.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                downed = b;
-            }
-        });
+        for (CheckBox checkBox : checkBoxes) {
+            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
-        checkBoxDanger = v.findViewById(R.id.checkBoxPanicDanger);
-        checkBoxDanger.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                danger = b;
-            }
-        });
-
-        checkBoxViral = v.findViewById(R.id.checkBoxPanicViralLoad);
-        checkBoxViral.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                viral = b;
-            }
-        });
-
-        checkBoxTrapped = v.findViewById(R.id.checkBoxPanicTrapped);
-        checkBoxTrapped.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                trapped = b;
-            }
-        });
+                }
+            });
+        }
     }
 
     /**
@@ -128,7 +105,10 @@ public class ChangeStatusPanicFragment extends Fragment {
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean[] data = {downed, danger, viral, trapped};
+                boolean[] data = new boolean[4];
+                for (int i = 0; i < data.length; i++) {
+                    data[i] = checkBoxes[i].isChecked();
+                }
                 String selectedLocation = textViewLocation.getText().toString();
                 passData(data, selectedLocation);
             }

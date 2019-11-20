@@ -110,7 +110,7 @@ public class ChangeStatusDeadFragment extends Fragment {
             autoCompleteTextViews[i].setThreshold(0);
 
             if (i > 3 && isYoko) {
-                autoCompleteTextViews[i].setVisibility(View.VISIBLE);
+                checkBoxes[i].setVisibility(View.VISIBLE);
             }
 
             final int elementIndex = i;
