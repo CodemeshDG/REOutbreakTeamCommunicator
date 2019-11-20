@@ -39,11 +39,13 @@ class Scenario {
     private String[] itemsWeapon;
     private String[] itemsAmmo;
     private String[] itemsKey;
+    private TaskMaster taskMaster;
 
     Scenario(ScenarioName scenarioName, Resources resources) {
         this.scenarioName = scenarioName;
         loadLocations(scenarioName.getLevel(), resources);
         loadItems(scenarioName.getLevel(), resources);
+        taskMaster = new TaskMaster(scenarioName, resources);
     }
 
     int getScenarioName() {
@@ -68,6 +70,10 @@ class Scenario {
 
     String[] getItemsKey() {
         return itemsKey;
+    }
+
+    TaskMaster getTaskMaster() {
+        return taskMaster;
     }
 
     private void loadLocations(int scenario, Resources resources) {
