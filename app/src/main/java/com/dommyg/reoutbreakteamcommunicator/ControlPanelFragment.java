@@ -11,18 +11,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 public class ControlPanelFragment extends Fragment {
     private static final String TAG = "ControlPanelFragment";
+
+    private RecyclerView recyclerViewTasks;
+    private TaskAdapter taskAdapter;
+    private RecyclerView.LayoutManager recyclerViewLayoutManager;
+    private ArrayList<TaskItem> recyclerViewTaskNames = new ArrayList<>();
 
     private Room room;
     private Player myCharacter;
@@ -30,6 +40,8 @@ public class ControlPanelFragment extends Fragment {
     private TextView textViewRoomName;
     private TextView textViewCharacterName;
     private TextView textViewScenarioName;
+    private TextView textViewTaskSetName;
+    private int currentTaskSetToDisplay = 0;
 
     private TextView textViewPlayer3Status;
     private TextView textViewPlayer3SubStatus;
@@ -40,6 +52,8 @@ public class ControlPanelFragment extends Fragment {
     private Button buttonStatusPanic;
     private Button buttonStatusNeed;
     private Button buttonStatusDead;
+    private ImageButton buttonNextTaskSet;
+    private ImageButton buttonPreviousTaskSet;
 
     static ControlPanelFragment newInstance(int selectedPlayer, int selectedScenario, String roomName,
                                             String password, Resources resources) {
@@ -62,6 +76,7 @@ public class ControlPanelFragment extends Fragment {
         setUpRoom(v);
         setUpTeammates(v);
         setUpStatusButtons(v);
+        setUpTaskElements(v);
 
         // TODO: Remove in final version.
         setUpTestingCharacter(v);
@@ -319,6 +334,114 @@ public class ControlPanelFragment extends Fragment {
                 startActivityForResult(intent, statusType);
             }
         });
+    }
+
+    /**
+     * Sets up all elements related to displaying the scenario's tasks, including the buttons and
+     * recyclerView.
+     */
+    private void setUpTaskElements(View v) {
+        setUpTaskSetName(v);
+        setUpTaskSetButtons(v);
+        setUpTaskSetRecyclerView(v);
+    }
+
+    /**
+     * Finds views for the two task set buttons and sets them and their listeners.
+     */
+    private void setUpTaskSetButtons(View v) {
+        buttonNextTaskSet = v.findViewById(R.id.buttonNextTaskSet);
+        buttonNextTaskSet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateTaskSet(true);
+            }
+        });
+
+        buttonPreviousTaskSet = v.findViewById(R.id.buttonPreviousTaskSet);
+        buttonPreviousTaskSet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateTaskSet(false);
+            }
+        });
+    }
+
+    /**
+     * Finds and sets the view for the task set name and updates its contents.
+     */
+    private void setUpTaskSetName(View v) {
+        textViewTaskSetName = v.findViewById(R.id.textViewTaskSetName);
+        textViewTaskSetName.setText(room.getScenario()
+                .getTaskMaster()
+                .getTaskSets()
+                [0]
+                .getName());
+    }
+
+    /**
+     * Changes the currently displayed TaskSet.
+     * @param isNavigatingForward True if the user is going to the next TaskSet (false if going to
+     *                            previous one).
+     */
+    private void updateTaskSet(boolean isNavigatingForward) {
+        if (isNavigatingForward) {
+            if (currentTaskSetToDisplay == room.getScenario()
+                    .getTaskMaster()
+                    .getTaskSets()
+                    .length - 1) {
+                currentTaskSetToDisplay = 0;
+            } else {
+                currentTaskSetToDisplay++;
+            }
+        } else {
+            if (currentTaskSetToDisplay == 0) {
+                currentTaskSetToDisplay = room.getScenario()
+                        .getTaskMaster()
+                        .getTaskSets()
+                        .length - 1;
+            } else {
+                currentTaskSetToDisplay--;
+            }
+        }
+
+        textViewTaskSetName.setText(room.getScenario()
+                .getTaskMaster()
+                .getTaskSets()
+                [currentTaskSetToDisplay]
+                .getName());
+
+        for (int i = recyclerViewTaskNames.size() - 1; recyclerViewTaskNames.size() != 0; i--) {
+            recyclerViewTaskNames.remove(i);
+        }
+
+        addToTaskSet();
+        taskAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Adds TaskItems to recyclerViewTaskNames from Room's TaskMaster based upon currentTaskSetToDisplay.
+     */
+    private void addToTaskSet() {
+        TaskSet temp = room.getScenario()
+                .getTaskMaster()
+                .getTaskSets()
+                [currentTaskSetToDisplay];
+        for (int i = 0; i < temp.getTasks().length; i++) {
+            recyclerViewTaskNames.add(new TaskItem(temp.getTasks()[i], null));
+        }
+    }
+
+    private void setUpTaskSetRecyclerView(View v) {
+        addToTaskSet();
+
+        recyclerViewTasks = v.findViewById(R.id.recyclerViewTasks);
+        recyclerViewTasks.setNestedScrollingEnabled(false);
+        recyclerViewLayoutManager = new LinearLayoutManager(getContext());
+        taskAdapter = new TaskAdapter(recyclerViewTaskNames);
+
+        recyclerViewTasks.setLayoutManager(recyclerViewLayoutManager);
+        recyclerViewTasks.setAdapter(taskAdapter);
     }
 
     /**

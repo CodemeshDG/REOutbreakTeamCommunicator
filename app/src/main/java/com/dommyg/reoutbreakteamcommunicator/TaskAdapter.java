@@ -47,8 +47,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         TaskItem currentItem = taskItemList.get(position);
 
-        holder.textViewTaskName.setText(currentItem.getTextViewTaskName().toString());
-        holder.textViewTaskStatus.setText(currentItem.getTextViewTaskStatus().toString());
+        holder.textViewTaskName.setText(currentItem.getTaskName());
+        holder.textViewTaskStatus.setText(currentItem.getTaskStatus());
     }
 
     @Override

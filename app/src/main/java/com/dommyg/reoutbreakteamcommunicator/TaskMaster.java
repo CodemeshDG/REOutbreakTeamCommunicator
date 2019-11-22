@@ -5,7 +5,7 @@ import android.content.res.Resources;
 class TaskMaster {
     private TaskSet[] taskSets;
 
-    public TaskMaster(ScenarioName scenarioName, Resources resources) {
+    TaskMaster(ScenarioName scenarioName, Resources resources) {
         switch (scenarioName) {
             case OUTBREAK:
                 initializeScenario1Tasks(resources);
@@ -29,7 +29,7 @@ class TaskMaster {
         }
     }
 
-    public TaskSet[] getTaskSets() {
+    TaskSet[] getTaskSets() {
         return taskSets;
     }
 
