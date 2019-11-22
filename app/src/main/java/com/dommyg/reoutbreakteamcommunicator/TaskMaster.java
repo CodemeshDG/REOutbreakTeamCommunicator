@@ -33,6 +33,10 @@ class TaskMaster {
         return taskSets;
     }
 
+    public int getTaskSetsSize() {
+        return taskSets.length;
+    }
+
     private void initializeScenario1Tasks(Resources resources) {
         taskSets = new TaskSet[3];
 
@@ -146,5 +150,9 @@ class TaskSet {
 
     public String[] getTasks() {
         return tasks;
+    }
+
+    public int getTasksSize() {
+        return tasks.length;
     }
 }

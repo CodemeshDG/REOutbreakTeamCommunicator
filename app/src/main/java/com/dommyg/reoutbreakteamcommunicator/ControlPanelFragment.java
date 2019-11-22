@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -62,8 +61,8 @@ public class ControlPanelFragment extends Fragment {
 
     private ControlPanelFragment(int selectedPlayer, int selectedScenario, String roomName,
                                  String password, Resources resources) {
-        this.room = new Room(initializeCharacter(selectedPlayer), initializeScenario(selectedScenario,
-                resources), roomName, password);
+        Scenario scenario = initializeScenario(selectedScenario, resources);
+        this.room = new Room(initializeCharacter(selectedPlayer, scenario), scenario, roomName, password);
         this.myCharacter = room.getPlayer1();
     }
 
@@ -253,24 +252,24 @@ public class ControlPanelFragment extends Fragment {
      * @param selectedPlayer Selection made by the user with CreateRoomFragment's character radio
      *                       group.
      */
-    private Player initializeCharacter(int selectedPlayer) {
+    private Player initializeCharacter(int selectedPlayer, Scenario scenario) {
         switch (selectedPlayer) {
             case R.id.radioButtonCharacter1:
-                return new Player(Character.ALYSSA);
+                return new Player(Character.ALYSSA, scenario.getTaskMaster());
             case R.id.radioButtonCharacter2:
-                return new Player(Character.CINDY);
+                return new Player(Character.CINDY, scenario.getTaskMaster());
             case R.id.radioButtonCharacter3:
-                return new Player(Character.DAVID);
+                return new Player(Character.DAVID, scenario.getTaskMaster());
             case R.id.radioButtonCharacter4:
-                return new Player(Character.GEORGE);
+                return new Player(Character.GEORGE, scenario.getTaskMaster());
             case R.id.radioButtonCharacter5:
-                return new Player(Character.JIM);
+                return new Player(Character.JIM, scenario.getTaskMaster());
             case R.id.radioButtonCharacter6:
-                return new Player(Character.KEVIN);
+                return new Player(Character.KEVIN, scenario.getTaskMaster());
             case R.id.radioButtonCharacter7:
-                return new Player(Character.MARK);
+                return new Player(Character.MARK, scenario.getTaskMaster());
             case R.id.radioButtonCharacter8:
-                return new Player(Character.YOKO);
+                return new Player(Character.YOKO, scenario.getTaskMaster());
             default:
                 return null;
         }
@@ -388,8 +387,7 @@ public class ControlPanelFragment extends Fragment {
         if (isNavigatingForward) {
             if (currentTaskSetToDisplay == room.getScenario()
                     .getTaskMaster()
-                    .getTaskSets()
-                    .length - 1) {
+                    .getTaskSetsSize() - 1) {
                 currentTaskSetToDisplay = 0;
             } else {
                 currentTaskSetToDisplay++;
@@ -398,8 +396,7 @@ public class ControlPanelFragment extends Fragment {
             if (currentTaskSetToDisplay == 0) {
                 currentTaskSetToDisplay = room.getScenario()
                         .getTaskMaster()
-                        .getTaskSets()
-                        .length - 1;
+                        .getTaskSetsSize() - 1;
             } else {
                 currentTaskSetToDisplay--;
             }
@@ -427,7 +424,7 @@ public class ControlPanelFragment extends Fragment {
                 .getTaskMaster()
                 .getTaskSets()
                 [currentTaskSetToDisplay];
-        for (int i = 0; i < temp.getTasks().length; i++) {
+        for (int i = 0; i < temp.getTasksSize(); i++) {
             recyclerViewTaskNames.add(new TaskItem(temp.getTasks()[i], null));
         }
     }
