@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,11 @@ import java.util.ArrayList;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
     private ArrayList<TaskItem> taskItemList;
+    private ControlPanelFragment controlPanelFragment;
+
+    private final int CHECK_BOX_PLAN = 0;
+    private final int CHECK_BOX_IN_PROGRESS = 1;
+    private final int CHECK_BOX_COMPLETE = 2;
 
     static class TaskViewHolder extends RecyclerView.ViewHolder {
         CheckBox checkBoxPlan;
@@ -31,7 +37,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         }
     }
 
-    public TaskAdapter(ArrayList<TaskItem> taskItemList) {
+    TaskAdapter(ControlPanelFragment controlPanelFragment, ArrayList<TaskItem> taskItemList) {
+        this.controlPanelFragment = controlPanelFragment;
         this.taskItemList = taskItemList;
     }
 
@@ -44,15 +51,56 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TaskViewHolder holder, final int position) {
         TaskItem currentItem = taskItemList.get(position);
 
         holder.textViewTaskName.setText(currentItem.getTaskName());
         holder.textViewTaskStatus.setText(currentItem.getTaskStatus());
+        holder.checkBoxPlan.setChecked(updateCheckBoxFromPlayerTaskProgress(position, CHECK_BOX_PLAN));
+        holder.checkBoxInProgress.setChecked(updateCheckBoxFromPlayerTaskProgress(position, CHECK_BOX_IN_PROGRESS));
+        holder.checkBoxComplete.setChecked(updateCheckBoxFromPlayerTaskProgress(position, CHECK_BOX_COMPLETE));
+
+        holder.checkBoxPlan.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                updatePlayerTaskProgress(position, CHECK_BOX_PLAN, b);
+            }
+        });
+        holder.checkBoxInProgress.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                updatePlayerTaskProgress(position, CHECK_BOX_IN_PROGRESS, b);
+            }
+        });
+        holder.checkBoxComplete.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                updatePlayerTaskProgress(position, CHECK_BOX_COMPLETE, b);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return taskItemList.size();
+    }
+
+    private boolean updateCheckBoxFromPlayerTaskProgress(int position, int checkBox) {
+        return controlPanelFragment.getRoom()
+                .getPlayer1()
+                .getTaskProgress()
+                [controlPanelFragment.getCurrentTaskSetToDisplay()]
+                [position]
+                [checkBox];
+    }
+
+    private void updatePlayerTaskProgress(int position, int checkBox, boolean isChecked) {
+        controlPanelFragment.getRoom()
+                .getPlayer1()
+                .setTaskProgress(
+                        controlPanelFragment.getCurrentTaskSetToDisplay(),
+                        position,
+                        checkBox,
+                        isChecked);
     }
 }

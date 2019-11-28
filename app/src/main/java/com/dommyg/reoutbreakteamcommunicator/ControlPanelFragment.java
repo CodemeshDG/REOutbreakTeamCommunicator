@@ -435,7 +435,7 @@ public class ControlPanelFragment extends Fragment {
         recyclerViewTasks = v.findViewById(R.id.recyclerViewTasks);
         recyclerViewTasks.setNestedScrollingEnabled(false);
         recyclerViewLayoutManager = new LinearLayoutManager(getContext());
-        taskAdapter = new TaskAdapter(recyclerViewTaskNames);
+        taskAdapter = new TaskAdapter(this, recyclerViewTaskNames);
 
         recyclerViewTasks.setLayoutManager(recyclerViewLayoutManager);
         recyclerViewTasks.setAdapter(taskAdapter);
@@ -502,5 +502,13 @@ public class ControlPanelFragment extends Fragment {
 
         return ChangeStatusActivity.newIntent(getContext(), statusType, locations,
                 itemsHealing, itemsWeapon, itemsAmmo, itemsKey, isYoko);
+    }
+
+    Room getRoom() {
+        return room;
+    }
+
+    int getCurrentTaskSetToDisplay() {
+        return currentTaskSetToDisplay;
     }
 }

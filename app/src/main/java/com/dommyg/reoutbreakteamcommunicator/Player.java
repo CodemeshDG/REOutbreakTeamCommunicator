@@ -37,7 +37,7 @@ enum Character {
 class Player {
     private Status status;
     private Character character;
-    private boolean[][] taskProgress;
+    private boolean[][][] taskProgress;
 
     Player(Character character, TaskMaster taskMaster) {
         this.character = character;
@@ -47,11 +47,11 @@ class Player {
 
     private void initializeTaskProgress(TaskMaster taskMaster) {
         int taskSetsSize = taskMaster.getTaskSetsSize();
-        taskProgress = new boolean[taskSetsSize][];
+        taskProgress = new boolean[taskSetsSize][][];
 
         for (int i = 0; i < taskSetsSize; i++) {
             int tasksSize = taskMaster.getTaskSets()[i].getTasksSize();
-            taskProgress[i] = new boolean[tasksSize];
+            taskProgress[i] = new boolean[tasksSize][3];
         }
     }
 
@@ -67,7 +67,11 @@ class Player {
         return character.getHeadshotPath();
     }
 
-    boolean[][] getTaskProgress() {
+    boolean[][][] getTaskProgress() {
         return taskProgress;
+    }
+
+    void setTaskProgress(int taskSet, int task, int checkBox, boolean isChecked) {
+        this.taskProgress[taskSet][task][checkBox] = isChecked;
     }
 }
