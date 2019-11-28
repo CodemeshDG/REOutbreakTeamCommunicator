@@ -55,7 +55,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         TaskItem currentItem = taskItemList.get(position);
 
         holder.textViewTaskName.setText(currentItem.getTaskName());
-        holder.textViewTaskStatus.setText(currentItem.getTaskStatus());
+        holder.textViewTaskStatus.setText(updateTaskStatus(position));
         holder.checkBoxPlan.setChecked(updateCheckBoxFromPlayerTaskProgress(position, CHECK_BOX_PLAN));
         holder.checkBoxInProgress.setChecked(updateCheckBoxFromPlayerTaskProgress(position, CHECK_BOX_IN_PROGRESS));
         holder.checkBoxComplete.setChecked(updateCheckBoxFromPlayerTaskProgress(position, CHECK_BOX_COMPLETE));
@@ -70,6 +70,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                     updatePlayerTaskProgress(position, CHECK_BOX_COMPLETE, false);
                 }
                 updatePlayerTaskProgress(position, CHECK_BOX_PLAN, b);
+                holder.textViewTaskStatus.setText(updateTaskStatus(position));
             }
         });
         holder.checkBoxInProgress.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -82,6 +83,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                     updatePlayerTaskProgress(position, CHECK_BOX_COMPLETE, false);
                 }
                 updatePlayerTaskProgress(position, CHECK_BOX_IN_PROGRESS, b);
+                holder.textViewTaskStatus.setText(updateTaskStatus(position));
             }
         });
         holder.checkBoxComplete.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -94,6 +96,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                     updatePlayerTaskProgress(position, CHECK_BOX_IN_PROGRESS, false);
                 }
                 updatePlayerTaskProgress(position, CHECK_BOX_COMPLETE, b);
+                holder.textViewTaskStatus.setText(updateTaskStatus(position));
             }
         });
     }
@@ -120,5 +123,193 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                         position,
                         checkBox,
                         isChecked);
+    }
+
+    private String updateTaskStatus(int position) {
+        StringBuilder stringBuilder = new StringBuilder();
+        boolean flag = false;
+        boolean[] teamTaskProgress = new boolean[4];
+        String[] teamNames = new String[4];
+
+        teamNames[0] = controlPanelFragment.getResources()
+                .getString(controlPanelFragment.getRoom()
+                        .getPlayer1()
+                        .getCharacterName());
+        if (controlPanelFragment.getRoom().getPlayer2() != null) {
+            teamNames[1] = controlPanelFragment.getResources()
+                    .getString(controlPanelFragment.getRoom()
+                            .getPlayer2()
+                            .getCharacterName());
+        }
+
+        if (controlPanelFragment.getRoom().getPlayer3() != null) {
+            teamNames[2] = controlPanelFragment.getResources()
+                    .getString(controlPanelFragment.getRoom()
+                            .getPlayer3()
+                            .getCharacterName());
+        }
+
+        if (controlPanelFragment.getRoom().getPlayer4() != null) {
+            teamNames[3] = controlPanelFragment.getResources()
+                    .getString(controlPanelFragment.getRoom()
+                            .getPlayer4()
+                            .getCharacterName());
+        }
+
+        teamTaskProgress[0] = controlPanelFragment.getRoom()
+                .getPlayer1()
+                .getTaskProgress()
+                [controlPanelFragment.getCurrentTaskSetToDisplay()]
+                [position]
+                [CHECK_BOX_COMPLETE];
+
+        if (controlPanelFragment.getRoom().getPlayer2() != null) {
+            teamTaskProgress[1] = controlPanelFragment.getRoom()
+                    .getPlayer2()
+                    .getTaskProgress()
+                    [controlPanelFragment.getCurrentTaskSetToDisplay()]
+                    [position]
+                    [CHECK_BOX_COMPLETE];
+        }
+
+        if (controlPanelFragment.getRoom().getPlayer3() != null) {
+            teamTaskProgress[2] = controlPanelFragment.getRoom()
+                    .getPlayer3()
+                    .getTaskProgress()
+                    [controlPanelFragment.getCurrentTaskSetToDisplay()]
+                    [position]
+                    [CHECK_BOX_COMPLETE];
+        }
+
+        if (controlPanelFragment.getRoom().getPlayer4() != null) {
+            teamTaskProgress[3] = controlPanelFragment.getRoom()
+                    .getPlayer4()
+                    .getTaskProgress()
+                    [controlPanelFragment.getCurrentTaskSetToDisplay()]
+                    [position]
+                    [CHECK_BOX_COMPLETE];
+        }
+
+        for (int i = 0; i < teamTaskProgress.length; i++) {
+            if (teamTaskProgress[i] && !flag) {
+                stringBuilder.append(controlPanelFragment.getResources()
+                        .getString(R.string.task_status_complete))
+                        .append(" ")
+                        .append(teamNames[i]);
+                flag = true;
+            } else if (teamTaskProgress[i]) {
+                stringBuilder.append(" ")
+                        .append(teamNames[i]);
+            }
+        }
+
+        if (flag) {
+            return stringBuilder.toString();
+        }
+
+        teamTaskProgress[0] = controlPanelFragment.getRoom()
+                .getPlayer1()
+                .getTaskProgress()
+                [controlPanelFragment.getCurrentTaskSetToDisplay()]
+                [position]
+                [CHECK_BOX_IN_PROGRESS];
+
+        if (controlPanelFragment.getRoom().getPlayer2() != null) {
+            teamTaskProgress[1] = controlPanelFragment.getRoom()
+                    .getPlayer2()
+                    .getTaskProgress()
+                    [controlPanelFragment.getCurrentTaskSetToDisplay()]
+                    [position]
+                    [CHECK_BOX_IN_PROGRESS];
+        }
+
+        if (controlPanelFragment.getRoom().getPlayer3() != null) {
+            teamTaskProgress[2] = controlPanelFragment.getRoom()
+                    .getPlayer3()
+                    .getTaskProgress()
+                    [controlPanelFragment.getCurrentTaskSetToDisplay()]
+                    [position]
+                    [CHECK_BOX_IN_PROGRESS];
+        }
+
+        if (controlPanelFragment.getRoom().getPlayer4() != null) {
+            teamTaskProgress[3] = controlPanelFragment.getRoom()
+                    .getPlayer4()
+                    .getTaskProgress()
+                    [controlPanelFragment.getCurrentTaskSetToDisplay()]
+                    [position]
+                    [CHECK_BOX_IN_PROGRESS];
+        }
+
+        for (int i = 0; i < teamTaskProgress.length; i++) {
+            if (teamTaskProgress[i] && !flag) {
+                stringBuilder.append(controlPanelFragment.getResources()
+                        .getString(R.string.task_status_in_progress))
+                        .append(" ")
+                        .append(teamNames[i]);
+                flag = true;
+            } else if (teamTaskProgress[i]) {
+                stringBuilder.append(" ")
+                        .append(teamNames[i]);
+            }
+        }
+
+        if (flag) {
+            return stringBuilder.toString();
+        }
+
+        teamTaskProgress[0] = controlPanelFragment.getRoom()
+                .getPlayer1()
+                .getTaskProgress()
+                [controlPanelFragment.getCurrentTaskSetToDisplay()]
+                [position]
+                [CHECK_BOX_PLAN];
+
+        if (controlPanelFragment.getRoom().getPlayer2() != null) {
+            teamTaskProgress[1] = controlPanelFragment.getRoom()
+                    .getPlayer2()
+                    .getTaskProgress()
+                    [controlPanelFragment.getCurrentTaskSetToDisplay()]
+                    [position]
+                    [CHECK_BOX_PLAN];
+        }
+
+        if (controlPanelFragment.getRoom().getPlayer3() != null) {
+            teamTaskProgress[2] = controlPanelFragment.getRoom()
+                    .getPlayer3()
+                    .getTaskProgress()
+                    [controlPanelFragment.getCurrentTaskSetToDisplay()]
+                    [position]
+                    [CHECK_BOX_PLAN];
+        }
+
+        if (controlPanelFragment.getRoom().getPlayer4() != null) {
+            teamTaskProgress[3] = controlPanelFragment.getRoom()
+                    .getPlayer4()
+                    .getTaskProgress()
+                    [controlPanelFragment.getCurrentTaskSetToDisplay()]
+                    [position]
+                    [CHECK_BOX_PLAN];
+        }
+
+        for (int i = 0; i < teamTaskProgress.length; i++) {
+            if (teamTaskProgress[i] && !flag) {
+                stringBuilder.append(controlPanelFragment.getResources()
+                        .getString(R.string.task_status_plan))
+                        .append(" ")
+                        .append(teamNames[i]);
+                flag = true;
+            } else if (teamTaskProgress[i]) {
+                stringBuilder.append(" ")
+                        .append(teamNames[i]);
+            }
+        }
+
+        if (flag) {
+            return stringBuilder.toString();
+        }
+
+        return stringBuilder.append(controlPanelFragment.getResources()
+                .getString(R.string.task_status_none)).toString();
     }
 }

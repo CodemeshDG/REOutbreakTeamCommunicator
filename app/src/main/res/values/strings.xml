@@ -64,6 +64,11 @@
     <string name="button_status_cancel">CANCEL</string>
     <string name="button_status_submit">SUBMIT</string>
 
+    <string name="task_status_none">No one has planned to do this task.</string>
+    <string name="task_status_plan">PLANNED:</string>
+    <string name="task_status_in_progress">IN PROGRESS:</string>
+    <string name="task_status_complete">COMPLETED:</string>
+
     <string name="task_set_1_1_1">Escaping J\'s Bar</string>
     <string name="task_set_1_1_2">Evacuating the area</string>
     <string name="task_set_1_1_3">Blowing up Main Street</string>
