@@ -51,7 +51,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TaskViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final TaskViewHolder holder, final int position) {
         TaskItem currentItem = taskItemList.get(position);
 
         holder.textViewTaskName.setText(currentItem.getTaskName());
@@ -63,18 +63,36 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         holder.checkBoxPlan.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    holder.checkBoxInProgress.setChecked(false);
+                    updatePlayerTaskProgress(position, CHECK_BOX_IN_PROGRESS, false);
+                    holder.checkBoxComplete.setChecked(false);
+                    updatePlayerTaskProgress(position, CHECK_BOX_COMPLETE, false);
+                }
                 updatePlayerTaskProgress(position, CHECK_BOX_PLAN, b);
             }
         });
         holder.checkBoxInProgress.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    holder.checkBoxPlan.setChecked(false);
+                    updatePlayerTaskProgress(position, CHECK_BOX_PLAN, false);
+                    holder.checkBoxComplete.setChecked(false);
+                    updatePlayerTaskProgress(position, CHECK_BOX_COMPLETE, false);
+                }
                 updatePlayerTaskProgress(position, CHECK_BOX_IN_PROGRESS, b);
             }
         });
         holder.checkBoxComplete.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    holder.checkBoxPlan.setChecked(false);
+                    updatePlayerTaskProgress(position, CHECK_BOX_PLAN, false);
+                    holder.checkBoxInProgress.setChecked(false);
+                    updatePlayerTaskProgress(position, CHECK_BOX_IN_PROGRESS, false);
+                }
                 updatePlayerTaskProgress(position, CHECK_BOX_COMPLETE, b);
             }
         });
