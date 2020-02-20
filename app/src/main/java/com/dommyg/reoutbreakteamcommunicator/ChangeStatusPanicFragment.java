@@ -18,7 +18,7 @@ import androidx.fragment.app.Fragment;
 import java.util.Objects;
 
 public class ChangeStatusPanicFragment extends Fragment {
-    private OnDataPass dataPasser;
+//    private OnDataPass dataPasser;
 
     private final int NUMBER_PANIC_TYPES = 4;
 
@@ -28,24 +28,29 @@ public class ChangeStatusPanicFragment extends Fragment {
 
     private String[] locations;
 
-    public interface OnDataPass {
-        void onDataPass(boolean[] data, String location, int resultCode);
+    private ChangeStatusActivity changeStatusActivity;
+
+//    public interface OnDataPass {
+//        void onDataPass(boolean[] data, String location, int resultCode);
+//    }
+
+    static ChangeStatusPanicFragment newInstance(ChangeStatusActivity changeStatusActivity,
+                                                 String[] locations) {
+        return new ChangeStatusPanicFragment(changeStatusActivity, locations);
     }
 
-    static ChangeStatusPanicFragment newInstance(String[] locations) {
-        return new ChangeStatusPanicFragment(locations);
-    }
-
-    private ChangeStatusPanicFragment(String[] locations) {
+    private ChangeStatusPanicFragment(ChangeStatusActivity changeStatusActivity,
+                                      String[] locations) {
+        this.changeStatusActivity = changeStatusActivity;
         this.locations = locations;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnDataPass) {
-            dataPasser = (OnDataPass) context;
-        }
+//        if (context instanceof OnDataPass) {
+//            dataPasser = (OnDataPass) context;
+//        }
     }
 
     @Nullable
@@ -61,9 +66,9 @@ public class ChangeStatusPanicFragment extends Fragment {
         return v;
     }
 
-    private void passData(boolean[] data, String selectedLocation) {
-        dataPasser.onDataPass(data, selectedLocation, StatusType.PANIC.getType());
-    }
+//    private void passData(boolean[] data, String selectedLocation) {
+//        dataPasser.onDataPass(data, selectedLocation, StatusType.PANIC.getType());
+//    }
 
     private void populateCheckBoxes(View v) {
         checkBoxes[0] = v.findViewById(R.id.checkBoxPanicDowned);
@@ -111,7 +116,9 @@ public class ChangeStatusPanicFragment extends Fragment {
                     data[i] = checkBoxes[i].isChecked();
                 }
                 String selectedLocation = textViewLocation.getText().toString();
-                passData(data, selectedLocation);
+//                passData(data, selectedLocation);
+                changeStatusActivity.updateStatus(StatusType.PANIC, data, null,
+                        selectedLocation);
             }
         });
 

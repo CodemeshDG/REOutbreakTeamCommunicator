@@ -18,7 +18,7 @@ import androidx.fragment.app.Fragment;
 import java.util.Objects;
 
 public class ChangeStatusNeedFragment extends Fragment {
-    private OnDataPass dataPasser;
+//    private OnDataPass dataPasser;
 
     private final int NUMBER_ITEM_TYPES = 4;
 
@@ -31,18 +31,24 @@ public class ChangeStatusNeedFragment extends Fragment {
     private String[][] items = new String[4][];
     private String[] locations;
 
-    public interface OnDataPass {
-        void onDataPass(boolean[] data, String[] items, String location, int resultCode);
+    private ChangeStatusActivity changeStatusActivity;
+
+//    public interface OnDataPass {
+//        void onDataPass(boolean[] data, String[] items, String location, int resultCode);
+//    }
+
+    static ChangeStatusNeedFragment newInstance(ChangeStatusActivity changeStatusActivity,
+                                                String[] locations, String[] itemsHealing,
+                                                String[] itemsWeapon, String[] itemsAmmo,
+                                                String[] itemsKey) {
+        return new ChangeStatusNeedFragment(changeStatusActivity, locations, itemsHealing,
+                itemsWeapon, itemsAmmo, itemsKey);
     }
 
-    static ChangeStatusNeedFragment newInstance(String[] locations, String[] itemsHealing,
-                                                       String[] itemsWeapon, String[] itemsAmmo,
-                                                       String[] itemsKey) {
-        return new ChangeStatusNeedFragment(locations, itemsHealing, itemsWeapon, itemsAmmo, itemsKey);
-    }
-
-    private ChangeStatusNeedFragment(String[] locations, String[] itemsHealing,  String[] itemsWeapon,
-                                    String[] itemsAmmo, String[] itemsKey) {
+    private ChangeStatusNeedFragment(ChangeStatusActivity changeStatusActivity, String[] locations,
+                                     String[] itemsHealing,  String[] itemsWeapon,
+                                     String[] itemsAmmo, String[] itemsKey) {
+        this.changeStatusActivity = changeStatusActivity;
         this.locations = locations;
         this.items[0] = itemsHealing;
         this.items[1] = itemsWeapon;
@@ -53,9 +59,9 @@ public class ChangeStatusNeedFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnDataPass) {
-            dataPasser = (OnDataPass) context;
-        }
+//        if (context instanceof OnDataPass) {
+//            dataPasser = (OnDataPass) context;
+//        }
     }
 
     @Nullable
@@ -73,9 +79,9 @@ public class ChangeStatusNeedFragment extends Fragment {
         return v;
     }
 
-    private void passData(boolean[] data, String[] selectedItems, String selectedLocation) {
-        dataPasser.onDataPass(data, selectedItems, selectedLocation, StatusType.NEED.getType());
-    }
+//    private void passData(boolean[] data, String[] selectedItems, String selectedLocation) {
+//        dataPasser.onDataPass(data, selectedItems, selectedLocation, StatusType.NEED.getType());
+//    }
 
     private void populateCheckBoxes(View v) {
         checkBoxes[0] = v.findViewById(R.id.checkBoxNeedHealing);
@@ -152,7 +158,9 @@ public class ChangeStatusNeedFragment extends Fragment {
                 }
 
                 String selectedLocation = textViewLocation.getText().toString();
-                passData(data, selectedItems, selectedLocation);
+//                passData(data, selectedItems, selectedLocation);
+                changeStatusActivity.updateStatus(StatusType.NEED, data, selectedItems,
+                        selectedLocation);
             }
         });
 

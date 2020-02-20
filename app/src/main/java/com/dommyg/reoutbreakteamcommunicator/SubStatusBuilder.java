@@ -1,6 +1,6 @@
 package com.dommyg.reoutbreakteamcommunicator;
 
-class SubStatus {
+class SubStatusBuilder {
 
     String create(boolean[] data, String[] items, String location, StatusType statusType) {
         StringBuilder stringBuilder = new StringBuilder();

@@ -18,7 +18,7 @@ import androidx.fragment.app.Fragment;
 import java.util.Objects;
 
 public class ChangeStatusDeadFragment extends Fragment {
-    private OnDataPass dataPasser;
+//    private OnDataPass dataPasser;
 
     private final int NUMBER_ITEM_SLOTS = 8;
 
@@ -29,21 +29,29 @@ public class ChangeStatusDeadFragment extends Fragment {
     private String[] locations;
     private String[] itemsAll;
 
+    private String username;
+    private String characterName;
+
     private boolean isYoko;
 
-    public interface OnDataPass {
-        void onDataPass(boolean[] data, String[] items, String location, int resultCode);
+    private ChangeStatusActivity changeStatusActivity;
+
+//    public interface OnDataPass {
+//        void onDataPass(boolean[] data, String[] items, String location, int resultCode);
+//    }
+
+    static ChangeStatusDeadFragment newInstance(ChangeStatusActivity changeStatusActivity,
+                                                String[] locations, String[] itemsHealing,
+                                                String[] itemsWeapon, String[] itemsAmmo,
+                                                String[] itemsKey, boolean isYoko) {
+        return new ChangeStatusDeadFragment(changeStatusActivity, locations, itemsHealing,
+                itemsWeapon, itemsAmmo, itemsKey, isYoko);
     }
 
-    static ChangeStatusDeadFragment newInstance(String[] locations, String[] itemsHealing,
-                                                       String[] itemsWeapon, String[] itemsAmmo,
-                                                       String[] itemsKey, boolean isYoko) {
-        return new ChangeStatusDeadFragment(locations, itemsHealing, itemsWeapon, itemsAmmo,
-                itemsKey, isYoko);
-    }
-
-    private ChangeStatusDeadFragment(String[] locations, String[] itemsHealing,  String[] itemsWeapon,
-                                    String[] itemsAmmo, String[] itemsKey, boolean isYoko) {
+    private ChangeStatusDeadFragment(ChangeStatusActivity changeStatusActivity, String[] locations,
+                                     String[] itemsHealing,  String[] itemsWeapon,
+                                     String[] itemsAmmo, String[] itemsKey, boolean isYoko) {
+        this.changeStatusActivity = changeStatusActivity;
         this.locations = locations;
         this.itemsAll = compileMasterItemList(itemsHealing, itemsWeapon, itemsAmmo, itemsKey);
         this.isYoko = isYoko;
@@ -52,9 +60,9 @@ public class ChangeStatusDeadFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof  OnDataPass) {
-            dataPasser = (OnDataPass) context;
-        }
+//        if (context instanceof  OnDataPass) {
+//            dataPasser = (OnDataPass) context;
+//        }
     }
 
     @Nullable
@@ -71,9 +79,9 @@ public class ChangeStatusDeadFragment extends Fragment {
         return v;
     }
 
-    private void passData(boolean[] data, String[] selectedItems, String selectedLocation) {
-        dataPasser.onDataPass(data, selectedItems, selectedLocation, StatusType.DEAD.getType());
-    }
+//    private void passData(boolean[] data, String[] selectedItems, String selectedLocation) {
+//        dataPasser.onDataPass(data, selectedItems, selectedLocation, StatusType.DEAD.getType());
+//    }
 
     private void populateCheckBoxes(View v) {
         checkBoxes[0] = v.findViewById(R.id.checkBoxDeadItem1);
@@ -152,7 +160,9 @@ public class ChangeStatusDeadFragment extends Fragment {
                 }
 
                 String selectedLocation = textViewLocation.getText().toString();
-                passData(data, selectedItems, selectedLocation);
+//                passData(data, selectedItems, selectedLocation);
+                changeStatusActivity.updateStatus(StatusType.DEAD, data, selectedItems,
+                        selectedLocation);
             }
         });
 
