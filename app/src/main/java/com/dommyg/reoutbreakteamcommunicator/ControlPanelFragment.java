@@ -1,18 +1,13 @@
 package com.dommyg.reoutbreakteamcommunicator;
 
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,17 +16,24 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.IOException;
-import java.io.InputStream;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+
 import java.util.ArrayList;
 
 public class ControlPanelFragment extends Fragment {
-    private static final String TAG = "ControlPanelFragment";
+//    private static final String TAG = "ControlPanelFragment";
 
     private RecyclerView recyclerViewTasks;
     private TaskAdapter taskAdapter;
-    private RecyclerView.LayoutManager recyclerViewLayoutManager;
+    private RecyclerView.LayoutManager recyclerViewTasksLayoutManager;
     private ArrayList<TaskItem> recyclerViewTaskNames = new ArrayList<>();
+
+    private RecyclerView recyclerViewTeamStatus;
+    private StatusAdapter statusAdapter;
+    private RecyclerView.LayoutManager recyclerViewStatusesLayoutManager;
 
     private Room room;
     private Player myCharacter;
@@ -42,17 +44,19 @@ public class ControlPanelFragment extends Fragment {
     private TextView textViewTaskSetName;
     private int currentTaskSetToDisplay = 0;
 
-    private TextView textViewPlayer3Status;
-    private TextView textViewPlayer3SubStatus;
-    private ImageView imageViewHeadshotPlayer1;
-    private ImageView imageViewHeadshotPlayer2;
-    private ImageView imageViewHeadshotPlayer3;
+//    private TextView textViewPlayer3Status;
+//    private TextView textViewPlayer3SubStatus;
+//    private ImageView imageViewHeadshotPlayer1;
+//    private ImageView imageViewHeadshotPlayer2;
+//    private ImageView imageViewHeadshotPlayer3;
 
     private Button buttonStatusPanic;
     private Button buttonStatusNeed;
     private Button buttonStatusDead;
     private ImageButton buttonNextTaskSet;
     private ImageButton buttonPreviousTaskSet;
+
+    private CollectionReference playersReference;
 
     static ControlPanelFragment newInstance(int selectedPlayer, int selectedScenario, String roomName,
                                             String password, Resources resources) {
@@ -64,6 +68,8 @@ public class ControlPanelFragment extends Fragment {
         Scenario scenario = initializeScenario(selectedScenario, resources);
         this.room = new Room(initializeCharacter(selectedPlayer, scenario), scenario, roomName, password);
         this.myCharacter = room.getPlayer1();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        this.playersReference = db.collection("players");
     }
 
     @Nullable
@@ -73,12 +79,13 @@ public class ControlPanelFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_control_panel, container, false);
 
         setUpRoom(v);
-        setUpTeammates(v);
+//        setUpTeammates(v);
         setUpStatusButtons(v);
+        setUpStatusRecyclerView(v);
         setUpTaskElements(v);
 
-        // TODO: Remove in final version.
-        setUpTestingCharacter(v);
+//        // TODO: Remove in final version.
+//        setUpTestingCharacter(v);
 
         return v;
     }
@@ -86,165 +93,35 @@ public class ControlPanelFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == StatusType.PANIC.getType()) {
-            processResult(data, StatusType.PANIC);
+            updateStatus(StatusType.PANIC);
         }
         if (resultCode == StatusType.NEED.getType()) {
-            processResult(data, StatusType.NEED);
+            updateStatus(StatusType.NEED);
         }
         if (resultCode == StatusType.DEAD.getType()) {
-            processResult(data, StatusType.DEAD);
+            updateStatus(StatusType.DEAD);
         }
     }
 
-    private void processResult(Intent data, StatusType statusType) {
-        boolean[] checkBoxData = data.getBooleanArrayExtra(ChangeStatusActivity.EXTRA_SELECTED_CHECKBOXES);
-        String[] items = null;
-        if (!statusType.equals(StatusType.PANIC)) {
-            items = data.getStringArrayExtra(ChangeStatusActivity.EXTRA_SELECTED_ITEMS);
-        }
-        String location = data.getStringExtra(ChangeStatusActivity.EXTRA_SELECTED_LOCATION);
-        updateStatus(statusType);
-        updateSubStatus(checkBoxData, items, location, statusType);
-    }
+//    private void processResult(Intent data, StatusType statusType) {
+//        boolean[] checkBoxData = data.getBooleanArrayExtra(ChangeStatusActivity.EXTRA_SELECTED_CHECKBOXES);
+//        String[] items = null;
+//        if (!statusType.equals(StatusType.PANIC)) {
+//            items = data.getStringArrayExtra(ChangeStatusActivity.EXTRA_SELECTED_ITEMS);
+//        }
+//        String location = data.getStringExtra(ChangeStatusActivity.EXTRA_SELECTED_LOCATION);
+//        updateStatus(statusType);
+////        updateSubStatus(checkBoxData, items, location, statusType);
+//    }
 
     private void updateStatus(StatusType statusType) {
         myCharacter.getStatus().setStatusType(statusType);
 
-        // TODO: For testing purposes. Remove when complete.
-        String updateStatus = getString(R.string.test_status);
-        String characterName = getString(myCharacter.getCharacterName()).toUpperCase();
-        String status = getString(myCharacter.getStatus().getStatusType());
-        textViewPlayer3Status.setText(String.format(updateStatus, characterName, status));
-    }
-
-    private void updateSubStatus(boolean[] data, String[] items, String location, StatusType statusType) {
-        StringBuilder stringBuilder = new StringBuilder();
-        switch (statusType) {
-            case PANIC:
-                    if (data[0]) {
-                        stringBuilder.append(" downed");
-                    }
-                    if (data[1]) {
-                        stringBuilder.append(" in danger status");
-                    }
-                    if (data[2]) {
-                        stringBuilderCheckComma(stringBuilder);
-                        stringBuilder.append(" having a high viral load");
-                    }
-                    if (data[3]) {
-                        stringBuilderCheckComma(stringBuilder);
-                        if (stringBuilder.length() > 0) {
-                            stringBuilder.append("and");
-                        }
-                        stringBuilder.append(" trapped");
-                    }
-
-                    stringBuilderLocation(stringBuilder, location);
-
-                    if (stringBuilder.toString().length() > 0) {
-                        stringBuilder.insert(0, "I'm");
-                        stringBuilder.append("!");
-                        textViewPlayer3SubStatus.setText(stringBuilder.toString().toUpperCase());
-                    } else {
-                        textViewPlayer3SubStatus.setText("");
-                    }
-                    break;
-
-            case NEED:
-                boolean requestItem = false;
-
-                for (int i = 0; data.length > i; i++) {
-                    if (data[i]) {
-                        requestItem = true;
-                        if (items[i].length() > 0) {
-                            stringBuilderCheckComma(stringBuilder);
-                            stringBuilder.append(items[i]);
-                        } else {
-                            stringBuilderCheckComma(stringBuilder);
-                            switch (i) {
-                                case 0:
-                                    stringBuilder.append("a healing item");
-                                    break;
-
-                                case 1:
-                                    stringBuilder.append("a weapon");
-                                    break;
-
-                                case 2:
-                                    stringBuilder.append("ammo");
-                                    break;
-
-                                case 3:
-                                    stringBuilder.append("a key item");
-                                    break;
-                            }
-                        }
-                    }
-                }
-
-                stringBuilderLocation(stringBuilder, location);
-
-                if (stringBuilder.toString().length() > 0) {
-                    if (requestItem) {
-                        stringBuilder.insert(0, "I need ");
-                    } else {
-                        stringBuilder.insert(0, "I'm");
-                    }
-                    stringBuilder.append("!");
-                    textViewPlayer3SubStatus.setText(stringBuilder.toString().toUpperCase());
-                } else {
-                    textViewPlayer3SubStatus.setText("");
-                }
-                break;
-
-            case DEAD:
-                boolean hadItem = false;
-                int undeclaredItems = 0;
-
-                for (int i = 0; data.length > i; i++) {
-                    if (data[i]) {
-                        hadItem = true;
-                        if (items[i].length() > 0) {
-                            stringBuilderCheckComma(stringBuilder);
-                            stringBuilder.append(items[i]);
-                        } else {
-                            undeclaredItems++;
-                        }
-                    }
-                }
-
-                if (stringBuilder.toString().length() > 0 && undeclaredItems > 0) {
-                    stringBuilder.append(", and ").append(undeclaredItems).append(" other items");
-                } else {
-                    stringBuilder.append(undeclaredItems).append(" items");
-                }
-
-                stringBuilderLocation(stringBuilder, location);
-
-                if (stringBuilder.toString().length() > 0) {
-                    if (hadItem) {
-                        stringBuilder.insert(0, "I was carrying ");
-                    } else {
-                        stringBuilder.insert(0, "I'm");
-                    }
-                    stringBuilder.append("!");
-                    textViewPlayer3SubStatus.setText(stringBuilder.toString().toUpperCase());
-                } else {
-                    textViewPlayer3SubStatus.setText("");
-                }
-        }
-    }
-
-    private void stringBuilderCheckComma(StringBuilder stringBuilder) {
-        if (stringBuilder.length() > 0) {
-            stringBuilder.append(", ");
-        }
-    }
-
-    private void stringBuilderLocation(StringBuilder stringBuilder, String location) {
-        if (location.length() > 0) {
-            stringBuilder.append(" @ ").append(location);
-        }
+//        // TODO: For testing purposes. Remove when complete.
+//        String updateStatus = getString(R.string.test_status);
+//        String characterName = getString(myCharacter.getCharacterName()).toUpperCase();
+//        String status = getString(myCharacter.getStatus().getStatusType());
+//        textViewPlayer3Status.setText(String.format(updateStatus, characterName, status));
     }
 
     /**
@@ -295,6 +172,29 @@ public class ControlPanelFragment extends Fragment {
             default:
                 return null;
         }
+    }
+
+    /**
+     * Sets up the recyclerView for the team's statuses.
+     */
+    private void setUpStatusRecyclerView(View v) {
+        Query query = playersReference;
+
+        FirestoreRecyclerOptions<StatusItem> options =
+                new FirestoreRecyclerOptions.Builder<StatusItem>()
+                .setQuery(query, StatusItem.class)
+                .build();
+
+        statusAdapter = new StatusAdapter(options, getContext());
+
+        recyclerViewTeamStatus = v.findViewById(R.id.recyclerViewTeamStatus);
+        recyclerViewTeamStatus.setNestedScrollingEnabled(false);
+        recyclerViewTeamStatus.setHasFixedSize(true);
+
+        recyclerViewStatusesLayoutManager = new LinearLayoutManager(getContext());
+
+        recyclerViewTeamStatus.setLayoutManager(recyclerViewStatusesLayoutManager);
+        recyclerViewTeamStatus.setAdapter(statusAdapter);
     }
 
     /**
@@ -434,10 +334,10 @@ public class ControlPanelFragment extends Fragment {
 
         recyclerViewTasks = v.findViewById(R.id.recyclerViewTasks);
         recyclerViewTasks.setNestedScrollingEnabled(false);
-        recyclerViewLayoutManager = new LinearLayoutManager(getContext());
+        recyclerViewTasksLayoutManager = new LinearLayoutManager(getContext());
         taskAdapter = new TaskAdapter(this, recyclerViewTaskNames);
 
-        recyclerViewTasks.setLayoutManager(recyclerViewLayoutManager);
+        recyclerViewTasks.setLayoutManager(recyclerViewTasksLayoutManager);
         recyclerViewTasks.setAdapter(taskAdapter);
     }
 
@@ -455,42 +355,42 @@ public class ControlPanelFragment extends Fragment {
         textViewScenarioName.setText(room.getScenario().getScenarioName());
     }
 
-    /**
-     * Finds views related to teammates' info displayed in the Team Status section and sets them.
-     */
-    private void setUpTeammates(View v) {
-        imageViewHeadshotPlayer1 = v.findViewById(R.id.imageViewHeadshotPlayer1);
-        imageViewHeadshotPlayer2 = v.findViewById(R.id.imageViewHeadshotPlayer2);
-        imageViewHeadshotPlayer3 = v.findViewById(R.id.imageViewHeadshotPlayer3);
+//    /**
+//     * Finds views related to teammates' info displayed in the Team Status section and sets them.
+//     */
+//    private void setUpTeammates(View v) {
+//        imageViewHeadshotPlayer1 = v.findViewById(R.id.imageViewHeadshotPlayer1);
+//        imageViewHeadshotPlayer2 = v.findViewById(R.id.imageViewHeadshotPlayer2);
+//        imageViewHeadshotPlayer3 = v.findViewById(R.id.imageViewHeadshotPlayer3);
+//
+//        AssetManager assetManager = getContext().getAssets();
+//        try {
+//            // TODO: These are for testing purposes and must be changed later.
+//            InputStream inputStream = assetManager.open(myCharacter.getHeadshot());
+//            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+//            imageViewHeadshotPlayer3.setImageBitmap(bitmap);
+//            inputStream = assetManager.open(Character.CINDY.getHeadshotPath());
+//            bitmap = BitmapFactory.decodeStream(inputStream);
+//            imageViewHeadshotPlayer1.setImageBitmap(bitmap);
+//            inputStream = assetManager.open(Character.JIM.getHeadshotPath());
+//            bitmap = BitmapFactory.decodeStream(inputStream);
+//            imageViewHeadshotPlayer2.setImageBitmap(bitmap);
+//
+//        } catch (IOException e) {
+//            Log.e(TAG, "setUpViews: ", e);
+//        }
+//    }
 
-        AssetManager assetManager = getContext().getAssets();
-        try {
-            // TODO: These are for testing purposes and must be changed later.
-            InputStream inputStream = assetManager.open(myCharacter.getHeadshot());
-            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-            imageViewHeadshotPlayer3.setImageBitmap(bitmap);
-            inputStream = assetManager.open(Character.CINDY.getHeadshotPath());
-            bitmap = BitmapFactory.decodeStream(inputStream);
-            imageViewHeadshotPlayer1.setImageBitmap(bitmap);
-            inputStream = assetManager.open(Character.JIM.getHeadshotPath());
-            bitmap = BitmapFactory.decodeStream(inputStream);
-            imageViewHeadshotPlayer2.setImageBitmap(bitmap);
-
-        } catch (IOException e) {
-            Log.e(TAG, "setUpViews: ", e);
-        }
-    }
-
-    /**
-     * Used for testing. Displays user's character and status in the third teammate's spot on the
-     * Team Status section. Not for use in final version.
-     */
-    private void setUpTestingCharacter(View v) {
-        textViewPlayer3Status = v.findViewById(R.id.textViewPlayer3Status);
-        textViewPlayer3SubStatus = v.findViewById(R.id.textViewPlayer3SubStatus);
-        String name = getString(myCharacter.getCharacterName()).toUpperCase();
-        textViewPlayer3Status.setText(name);
-    }
+//    /**
+//     * Used for testing. Displays user's character and status in the third teammate's spot on the
+//     * Team Status section. Not for use in final version.
+//     */
+//    private void setUpTestingCharacter(View v) {
+//        textViewPlayer3Status = v.findViewById(R.id.textViewPlayer3Status);
+//        textViewPlayer3SubStatus = v.findViewById(R.id.textViewPlayer3SubStatus);
+//        String name = getString(myCharacter.getCharacterName()).toUpperCase();
+//        textViewPlayer3Status.setText(name);
+//    }
 
     private Intent createIntentForChangeStatusActivity(int statusType) {
         String[] locations = room.getScenario().getLocations();
@@ -500,7 +400,7 @@ public class ControlPanelFragment extends Fragment {
         String[] itemsKey = room.getScenario().getItemsKey();
         boolean isYoko = (myCharacter.getCharacterName() == Character.YOKO.getName());
 
-        return ChangeStatusActivity.newIntent(getContext(), statusType, locations,
+        return ChangeStatusActivity.newIntent(getContext(), "dom", getResources().getString(myCharacter.getCharacterName()), statusType, locations,
                 itemsHealing, itemsWeapon, itemsAmmo, itemsKey, isYoko);
     }
 

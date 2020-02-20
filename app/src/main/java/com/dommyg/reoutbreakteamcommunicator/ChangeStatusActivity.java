@@ -78,9 +78,11 @@ public class ChangeStatusActivity extends SingleFragmentActivity
                 statusType);
         String subStatus = new SubStatusBuilder().create(data, selectedItems,
                 selectedLocation, statusType);
-        new FirestoreStatusController().update(this,
-                USERNAME, status, subStatus);
+        new FirestoreStatusController().update(this, statusType, USERNAME, status,
+                subStatus);
     }
+
+
 
 //    @Override
 //    public void onDataPass(boolean[] data, String location, int resultCode) {

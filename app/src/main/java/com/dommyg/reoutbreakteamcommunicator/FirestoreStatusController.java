@@ -16,25 +16,28 @@ class FirestoreStatusController {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final CollectionReference playersReference = db.collection("players");
 
-    void update(ChangeStatusActivity activity, String username, String status, String subStatus) {
+    void update(ChangeStatusActivity activity, StatusType statusType, String username, String status, String subStatus) {
         Map<String, Object> data = new HashMap<>();
         data.put(KEY_PLAYER_STATUS, status);
         data.put(KEY_PLAYER_SUB_STATUS, subStatus);
 
         playersReference.document(username)
-                .set(data, SetOptions.merge())
-                .addOnSuccessListener(new UpdateListener(activity));
+                .update(data)
+                .addOnSuccessListener(new UpdateListener(activity, statusType));
     }
 
     private class UpdateListener implements OnSuccessListener<Void> {
         ChangeStatusActivity activity;
+        StatusType statusType;
 
-        UpdateListener(ChangeStatusActivity activity) {
+        UpdateListener(ChangeStatusActivity activity, StatusType statusType) {
+            this.statusType = statusType;
             this.activity = activity;
         }
 
         @Override
         public void onSuccess(Void aVoid) {
+            activity.setResult(statusType.getType());
             activity.finish();
         }
     }

@@ -19,7 +19,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import java.io.IOException;
 import java.io.InputStream;
 
-class StatusAdapter extends FirestoreRecyclerAdapter<StatusItem, StatusAdapter.StatusViewHolder> {
+public class StatusAdapter extends FirestoreRecyclerAdapter<StatusItem, StatusAdapter.StatusViewHolder> {
 
     private Context context;
 
@@ -36,7 +36,7 @@ class StatusAdapter extends FirestoreRecyclerAdapter<StatusItem, StatusAdapter.S
         }
     }
 
-    public StatusAdapter(@NonNull FirestoreRecyclerOptions<StatusItem> options, Context context) {
+    StatusAdapter(@NonNull FirestoreRecyclerOptions<StatusItem> options, Context context) {
         super(options);
         this.context = context;
     }
@@ -49,7 +49,6 @@ class StatusAdapter extends FirestoreRecyclerAdapter<StatusItem, StatusAdapter.S
 
         AssetManager assetManager = context.getAssets();
         try {
-            // TODO: These are for testing purposes and must be changed later.
             InputStream inputStream = assetManager.open(model.getHeadshotPath());
             Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
             holder.imageViewPlayerHeadshot.setImageBitmap(bitmap);

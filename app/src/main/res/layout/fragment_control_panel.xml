@@ -47,7 +47,7 @@
             android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textViewTeamStatus"/>
+            app:layout_constraintTop_toBottomOf="@id/textViewTeamStatus" />
 
         <LinearLayout
             android:id="@+id/linearLayoutStatusButtons"
