@@ -24,16 +24,13 @@ import com.google.firebase.firestore.Query;
 import java.util.ArrayList;
 
 public class ControlPanelFragment extends Fragment {
-//    private static final String TAG = "ControlPanelFragment";
 
     private RecyclerView recyclerViewTasks;
     private TaskAdapter taskAdapter;
     private RecyclerView.LayoutManager recyclerViewTasksLayoutManager;
     private ArrayList<TaskItem> recyclerViewTaskNames = new ArrayList<>();
 
-    private RecyclerView recyclerViewTeamStatus;
     private StatusAdapter statusAdapter;
-    private RecyclerView.LayoutManager recyclerViewStatusesLayoutManager;
 
     private Room room;
     private Player myCharacter;
@@ -43,12 +40,6 @@ public class ControlPanelFragment extends Fragment {
     private TextView textViewScenarioName;
     private TextView textViewTaskSetName;
     private int currentTaskSetToDisplay = 0;
-
-//    private TextView textViewPlayer3Status;
-//    private TextView textViewPlayer3SubStatus;
-//    private ImageView imageViewHeadshotPlayer1;
-//    private ImageView imageViewHeadshotPlayer2;
-//    private ImageView imageViewHeadshotPlayer3;
 
     private Button buttonStatusPanic;
     private Button buttonStatusNeed;
@@ -79,15 +70,23 @@ public class ControlPanelFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_control_panel, container, false);
 
         setUpRoom(v);
-//        setUpTeammates(v);
         setUpStatusButtons(v);
         setUpStatusRecyclerView(v);
         setUpTaskElements(v);
 
-//        // TODO: Remove in final version.
-//        setUpTestingCharacter(v);
-
         return v;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        statusAdapter.startListening();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        statusAdapter.stopListening();
     }
 
     @Override
@@ -103,25 +102,8 @@ public class ControlPanelFragment extends Fragment {
         }
     }
 
-//    private void processResult(Intent data, StatusType statusType) {
-//        boolean[] checkBoxData = data.getBooleanArrayExtra(ChangeStatusActivity.EXTRA_SELECTED_CHECKBOXES);
-//        String[] items = null;
-//        if (!statusType.equals(StatusType.PANIC)) {
-//            items = data.getStringArrayExtra(ChangeStatusActivity.EXTRA_SELECTED_ITEMS);
-//        }
-//        String location = data.getStringExtra(ChangeStatusActivity.EXTRA_SELECTED_LOCATION);
-//        updateStatus(statusType);
-////        updateSubStatus(checkBoxData, items, location, statusType);
-//    }
-
     private void updateStatus(StatusType statusType) {
         myCharacter.getStatus().setStatusType(statusType);
-
-//        // TODO: For testing purposes. Remove when complete.
-//        String updateStatus = getString(R.string.test_status);
-//        String characterName = getString(myCharacter.getCharacterName()).toUpperCase();
-//        String status = getString(myCharacter.getStatus().getStatusType());
-//        textViewPlayer3Status.setText(String.format(updateStatus, characterName, status));
     }
 
     /**
@@ -187,11 +169,10 @@ public class ControlPanelFragment extends Fragment {
 
         statusAdapter = new StatusAdapter(options, getContext());
 
-        recyclerViewTeamStatus = v.findViewById(R.id.recyclerViewTeamStatus);
+        RecyclerView recyclerViewTeamStatus = v.findViewById(R.id.recyclerViewTeamStatus);
         recyclerViewTeamStatus.setNestedScrollingEnabled(false);
-        recyclerViewTeamStatus.setHasFixedSize(true);
 
-        recyclerViewStatusesLayoutManager = new LinearLayoutManager(getContext());
+        RecyclerView.LayoutManager recyclerViewStatusesLayoutManager = new LinearLayoutManager(getContext());
 
         recyclerViewTeamStatus.setLayoutManager(recyclerViewStatusesLayoutManager);
         recyclerViewTeamStatus.setAdapter(statusAdapter);
@@ -354,43 +335,6 @@ public class ControlPanelFragment extends Fragment {
         textViewScenarioName = v.findViewById(R.id.textViewScenarioName);
         textViewScenarioName.setText(room.getScenario().getScenarioName());
     }
-
-//    /**
-//     * Finds views related to teammates' info displayed in the Team Status section and sets them.
-//     */
-//    private void setUpTeammates(View v) {
-//        imageViewHeadshotPlayer1 = v.findViewById(R.id.imageViewHeadshotPlayer1);
-//        imageViewHeadshotPlayer2 = v.findViewById(R.id.imageViewHeadshotPlayer2);
-//        imageViewHeadshotPlayer3 = v.findViewById(R.id.imageViewHeadshotPlayer3);
-//
-//        AssetManager assetManager = getContext().getAssets();
-//        try {
-//            // TODO: These are for testing purposes and must be changed later.
-//            InputStream inputStream = assetManager.open(myCharacter.getHeadshot());
-//            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-//            imageViewHeadshotPlayer3.setImageBitmap(bitmap);
-//            inputStream = assetManager.open(Character.CINDY.getHeadshotPath());
-//            bitmap = BitmapFactory.decodeStream(inputStream);
-//            imageViewHeadshotPlayer1.setImageBitmap(bitmap);
-//            inputStream = assetManager.open(Character.JIM.getHeadshotPath());
-//            bitmap = BitmapFactory.decodeStream(inputStream);
-//            imageViewHeadshotPlayer2.setImageBitmap(bitmap);
-//
-//        } catch (IOException e) {
-//            Log.e(TAG, "setUpViews: ", e);
-//        }
-//    }
-
-//    /**
-//     * Used for testing. Displays user's character and status in the third teammate's spot on the
-//     * Team Status section. Not for use in final version.
-//     */
-//    private void setUpTestingCharacter(View v) {
-//        textViewPlayer3Status = v.findViewById(R.id.textViewPlayer3Status);
-//        textViewPlayer3SubStatus = v.findViewById(R.id.textViewPlayer3SubStatus);
-//        String name = getString(myCharacter.getCharacterName()).toUpperCase();
-//        textViewPlayer3Status.setText(name);
-//    }
 
     private Intent createIntentForChangeStatusActivity(int statusType) {
         String[] locations = room.getScenario().getLocations();

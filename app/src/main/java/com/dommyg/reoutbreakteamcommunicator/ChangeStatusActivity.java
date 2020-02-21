@@ -5,10 +5,8 @@ import android.content.Intent;
 
 import androidx.fragment.app.Fragment;
 
-public class ChangeStatusActivity extends SingleFragmentActivity
-//        implements ChangeStatusPanicFragment.OnDataPass, ChangeStatusNeedFragment.OnDataPass,
-//        ChangeStatusDeadFragment.OnDataPass
-{
+public class ChangeStatusActivity extends SingleFragmentActivity {
+
     private static final String EXTRA_SELECTED_STATUS = "com.dommyg.reoutbreakteamcommunicator.selected_status";
     private static final String EXTRA_LOCATIONS = "com.dommyg.reoutbreakteamcommunicator.locations";
     private static final String EXTRA_ITEMS_HEALING = "com.dommyg.reoutbreakteamcommunicator.items_healing";
@@ -16,10 +14,6 @@ public class ChangeStatusActivity extends SingleFragmentActivity
     private static final String EXTRA_ITEMS_AMMO = "com.dommyg.reoutbreakteamcommunicator.items_ammo";
     private static final String EXTRA_ITEMS_KEY = "com.dommyg.reoutbreakteamcommunicator.items_key";
     private static final String EXTRA_IS_YOKO = "com.dommyg.reoutbreakteamcommunicator.is_yoko";
-
-    static final String EXTRA_SELECTED_CHECKBOXES = "com.dommyg.reoutbreakteamcommunicator.selected_checkboxes";
-    static final String EXTRA_SELECTED_ITEMS = "com.dommyg.reoutbreakteamcommunicator.selected_items";
-    static final String EXTRA_SELECTED_LOCATION = "com.dommyg.reoutbreakteamcommunicator.selected_location";
 
     private static final String EXTRA_USERNAME = "com.dommyg.reoutbreakteamcommunicator.username";
     private static final String EXTRA_CHARACTER_NAME = "com.dommyg.reoutbreakteamcommunicator.character_name";
@@ -30,7 +24,7 @@ public class ChangeStatusActivity extends SingleFragmentActivity
     @Override
     protected Fragment createFragment() {
         USERNAME = getIntent().getStringExtra(EXTRA_USERNAME);
-        CHARACTER_NAME = getIntent().getStringExtra(CHARACTER_NAME);
+        CHARACTER_NAME = getIntent().getStringExtra(EXTRA_CHARACTER_NAME);
         int selectedStatus = getIntent().getIntExtra(EXTRA_SELECTED_STATUS, 0);
         String[] locations = getIntent().getStringArrayExtra(EXTRA_LOCATIONS);
         String[] itemsHealing = getIntent().getStringArrayExtra(EXTRA_ITEMS_HEALING);
@@ -81,25 +75,4 @@ public class ChangeStatusActivity extends SingleFragmentActivity
         new FirestoreStatusController().update(this, statusType, USERNAME, status,
                 subStatus);
     }
-
-
-
-//    @Override
-//    public void onDataPass(boolean[] data, String location, int resultCode) {
-//        Intent intent = new Intent();
-//        intent.putExtra(EXTRA_SELECTED_CHECKBOXES, data);
-//        intent.putExtra(EXTRA_SELECTED_LOCATION, location);
-//        setResult(resultCode, intent);
-//        finish();
-//    }
-//
-//    @Override
-//    public void onDataPass(boolean[] data, String[] items, String location, int resultCode) {
-//        Intent intent = new Intent();
-//        intent.putExtra(EXTRA_SELECTED_CHECKBOXES, data);
-//        intent.putExtra(EXTRA_SELECTED_ITEMS, items);
-//        intent.putExtra(EXTRA_SELECTED_LOCATION, location);
-//        setResult(resultCode, intent);
-//        finish();
-//    }
 }
