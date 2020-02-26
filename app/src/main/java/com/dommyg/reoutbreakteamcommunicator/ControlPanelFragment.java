@@ -48,6 +48,7 @@ public class ControlPanelFragment extends Fragment {
     private ImageButton buttonPreviousTaskSet;
 
     private CollectionReference playersReference;
+    private CollectionReference tasksReference;
 
     static ControlPanelFragment newInstance(int selectedPlayer, int selectedScenario, String roomName,
                                             String password, Resources resources) {
@@ -58,9 +59,10 @@ public class ControlPanelFragment extends Fragment {
                                  String password, Resources resources) {
         Scenario scenario = initializeScenario(selectedScenario, resources);
         this.room = new Room(initializeCharacter(selectedPlayer, scenario), scenario, roomName, password);
-        this.myCharacter = room.getPlayer1();
+        this.myCharacter = room.getPlayerUser();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         this.playersReference = db.collection("players");
+        this.tasksReference = db.collection("tasks");
     }
 
     @Nullable
@@ -81,12 +83,14 @@ public class ControlPanelFragment extends Fragment {
     public void onStart() {
         super.onStart();
         statusAdapter.startListening();
+        taskAdapter.startListening();
     }
 
     @Override
     public void onStop() {
         super.onStop();
         statusAdapter.stopListening();
+        taskAdapter.stopListening();
     }
 
     @Override
@@ -313,13 +317,33 @@ public class ControlPanelFragment extends Fragment {
     private void setUpTaskSetRecyclerView(View v) {
         addToTaskSet();
 
-        recyclerViewTasks = v.findViewById(R.id.recyclerViewTasks);
+        Query query = tasksReference;
+
+        FirestoreRecyclerOptions<TaskItem> options =
+                new FirestoreRecyclerOptions.Builder<TaskItem>()
+                        .setQuery(query, TaskItem.class)
+                        .build();
+
+        String[] characterNames = {"Alyssa", "Yoko", "Mark", "Cindy"};
+
+        taskAdapter = new TaskAdapter(options, this, getResources(),
+                characterNames);
+
+        RecyclerView recyclerViewTasks = v.findViewById(R.id.recyclerViewTasks);
         recyclerViewTasks.setNestedScrollingEnabled(false);
-        recyclerViewTasksLayoutManager = new LinearLayoutManager(getContext());
-        taskAdapter = new TaskAdapter(this, recyclerViewTaskNames);
+
+        RecyclerView.LayoutManager recyclerViewTasksLayoutManager = new LinearLayoutManager(getContext());
 
         recyclerViewTasks.setLayoutManager(recyclerViewTasksLayoutManager);
         recyclerViewTasks.setAdapter(taskAdapter);
+
+//        recyclerViewTasks = v.findViewById(R.id.recyclerViewTasks);
+//        recyclerViewTasks.setNestedScrollingEnabled(false);
+//        recyclerViewTasksLayoutManager = new LinearLayoutManager(getContext());
+//        taskAdapter = new TaskAdapter(this, recyclerViewTaskNames);
+//
+//        recyclerViewTasks.setLayoutManager(recyclerViewTasksLayoutManager);
+//        recyclerViewTasks.setAdapter(taskAdapter);
     }
 
     /**
