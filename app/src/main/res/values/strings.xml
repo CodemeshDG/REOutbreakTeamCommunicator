@@ -16,6 +16,13 @@
     <string name="scenario_1_4">Hellfire</string>
     <string name="scenario_1_5">Decisions, Decisions</string>
 
+    <string name="heading_main_menu">MAIN MENU</string>
+    <string name="text_no_username">You do not have a username yet! Enter one below to create or join rooms. Your username will not be visible to other users; it is only used for rooms to identify who you are.</string>
+    <string name="hint_enter_username">Enter a username&#8230;</string>
+    <string name="button_set_username">Set Username</string>
+    <string name="heading_rejoin_rooms">REJOIN YOUR COMRADES</string>
+    <string name="text_no_rooms">You have not joined any rooms yet&#8230;</string>
+
     <string name="heading_create_room">CREATE ROOM</string>
     <string name="subheading_room_name">Room Name</string>
     <string name="subheading_password">Password</string>
@@ -23,6 +30,10 @@
     <string name="subheading_your_character">Your Character</string>
     <string name="hint_create_room">Name your room&#8230;</string>
     <string name="hint_set_password">Set a password&#8230;</string>
+
+    <string name="heading_join_room">JOIN ROOM</string>
+    <string name="hint_join_room">Enter room name&#8230;</string>
+    <string name="hint_enter_password">Enter password&#8230;</string>
 
     <string name="heading_team_status">TEAM STATUS</string>
     <string name="heading_your_status">YOUR STATUS:</string>

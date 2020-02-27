@@ -4,28 +4,54 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/heading_join_room"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/subheading_room_name"
+        android:textStyle="bold" />
+
     <EditText
         android:id="@+id/editTextRoomName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="-2dp"
+        android:layout_marginEnd="-2dp"
         android:ems="10"
-        android:hint="Enter room name..."
+        android:hint="@string/hint_join_room"
         android:inputType="textPersonName" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/subheading_password"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/editTextPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="-2dp"
+        android:layout_marginEnd="-2dp"
         android:ems="10"
-        android:hint="Enter password..."
+        android:hint="@string/hint_enter_password"
         android:inputType="textPassword" />
 
     <Button
         android:id="@+id/buttonCreateRoom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="-2dp"
         android:layout_marginTop="8dp"
-        android:text="Join Room"
+        android:layout_marginEnd="-2dp"
+        android:text="@string/heading_join_room"
         android:textSize="18sp" />
 </LinearLayout>

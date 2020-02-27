@@ -5,10 +5,18 @@
     android:padding="16dp">
 
     <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/heading_main_menu"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
         android:id="@+id/textViewUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="You do not have a username yet! Enter one below to create or join rooms."
+        android:layout_marginTop="8dp"
+        android:text="@string/text_no_username"
         android:textSize="16sp" />
 
     <EditText
@@ -16,8 +24,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:layout_marginStart="-2dp"
+        android:layout_marginEnd="-2dp"
         android:ems="10"
-        android:hint="Enter a username..."
+        android:hint="@string/hint_enter_username"
         android:inputType="textPersonName"
         android:textSize="20sp" />
 
@@ -26,7 +36,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Set Username"
+        android:layout_marginStart="-2dp"
+        android:layout_marginEnd="-2dp"
+        android:text="@string/button_set_username"
         android:textSize="20sp" />
 
     <Button
@@ -34,7 +46,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Create Room"
+        android:layout_marginStart="-2dp"
+        android:layout_marginEnd="-2dp"
+        android:text="@string/heading_create_room"
         android:textSize="20sp" />
 
     <Button
@@ -42,7 +56,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Join Room"
+        android:layout_marginStart="-2dp"
+        android:layout_marginEnd="-2dp"
+        android:text="@string/heading_join_room"
         android:textSize="20sp" />
 
     <ProgressBar
@@ -57,7 +73,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="REJOIN YOUR ROOMS"
+        android:text="@string/heading_rejoin_rooms"
         android:textAlignment="center"
         android:textColor="#1976D2"
         android:textSize="20sp" />
@@ -66,8 +82,10 @@
         android:id="@+id/textViewNoRoomsMsg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="You have not joined any rooms yet..."
-        android:textSize="16sp" />
+        android:layout_marginTop="8dp"
+        android:text="@string/text_no_rooms"
+        android:textSize="16sp"
+        android:textStyle="italic" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewJoinedRooms"
