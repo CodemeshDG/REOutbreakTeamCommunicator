@@ -2,6 +2,7 @@ package com.dommyg.reoutbreakteamcommunicator;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -13,6 +14,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -31,11 +33,18 @@ class FirestoreRoomController {
     private final Context context;
 
     private static final String KEY_INPUT_PASSWORD = "inputPassword";
-    private static final String KEY_USERNAME = "username";
     private static final String KEY_ROOM_NAME = "roomName";
     private static final String KEY_PASSWORD = "password";
     private static final String KEY_OWNER = "owner";
     private static final String KEY_IS_OWNER = "isOwner";
+    private static final String KEY_NUMBER_PLAYERS = "numberPlayers";
+    private static final String KEY_SCENARIO = "scenario";
+    private static final String KEY_TASK_SET = "taskSet";
+    private static final String KEY_PLAYER_1_TASK_STATUS = "player1TaskStatus";
+    private static final String KEY_PLAYER_2_TASK_STATUS = "player2TaskStatus";
+    private static final String KEY_PLAYER_3_TASK_STATUS = "player3TaskStatus";
+    private static final String KEY_PLAYER_4_TASK_STATUS = "player4TaskStatus";
+
 
     private static final int CODE_CREATE = 1;
     private static final int CODE_JOIN = 2;
@@ -55,8 +64,10 @@ class FirestoreRoomController {
     /**
      * Processes a request to create a room.
      */
-    void createRoom(String password, String username, String roomName) {
-        readMasterRoomList(password, username, roomName);
+    void createRoom(Resources resources, String password, String username, String roomName,
+                    Character selectedCharacter, ScenarioName selectedScenario) {
+        readMasterRoomList(resources, password, username, roomName, selectedCharacter,
+                selectedScenario);
     }
 
     /**
@@ -99,49 +110,63 @@ class FirestoreRoomController {
     /**
      * Reads the "masterRoomList" to verify if a room already exists.
      */
-    private void readMasterRoomList(String password, String username, String roomName) {
+    private void readMasterRoomList(Resources resources, String password, String username,
+                                    String roomName, Character selectedCharacter,
+                                    ScenarioName selectedScenario) {
         masterRoomReference.document(roomName)
                 .get()
-                .addOnCompleteListener(new ReadMasterRoomListOnCompleteListener(password, username, roomName));
+                .addOnCompleteListener(new ReadMasterRoomListOnCompleteListener(resources, password,
+                        username, roomName, selectedCharacter, selectedScenario));
     }
 
     /**
      * Creates and commits a batch write to set up a new room.
      */
-    private void batchWriteToCreateRoom(String password, String username, String roomName) {
+    private void batchWriteToCreateRoom(Resources resources, String password, String username,
+                                        String roomName, Character selectedCharacter,
+                                        ScenarioName selectedScenario) {
         WriteBatch creationBatch = db.batch();
 
         // Stores the room name in the "masterRoomList" collection for future querying (to prevent
         // someone from making a room with the same name and overwriting this room's data).
-        Map<String, String> mapRoom = new HashMap<>();
+        Map<String, Object> mapRoom = new HashMap<>();
         mapRoom.put(KEY_ROOM_NAME, roomName);
 
         creationBatch.set(masterRoomReference.document(roomName), mapRoom);
 
-        // Creates the room document in the "rooms" collection, storing its name, password, and
+        // Creates the room document in the "rooms" collection, storing its name, password, the
         // owner, which allows for other users to join with a password and enables the owner to
-        // delete the room rather than leave.
+        // delete the room rather than leave. It also stores the scenario level and the number of
+        // players.
         mapRoom.put(KEY_PASSWORD, password);
         mapRoom.put(KEY_OWNER, username);
+        mapRoom.put(KEY_SCENARIO, selectedScenario.getLevel());
+        mapRoom.put(KEY_NUMBER_PLAYERS, 1);
 
         creationBatch.set(roomsReference.document(roomName), mapRoom);
 
-        // Creates the "users" collection in the room's document and adds the owner as the first user.
-        // This document holds information related to the user's status once the user updates their
+        // Creates the "players" collection in the room's document and adds the owner as the first
+        // player. This document holds information related to the player's character info and
         // status.
-        Map<String, String> mapUsername = new HashMap<>();
-        mapUsername.put(KEY_USERNAME, username);
+        DocumentReference playerReference = roomsReference.document(roomName)
+                .collection("players").document(username);
 
-        creationBatch.set(roomsReference
-                        .document(roomName)
-                        .collection("users")
-                        .document(username),
-                mapUsername);
+        new FirestorePlayerController().createPlayer(resources, creationBatch, playerReference,
+                selectedCharacter, 1);
 
-        // Stores into the user's "joinedRooms" collection the room name of the room being joined, its
-        // password, and if the user is the room's owner. This allows for rejoining without inputting a
-        // password in the future from the main menu, as well as appropriate actions for disengagement
-        // with the room (leaving room for non-owners and deleting the room for owners).
+        // Creates the "tasks" collection in the room's document and creates a document for each
+        // task in the scenario. This document holds information about its associated task set (for
+        // filtered querying for use with the TaskAdapter) and each player's status for that task.
+        CollectionReference tasksReference = roomsReference.document(roomName)
+                .collection("tasks");
+
+        setTaskDocumentsIntoBatch(creationBatch, tasksReference, selectedScenario);
+
+        // Stores into the user's "joinedRooms" collection the room name of the room being joined,
+        // its password, and if the user is the room's owner. This allows for rejoining without
+        // inputting a password in the future from the main menu, as well as appropriate actions for
+        // disengagement with the room (leaving room for non-owners and deleting the room for
+        // owners).
         Map<String, Object> mapRoomInfo = new HashMap<>();
         mapRoomInfo.put(KEY_ROOM_NAME, roomName);
         mapRoomInfo.put(KEY_PASSWORD, password);
@@ -159,17 +184,71 @@ class FirestoreRoomController {
     }
 
     /**
+     * Creates and sets documents for each scenario task into the creationBatch.
+     */
+    private void setTaskDocumentsIntoBatch(WriteBatch creationBatch,
+                                   CollectionReference tasksReference,
+                                   ScenarioName scenarioName) {
+        int[] taskNumbers = new TaskMaster().getTaskNumbers(scenarioName);
+        int taskSetsNumber = taskNumbers.length + 1;
+        for (int i = 1; i < taskSetsNumber; i++) {
+            char j = 'a';
+            for (int x = 0; x < taskNumbers[i]; x++) {
+                Map<String, Integer> mapTask = new HashMap<>();
+                mapTask.put(KEY_TASK_SET, i);
+                mapTask.put(KEY_PLAYER_1_TASK_STATUS, 0);
+                mapTask.put(KEY_PLAYER_2_TASK_STATUS, 0);
+                mapTask.put(KEY_PLAYER_3_TASK_STATUS, 0);
+                mapTask.put(KEY_PLAYER_4_TASK_STATUS, 0);
+                String documentName = Integer.toString(i) + j;
+
+                creationBatch.set(tasksReference.document(documentName), mapTask);
+
+                j++;
+            }
+        }
+    }
+
+//    /**
+//     * Returns the Level of the scenario selected to be used for storing into the database.
+//     */
+//    private int getScenarioLevel(int selectedScenario) {
+//        switch (selectedScenario) {
+//            case R.id.radioButtonScenario1:
+//                return ScenarioName.OUTBREAK.getLevel();
+//            case R.id.radioButtonScenario2:
+//                return ScenarioName.BELOW_FREEZING_POINT.getLevel();
+//            case R.id.radioButtonScenario3:
+//                return ScenarioName.THE_HIVE.getLevel();
+//            case R.id.radioButtonScenario4:
+//                return ScenarioName.HELLFIRE.getLevel();
+//            case R.id.radioButtonScenario5:
+//                return ScenarioName.DECISIONS_DECISIONS.getLevel();
+//            default:
+//                return -1;
+//        }
+//    }
+
+    /**
      * Listens for completion of searching for a room in the database.
      */
     private class ReadMasterRoomListOnCompleteListener implements OnCompleteListener<DocumentSnapshot> {
+        private Resources resources;
         private String password;
         private String username;
         private String roomName;
+        private Character selectedCharacter;
+        private ScenarioName selectedScenario;
 
-        ReadMasterRoomListOnCompleteListener(String password, String username, String roomName) {
+        ReadMasterRoomListOnCompleteListener(Resources resources, String password, String username,
+                                             String roomName, Character selectedCharacter,
+                                             ScenarioName selectedScenario) {
+            this.resources = resources;
             this.password = password;
             this.username = username;
             this.roomName = roomName;
+            this.selectedCharacter = selectedCharacter;
+            this.selectedScenario = selectedScenario;
         }
 
         @Override
@@ -182,7 +261,8 @@ class FirestoreRoomController {
                             Toast.LENGTH_SHORT).show();
                 } else {
                     // User entered a room name which does not exist and a password; create the room.
-                    batchWriteToCreateRoom(password, username, roomName);
+                    batchWriteToCreateRoom(resources, password, username, roomName,
+                            selectedCharacter, selectedScenario);
                 }
             }
         }

@@ -29,6 +29,10 @@ class TaskMaster {
         }
     }
 
+    TaskMaster() {
+
+    }
+
     TaskSet[] getTaskSets() {
         return taskSets;
     }
@@ -132,6 +136,28 @@ class TaskMaster {
                 resources.getString(R.string.task_1_5_3_3),
                 resources.getString(R.string.task_1_5_3_4),
                 resources.getString(R.string.task_1_5_3_5)});
+    }
+
+    int[] getTaskNumbers(ScenarioName scenarioName) {
+        switch (scenarioName) {
+            case OUTBREAK:
+                return new int[]{6, 5, 3};
+
+            case BELOW_FREEZING_POINT:
+                return new int[]{3, 3, 5};
+
+            case THE_HIVE:
+                return new int[]{4, 3};
+
+            case HELLFIRE:
+                return new int[]{4, 2};
+
+            case DECISIONS_DECISIONS:
+                return new int[]{5, 5, 5};
+
+            default:
+                return new int[]{0};
+        }
     }
 }
 

@@ -4,22 +4,28 @@ package com.dommyg.reoutbreakteamcommunicator;
  * Contains each character's name and headshot file name.
  */
 enum Character {
-    ALYSSA (R.string.character_alyssa, "headshot_alyssa.jpg"),
-    CINDY (R.string.character_cindy, "headshot_cindy.jpg"),
-    DAVID (R.string.character_david, "headshot_david.jpg"),
-    GEORGE (R.string.character_george, "headshot_george.jpg"),
-    JIM (R.string.character_jim, "headshot_jim.jpg"),
-    KEVIN (R.string.character_kevin, "headshot_kevin.png"),
-    MARK (R.string.character_mark, "headshot_mark.jpg"),
-    YOKO (R.string.character_yoko, "headshot_yoko.jpg");
+    ALYSSA (0, R.string.character_alyssa, "headshot_alyssa.jpg"),
+    CINDY (1, R.string.character_cindy, "headshot_cindy.jpg"),
+    DAVID (2, R.string.character_david, "headshot_david.jpg"),
+    GEORGE (3, R.string.character_george, "headshot_george.jpg"),
+    JIM (4, R.string.character_jim, "headshot_jim.jpg"),
+    KEVIN (5, R.string.character_kevin, "headshot_kevin.png"),
+    MARK (6, R.string.character_mark, "headshot_mark.jpg"),
+    YOKO (7, R.string.character_yoko, "headshot_yoko.jpg");
 
+    private final int number;
     private final int name;
     private final String headshotPath;
     private static final String HEADSHOT_DIRECTORY = "character_headshots";
 
-    Character(int name, String headshotPath) {
+    Character(int number, int name, String headshotPath) {
+        this.number = number;
         this.name = name;
         this.headshotPath = headshotPath;
+    }
+
+    public int getNumber() {
+        return number;
     }
 
     public int getName() {
