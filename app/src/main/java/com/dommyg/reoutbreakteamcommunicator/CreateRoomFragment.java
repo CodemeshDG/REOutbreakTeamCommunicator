@@ -1,6 +1,5 @@
 package com.dommyg.reoutbreakteamcommunicator;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,24 +14,25 @@ import androidx.fragment.app.Fragment;
 
 public class CreateRoomFragment extends Fragment {
 
-    private Button buttonCreateRoom;
-
-    private RadioGroup radioGroupScenario;
     private boolean scenarioSelected;
-    private RadioGroup radioGroupCharacter;
     private boolean playerSelected;
 
     private EditText editTextRoomName;
     private EditText editTextPassword;
 
-    private int selectedPlayer;
+    private int selectedCharacter;
     private int selectedScenario;
 
+    private String username;
     private String roomName;
     private String password;
 
-    public static CreateRoomFragment newInstance() {
-        return new CreateRoomFragment();
+    public static CreateRoomFragment newInstance(String username) {
+        return new CreateRoomFragment(username);
+    }
+
+    private CreateRoomFragment(String username) {
+        this.username = username;
     }
 
     @Nullable
@@ -49,7 +49,7 @@ public class CreateRoomFragment extends Fragment {
     }
 
     private void setUpButtonCreateRoom(View v) {
-        buttonCreateRoom = v.findViewById(R.id.buttonCreateRoom);
+        Button buttonCreateRoom = v.findViewById(R.id.buttonCreateRoom);
         buttonCreateRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,24 +64,23 @@ public class CreateRoomFragment extends Fragment {
                 }
                 roomName = editTextRoomName.getText().toString();
                 password = editTextPassword.getText().toString();
-                Intent intent = ControlPanelActivity.newIntent(getContext(), selectedPlayer,
-                        selectedScenario, roomName, password);
-                startActivity(intent);
+                new FirestoreRoomController(getContext()).createRoom(getResources(), password,
+                        username, roomName, getCharacter(), getScenarioName());
             }
         });
     }
 
     private void setUpRadioGroups(View v) {
-        radioGroupCharacter = v.findViewById(R.id.radioGroupCharacter);
+        RadioGroup radioGroupCharacter = v.findViewById(R.id.radioGroupCharacter);
         radioGroupCharacter.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                selectedPlayer = radioGroup.getCheckedRadioButtonId();
+                selectedCharacter = radioGroup.getCheckedRadioButtonId();
                 playerSelected = true;
             }
         });
 
-        radioGroupScenario = v.findViewById(R.id.radioGroupScenario);
+        RadioGroup radioGroupScenario = v.findViewById(R.id.radioGroupScenario);
         radioGroupScenario.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
@@ -96,4 +95,43 @@ public class CreateRoomFragment extends Fragment {
         editTextPassword = v.findViewById(R.id.editTextSetPassword);
     }
 
+    private Character getCharacter() {
+        switch (selectedCharacter) {
+            case R.id.radioButtonCharacter1:
+                return Character.ALYSSA;
+            case R.id.radioButtonCharacter2:
+                return Character.CINDY;
+            case R.id.radioButtonCharacter3:
+                return Character.DAVID;
+            case R.id.radioButtonCharacter4:
+                return Character.GEORGE;
+            case R.id.radioButtonCharacter5:
+                return Character.JIM;
+            case R.id.radioButtonCharacter6:
+                return Character.KEVIN;
+            case R.id.radioButtonCharacter7:
+                return Character.MARK;
+            case R.id.radioButtonCharacter8:
+                return Character.YOKO;
+            default:
+                return null;
+        }
+    }
+
+    private ScenarioName getScenarioName() {
+        switch (selectedScenario) {
+            case R.id.radioButtonScenario1:
+                return ScenarioName.OUTBREAK;
+            case R.id.radioButtonScenario2:
+                return ScenarioName.BELOW_FREEZING_POINT;
+            case R.id.radioButtonScenario3:
+                return ScenarioName.THE_HIVE;
+            case R.id.radioButtonScenario4:
+                return ScenarioName.HELLFIRE;
+            case R.id.radioButtonScenario5:
+                return ScenarioName.DECISIONS_DECISIONS;
+            default:
+                return null;
+        }
+    }
 }

@@ -25,9 +25,7 @@ import java.util.ArrayList;
 
 public class ControlPanelFragment extends Fragment {
 
-    private RecyclerView recyclerViewTasks;
     private TaskAdapter taskAdapter;
-    private RecyclerView.LayoutManager recyclerViewTasksLayoutManager;
     private ArrayList<TaskItem> recyclerViewTaskNames = new ArrayList<>();
 
     private StatusAdapter statusAdapter;
@@ -47,22 +45,17 @@ public class ControlPanelFragment extends Fragment {
     private ImageButton buttonNextTaskSet;
     private ImageButton buttonPreviousTaskSet;
 
-    private CollectionReference playersReference;
-    private CollectionReference tasksReference;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference playersReference = db.collection("players");;
+    private CollectionReference tasksReference = db.collection("tasks");;
 
-    static ControlPanelFragment newInstance(int selectedPlayer, int selectedScenario, String roomName,
-                                            String password, Resources resources) {
-        return new ControlPanelFragment(selectedPlayer, selectedScenario, roomName, password, resources);
+    static ControlPanelFragment newInstance(Room room) {
+        return new ControlPanelFragment(room);
     }
 
-    private ControlPanelFragment(int selectedPlayer, int selectedScenario, String roomName,
-                                 String password, Resources resources) {
-        Scenario scenario = initializeScenario(selectedScenario, resources);
-        this.room = new Room(initializeCharacter(selectedPlayer, scenario), scenario, roomName, password);
+    private ControlPanelFragment(Room room) {
+        this.room = room;
         this.myCharacter = room.getPlayerUser();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        this.playersReference = db.collection("players");
-        this.tasksReference = db.collection("tasks");
     }
 
     @Nullable
@@ -71,7 +64,7 @@ public class ControlPanelFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_control_panel, container, false);
 
-        setUpRoom(v);
+        setUpTextViews(v);
         setUpStatusButtons(v);
         setUpStatusRecyclerView(v);
         setUpTaskElements(v);
@@ -347,11 +340,11 @@ public class ControlPanelFragment extends Fragment {
     }
 
     /**
-     * Finds views related to room name, character name, and scenario name and sets them.
+     * Finds TextViews related to room name, character name, and scenario name and sets them.
      */
-    private void setUpRoom(View v) {
+    private void setUpTextViews(View v) {
         textViewRoomName = v.findViewById(R.id.textViewRoomName);
-        textViewRoomName.setText("ROOM: " + room.getName() + " | PASSWORD: " + room.getPassword());
+        textViewRoomName.setText("ROOM: " + room.getName());
 
         textViewCharacterName = v.findViewById(R.id.textViewPlayerCharacterName);
         textViewCharacterName.setText(myCharacter.getCharacterName());

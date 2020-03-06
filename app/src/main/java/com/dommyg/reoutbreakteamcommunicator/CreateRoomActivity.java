@@ -10,7 +10,8 @@ public class CreateRoomActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment() {
-        return CreateRoomFragment.newInstance();
+        String username = getIntent().getStringExtra(KEY_USERNAME);
+        return CreateRoomFragment.newInstance(username);
     }
 
     public static Intent newIntent(Context packageContext, String username) {

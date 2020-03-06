@@ -7,13 +7,13 @@ class Room {
     private Player playerUser;
     private Scenario scenario;
     private String name;
-    private String password;
+    private String[] characterNames;
 
-    Room(Player playerUser, Scenario scenario, String name, String password) {
+    Room(Player playerUser, Scenario scenario, String name, String[] characterNames) {
         this.playerUser = playerUser;
         this.scenario = scenario;
         this.name = name;
-        this.password = password;
+        this.characterNames = characterNames;
     }
 
     Player getPlayerUser() {
@@ -28,7 +28,7 @@ class Room {
         return name;
     }
 
-    String getPassword() {
-        return password;
+    String[] getCharacterNames() {
+        return characterNames;
     }
 }
