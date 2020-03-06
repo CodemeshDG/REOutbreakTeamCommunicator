@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -53,13 +54,17 @@ public class CreateRoomFragment extends Fragment {
         buttonCreateRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Check if room name and password fields are filled out, else do not create room.
                 if (editTextRoomName.getText().toString().equals("") ||
                         editTextPassword.getText().toString().equals("")) {
+                    // User did not fill out all required fields.
+                    Toast.makeText(getContext(), "Fill out all fields.", Toast.LENGTH_SHORT)
+                            .show();
                     return;
                 }
-                // Check if a scenario and player are selected, else do not create room.
                 if (!playerSelected || !scenarioSelected) {
+                    // User did not select a scenario and/or a character.
+                    Toast.makeText(getContext(), "Select a scenario and character.",
+                            Toast.LENGTH_SHORT).show();
                     return;
                 }
                 roomName = editTextRoomName.getText().toString();

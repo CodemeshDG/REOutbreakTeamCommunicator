@@ -6,11 +6,13 @@ import android.content.res.Resources;
 
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.firestore.CollectionReference;
+
 public class ControlPanelActivity extends SingleFragmentActivity {
     private static final String EXTRA_SELECTED_CHARACTER = "com.dommyg.reoutbreakteamcommunicator.selected_player";
     private static final String EXTRA_SELECTED_SCENARIO = "com.dommyg.reoutbreakteamcommunicator.selected_scenario";
     private static final String EXTRA_ROOM_NAME = "com.dommyg.reoutbreakteamcommunicator.room_name";
-    private static final String EXTRA_CHARACTER_NAMES = "com.dommyg.reoutbreakteamcommunicator.character_names";
+//    private static final String EXTRA_CHARACTER_NAMES = "com.dommyg.reoutbreakteamcommunicator.character_names";
 
     @Override
     protected Fragment createFragment() {
@@ -20,28 +22,27 @@ public class ControlPanelActivity extends SingleFragmentActivity {
         ScenarioName selectedScenario = (ScenarioName) getIntent()
                 .getSerializableExtra(EXTRA_SELECTED_SCENARIO);
         String roomName = getIntent().getStringExtra(EXTRA_ROOM_NAME);
-        String[] characterNames = getIntent().getStringArrayExtra(EXTRA_CHARACTER_NAMES);
+//        String[] characterNames = getIntent().getStringArrayExtra(EXTRA_CHARACTER_NAMES);
 
         return ControlPanelFragment.newInstance(initializeRoom(selectedCharacter, selectedScenario,
-                roomName, characterNames));
+                roomName));
     }
 
     public static Intent newIntent(Context packageContext, Character selectedPlayer,
-                                   ScenarioName selectedScenario, String roomName,
-                                   String[] characterNames) {
+                                   ScenarioName selectedScenario, String roomName) {
         Intent intent = new Intent(packageContext, ControlPanelActivity.class);
         intent.putExtra(EXTRA_SELECTED_CHARACTER, selectedPlayer);
         intent.putExtra(EXTRA_SELECTED_SCENARIO, selectedScenario);
         intent.putExtra(EXTRA_ROOM_NAME, roomName);
-        intent.putExtra(EXTRA_CHARACTER_NAMES, characterNames);
+//        intent.putExtra(EXTRA_CHARACTER_NAMES, characterNames);
         return intent;
     }
 
     private Room initializeRoom(Character selectedCharacter, ScenarioName selectedScenario,
-                                String roomName, String[] characterNames) {
+                                String roomName) {
         Scenario scenario = initializeScenario(selectedScenario, getResources());
         Player player = initializePlayer(selectedCharacter, scenario);
-        return new Room(player, scenario, roomName, characterNames);
+        return new Room(player, scenario, roomName);
     }
 
     /**

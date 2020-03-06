@@ -1,7 +1,6 @@
 package com.dommyg.reoutbreakteamcommunicator;
 
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,8 +45,8 @@ public class ControlPanelFragment extends Fragment {
     private ImageButton buttonPreviousTaskSet;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference playersReference = db.collection("players");;
-    private CollectionReference tasksReference = db.collection("tasks");;
+    private CollectionReference playersReference = db.collection("players");
+    private CollectionReference tasksReference = db.collection("tasks");
 
     static ControlPanelFragment newInstance(Room room) {
         return new ControlPanelFragment(room);
@@ -101,56 +100,6 @@ public class ControlPanelFragment extends Fragment {
 
     private void updateStatus(StatusType statusType) {
         myCharacter.getStatus().setStatusType(statusType);
-    }
-
-    /**
-     * Creates a new Player, which will be the user's, for the room.
-     * @param selectedPlayer Selection made by the user with CreateRoomFragment's character radio
-     *                       group.
-     */
-    private Player initializeCharacter(int selectedPlayer, Scenario scenario) {
-        switch (selectedPlayer) {
-            case R.id.radioButtonCharacter1:
-                return new Player(Character.ALYSSA, scenario.getTaskMaster());
-            case R.id.radioButtonCharacter2:
-                return new Player(Character.CINDY, scenario.getTaskMaster());
-            case R.id.radioButtonCharacter3:
-                return new Player(Character.DAVID, scenario.getTaskMaster());
-            case R.id.radioButtonCharacter4:
-                return new Player(Character.GEORGE, scenario.getTaskMaster());
-            case R.id.radioButtonCharacter5:
-                return new Player(Character.JIM, scenario.getTaskMaster());
-            case R.id.radioButtonCharacter6:
-                return new Player(Character.KEVIN, scenario.getTaskMaster());
-            case R.id.radioButtonCharacter7:
-                return new Player(Character.MARK, scenario.getTaskMaster());
-            case R.id.radioButtonCharacter8:
-                return new Player(Character.YOKO, scenario.getTaskMaster());
-            default:
-                return null;
-        }
-    }
-
-    /**
-     * Creates a new Scenario for the room.
-     * @param selectedScenario Selection made by the user with CreateRoomFragment's scenario radio
-     *                         group.
-     */
-    private Scenario initializeScenario(int selectedScenario, Resources resources) {
-        switch (selectedScenario) {
-            case R.id.radioButtonScenario1:
-                return new Scenario(ScenarioName.OUTBREAK, resources);
-            case R.id.radioButtonScenario2:
-                return new Scenario(ScenarioName.BELOW_FREEZING_POINT, resources);
-            case R.id.radioButtonScenario3:
-                return new Scenario(ScenarioName.THE_HIVE, resources);
-            case R.id.radioButtonScenario4:
-                return new Scenario(ScenarioName.HELLFIRE, resources);
-            case R.id.radioButtonScenario5:
-                return new Scenario(ScenarioName.DECISIONS_DECISIONS, resources);
-            default:
-                return null;
-        }
     }
 
     /**
@@ -317,10 +266,8 @@ public class ControlPanelFragment extends Fragment {
                         .setQuery(query, TaskItem.class)
                         .build();
 
-        String[] characterNames = {"Alyssa", "Yoko", "Mark", "Cindy"};
-
         taskAdapter = new TaskAdapter(options, this, getResources(),
-                characterNames);
+                room.getCharacterNames());
 
         RecyclerView recyclerViewTasks = v.findViewById(R.id.recyclerViewTasks);
         recyclerViewTasks.setNestedScrollingEnabled(false);
@@ -329,14 +276,6 @@ public class ControlPanelFragment extends Fragment {
 
         recyclerViewTasks.setLayoutManager(recyclerViewTasksLayoutManager);
         recyclerViewTasks.setAdapter(taskAdapter);
-
-//        recyclerViewTasks = v.findViewById(R.id.recyclerViewTasks);
-//        recyclerViewTasks.setNestedScrollingEnabled(false);
-//        recyclerViewTasksLayoutManager = new LinearLayoutManager(getContext());
-//        taskAdapter = new TaskAdapter(this, recyclerViewTaskNames);
-//
-//        recyclerViewTasks.setLayoutManager(recyclerViewTasksLayoutManager);
-//        recyclerViewTasks.setAdapter(taskAdapter);
     }
 
     /**

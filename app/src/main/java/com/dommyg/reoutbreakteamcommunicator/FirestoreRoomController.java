@@ -64,9 +64,10 @@ class FirestoreRoomController {
 
     private static final int CODE_CREATE = 1;
     private static final int CODE_JOIN = 2;
-    private static final int CODE_LEAVE = 3;
-    private static final int CODE_DELETE = 4;
-    private static final int CODE_CHANGE_PASSWORD = 5;
+    private static final int CODE_REJOIN = 3;
+    private static final int CODE_LEAVE = 4;
+    private static final int CODE_DELETE = 5;
+    private static final int CODE_CHANGE_PASSWORD = 6;
 
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final CollectionReference roomsReference = db.collection("rooms");
@@ -89,38 +90,103 @@ class FirestoreRoomController {
     /**
      * Processes a request to join a room.
      */
-    void joinRoom(String password, String username, String roomName, boolean newJoin) {
-        setInputPassword(CODE_JOIN, password, username, roomName, newJoin);
+    void joinRoom(Resources resources, Character selectedCharacter, String password,
+                  String username, String roomName) {
+        setInputPassword(resources, selectedCharacter, password, username, roomName);
+    }
+
+    /**
+     * Processes a request to join a room which was previously joined.
+     */
+    void rejoinRoom(String password, String username, String roomName, int retrievedCharacter,
+                    int retrievedScenario) {
+        Character selectedCharacter = getCharacter(retrievedCharacter);
+        ScenarioName selectedScenario = getScenarioName(retrievedScenario);
+        setInputPassword(selectedCharacter, selectedScenario, password, username, roomName);
     }
 
     /**
      * Processes a request to leave a room; available only to non-owners of the room.
      */
     void leaveRoom(String password, String username, String roomName) {
-        setInputPassword(CODE_LEAVE, password, username, roomName, false);
+        setInputPassword(password, username, roomName);
     }
 
     /**
      * Processes a request to delete a room; available only to owners of the room.
      */
-    void deleteRoom(String password, String username, String roomName) {
-        setInputPassword(CODE_DELETE, password, username, roomName, false);
+    void deleteRoom(String password, String roomName) {
+        setInputPassword(password, roomName);
     }
 
     /**
-     * Sets the "inputPassword" field for the user so that they may read and write to certain documents
-     * in the room. This is a required set to join, leave, or delete a room.
+     * ONLY USED FOR JOINING A ROOM FOR THE FIRST TIME (OR REJOINING ONE THAT WAS LEFT)
+     * <p>
+     * Sets the "inputPassword" field for the user so that they may read and write to certain
+     * documents in the room. This is a required set to join, leave, or delete a room.
      */
-    private void setInputPassword(int command, String password, String username, String roomName,
-                                  boolean newJoin) {
+    private void setInputPassword(Resources resources, Character selectedCharacter,
+                                  String password, String username, String roomName) {
         Map<String, String> mapInputPassword = new HashMap<>();
         mapInputPassword.put(KEY_INPUT_PASSWORD, password);
 
         masterUserReference.document(uid)
                 .set(mapInputPassword, SetOptions.merge())
-                .addOnSuccessListener(new WriteInputPasswordOnSuccessListener(command, password,
-                        username, roomName, newJoin))
-                .addOnFailureListener(new ActionFailureListener(command));
+                .addOnSuccessListener(new WriteInputPasswordOnSuccessListener(CODE_JOIN, resources,
+                        selectedCharacter, password, username, roomName))
+                .addOnFailureListener(new ActionFailureListener(CODE_JOIN));
+    }
+
+    /**
+     * ONLY USED FOR JOINING A ROOM THAT WAS PREVIOUSLY JOINED (AND HAS NOT BEEN LEFT)
+     * <p>
+     * Sets the "inputPassword" field for the user so that they may read and write to certain
+     * documents in the room. This is a required set to join, leave, or delete a room. Used for
+     * joining a room that was previously joined (and has not been left).
+     */
+    private void setInputPassword(Character selectedCharacter, ScenarioName selectedScenario,
+                                  String password, String username, String roomName) {
+        Map<String, String> mapInputPassword = new HashMap<>();
+        mapInputPassword.put(KEY_INPUT_PASSWORD, password);
+
+        masterUserReference.document(uid)
+                .set(mapInputPassword, SetOptions.merge())
+                .addOnSuccessListener(new WriteInputPasswordOnSuccessListener(CODE_REJOIN,
+                        selectedCharacter, selectedScenario, password, username, roomName))
+                .addOnFailureListener(new ActionFailureListener(CODE_REJOIN));
+    }
+
+    /**
+     * ONLY USED FOR LEAVING A ROOM
+     * <p>
+     * Sets the "inputPassword" field for the user so that they may read and write to certain
+     * documents in the room. This is a required set to join, leave, or delete a room.
+     */
+    private void setInputPassword(String password, String username, String roomName) {
+        Map<String, String> mapInputPassword = new HashMap<>();
+        mapInputPassword.put(KEY_INPUT_PASSWORD, password);
+
+        masterUserReference.document(uid)
+                .set(mapInputPassword, SetOptions.merge())
+                .addOnSuccessListener(new WriteInputPasswordOnSuccessListener(CODE_LEAVE, username,
+                        roomName))
+                .addOnFailureListener(new ActionFailureListener(CODE_LEAVE));
+    }
+
+    /**
+     * ONLY USED FOR DELETING A ROOM
+     * <p>
+     * Sets the "inputPassword" field for the user so that they may read and write to certain
+     * documents in the room. This is a required set to join, leave, or delete a room.
+     */
+    private void setInputPassword(String password, String roomName) {
+        Map<String, String> mapInputPassword = new HashMap<>();
+        mapInputPassword.put(KEY_INPUT_PASSWORD, password);
+
+        masterUserReference.document(uid)
+                .set(mapInputPassword, SetOptions.merge())
+                .addOnSuccessListener(new WriteInputPasswordOnSuccessListener(CODE_DELETE, roomName))
+                .addOnFailureListener(new ActionFailureListener(CODE_DELETE));
     }
 
     /**
@@ -141,7 +207,6 @@ class FirestoreRoomController {
     private void batchWriteToCreateRoom(Resources resources, String password, String username,
                                         String roomName, Character selectedCharacter,
                                         ScenarioName selectedScenario) {
-        // TODO: Write character and scenario to joined rooms data.
         WriteBatch creationBatch = db.batch();
 
         // Stores the room name in the "masterRoomList" collection for future querying (to prevent
@@ -153,7 +218,7 @@ class FirestoreRoomController {
 
         // Creates the room document in the "rooms" collection, storing its name, password, the
         // owner, which allows for other users to join with a password and enables the owner to
-        // delete the room rather than leave. It also stores the scenario level and the number of
+        // delete the room rather than leave. It also stores the selected scenario and the number of
         // players.
         mapRoom.put(KEY_PASSWORD, password);
         mapRoom.put(KEY_OWNER, username);
@@ -183,11 +248,13 @@ class FirestoreRoomController {
         // its password, and if the user is the room's owner. This allows for rejoining without
         // inputting a password in the future from the main menu, as well as appropriate actions for
         // disengagement with the room (leaving room for non-owners and deleting the room for
-        // owners).
+        // owners). It also stores the selected character and scenario for the room.
         Map<String, Object> mapRoomInfo = new HashMap<>();
         mapRoomInfo.put(KEY_ROOM_NAME, roomName);
         mapRoomInfo.put(KEY_PASSWORD, password);
         mapRoomInfo.put(KEY_IS_OWNER, true);
+        mapRoomInfo.put(KEY_CHARACTER, selectedCharacter.getNumber());
+        mapRoomInfo.put(KEY_SCENARIO, selectedScenario.getLevel());
 
         creationBatch.set(masterUserReference
                         .document(uid)
@@ -195,12 +262,9 @@ class FirestoreRoomController {
                         .document(roomName),
                 mapRoomInfo);
 
-        String[] characterNames = {resources.getString(selectedCharacter.getName()), null, null,
-                null};
-
         creationBatch.commit()
                 .addOnSuccessListener(new BatchWriteCreateRoomOnSuccessListener(selectedCharacter,
-                        selectedScenario, roomName, characterNames))
+                        selectedScenario, roomName))
                 .addOnFailureListener(new ActionFailureListener(CODE_CREATE));
     }
 
@@ -208,8 +272,8 @@ class FirestoreRoomController {
      * Creates and sets documents for each scenario task into the creationBatch.
      */
     private void setTaskDocumentsIntoBatch(WriteBatch creationBatch,
-                                   CollectionReference tasksReference,
-                                   ScenarioName scenarioName) {
+                                           CollectionReference tasksReference,
+                                           ScenarioName scenarioName) {
         int[] taskNumbers = new TaskMaster().getTaskNumbers(scenarioName);
         int taskSetsNumber = taskNumbers.length + 1;
         for (int i = 1; i < taskSetsNumber; i++) {
@@ -278,22 +342,57 @@ class FirestoreRoomController {
      * action based upon the user's request (joining, leaving, or deleting room).
      */
     private class WriteInputPasswordOnSuccessListener implements OnSuccessListener<Void> {
-        private Character selectedCharacter;
         private int command;
+        private Resources resources;
+        private Character selectedCharacter;
+        private ScenarioName selectedScenario;
         private String password;
         private String username;
         private String roomName;
-        private boolean newJoin;
 
-        WriteInputPasswordOnSuccessListener(Character selectedCharacter, int command,
-                                            String password, String username, String roomName,
-                                            boolean newJoin) {
-            this.selectedCharacter = selectedCharacter;
+        /**
+         * Constructor used for joining a room for the first time (or rejoining one that was left).
+         */
+        WriteInputPasswordOnSuccessListener(int command, Resources resources,
+                                            Character selectedCharacter, String password,
+                                            String username, String roomName) {
             this.command = command;
+            this.resources = resources;
+            this.selectedCharacter = selectedCharacter;
             this.password = password;
             this.username = username;
             this.roomName = roomName;
-            this.newJoin = newJoin;
+        }
+
+        /**
+         * Constructor used for joining a room that was previously joined (and has not been left).
+         */
+        WriteInputPasswordOnSuccessListener(int command, Character selectedCharacter,
+                                            ScenarioName selectedScenario, String password,
+                                            String username, String roomName) {
+            this.command = command;
+            this.selectedCharacter = selectedCharacter;
+            this.selectedScenario = selectedScenario;
+            this.password = password;
+            this.username = username;
+            this.roomName = roomName;
+        }
+
+        /**
+         * Constructor used for leaving a room.
+         */
+        WriteInputPasswordOnSuccessListener(int command, String username, String roomName) {
+            this.command = command;
+            this.username = username;
+            this.roomName = roomName;
+        }
+
+        /**
+         * Constructor used for deleting a room.
+         */
+        WriteInputPasswordOnSuccessListener(int command, String roomName) {
+            this.command = command;
+            this.roomName = roomName;
         }
 
         @Override
@@ -302,8 +401,16 @@ class FirestoreRoomController {
                 case CODE_JOIN:
                     // Search for room.
                     roomsReference.document(roomName).get()
-                            .addOnCompleteListener(new ReadRoomsOnCompleteListener(selectedCharacter,
-                                    password, username, roomName, newJoin));
+                            .addOnCompleteListener(new ReadRoomsOnCompleteListener(resources,
+                                    selectedCharacter, password, username, roomName));
+                    break;
+
+                case CODE_REJOIN:
+                    // Search for room.
+                    roomsReference.document(roomName).get()
+                            .addOnCompleteListener(new ReadRoomsOnCompleteListener(
+                                    selectedCharacter, selectedScenario, password, username,
+                                    roomName));
                     break;
 
                 case CODE_LEAVE:
@@ -341,20 +448,36 @@ class FirestoreRoomController {
     private class ReadRoomsOnCompleteListener implements OnCompleteListener<DocumentSnapshot> {
         private Resources resources;
         private Character selectedCharacter;
+        private ScenarioName selectedScenario;
         private String password;
         private String username;
         private String roomName;
         private boolean newJoin;
 
+        /**
+         * Constructor used for joining a room for the first time (or rejoining one that was left).
+         */
         ReadRoomsOnCompleteListener(Resources resources, Character selectedCharacter,
-                                    String password, String username, String roomName,
-                                    boolean newJoin) {
+                                    String password, String username, String roomName) {
             this.resources = resources;
             this.selectedCharacter = selectedCharacter;
             this.password = password;
             this.username = username;
             this.roomName = roomName;
-            this.newJoin = newJoin;
+            this.newJoin = true;
+        }
+
+        /**
+         * Constructor used for joining a room that was previously joined (and has not been left).
+         */
+        ReadRoomsOnCompleteListener(Character selectedCharacter, ScenarioName selectedScenario,
+                                    String password, String username, String roomName) {
+            this.selectedCharacter = selectedCharacter;
+            this.selectedScenario = selectedScenario;
+            this.password = password;
+            this.username = username;
+            this.roomName = roomName;
+            this.newJoin = false;
         }
 
         @Override
@@ -364,6 +487,9 @@ class FirestoreRoomController {
             if (task.isSuccessful()) {
                 // Was able to search for room.
                 DocumentSnapshot document = task.getResult();
+
+                DocumentReference playerReference = roomsReference.document(roomName)
+                        .collection("players").document(username);
 
                 if (document.exists()) {
                     // Room document exists.
@@ -393,11 +519,8 @@ class FirestoreRoomController {
                             mapRoomInfo.put(KEY_NUMBER_PLAYERS, FieldValue.increment(1));
 
                             joinBatch.set(masterUserReference.document(uid)
-                                    .collection("joinedRooms").document(roomName),
+                                            .collection("joinedRooms").document(roomName),
                                     mapRoomInfo);
-
-                            DocumentReference playerReference = roomsReference.document(roomName)
-                                    .collection("players").document(username);
 
                             new FirestorePlayerController().createPlayer(resources, joinBatch,
                                     playerReference, selectedCharacter,
@@ -405,12 +528,12 @@ class FirestoreRoomController {
 
                             joinBatch.commit()
                                     .addOnSuccessListener(new BatchWriteJoinRoomOnSuccessListener(
-                                            selectedCharacter, selectedScenario, roomName, ))
+                                            selectedCharacter, selectedScenario, roomName))
                                     .addOnFailureListener(new ActionFailureListener(CODE_JOIN));
                         } else {
                             // User is rejoining this room and does not require his "joinedRooms"
                             // collection to be updated.
-                            startMainPanelActivity(username, roomName);
+                            startMainPanelActivity(selectedCharacter, selectedScenario, roomName);
                         }
                     } else {
                         // User entered the wrong password for the room.
@@ -428,59 +551,6 @@ class FirestoreRoomController {
                         Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "onComplete: " + task.getException());
             }
-        }
-    }
-
-    private ScenarioName getScenarioName(int selectedScenario) {
-        switch (selectedScenario) {
-            case OUTBREAK:
-                return ScenarioName.OUTBREAK;
-
-            case BELOW_FREEZING_POINT:
-                return ScenarioName.BELOW_FREEZING_POINT;
-
-            case THE_HIVE:
-                return ScenarioName.THE_HIVE;
-
-            case HELLFIRE:
-                return ScenarioName.HELLFIRE;
-
-            case DECISIONS_DECISIONS:
-                return ScenarioName.DECISIONS_DECISIONS;
-
-            default:
-                return null;
-        }
-    }
-
-    private Character getCharacter(int selectedCharacter) {
-        switch (selectedCharacter) {
-            case ALYSSA:
-                return Character.ALYSSA;
-
-            case CINDY:
-                return Character.CINDY;
-
-            case DAVID:
-                return Character.DAVID;
-
-            case GEORGE:
-                return Character.GEORGE;
-
-            case JIM:
-                return Character.JIM;
-
-            case KEVIN:
-                return Character.KEVIN;
-
-            case MARK:
-                return Character.MARK;
-
-            case YOKO:
-                return Character.YOKO;
-
-            default:
-                return null;
         }
     }
 
@@ -537,20 +607,17 @@ class FirestoreRoomController {
         private Character selectedCharacter;
         private ScenarioName selectedScenario;
         private String roomName;
-        private String[] characterNames;
 
         BatchWriteJoinRoomOnSuccessListener(Character selectedCharacter,
-                                            ScenarioName selectedScenario, String roomName,
-                                            String[] characterNames) {
+                                            ScenarioName selectedScenario, String roomName) {
             this.selectedCharacter = selectedCharacter;
             this.selectedScenario = selectedScenario;
             this.roomName = roomName;
-            this.characterNames = characterNames;
         }
 
         @Override
         public void onSuccess(Void aVoid) {
-            startMainPanelActivity(selectedCharacter, selectedScenario, roomName, characterNames);
+            startMainPanelActivity(selectedCharacter, selectedScenario, roomName);
         }
     }
 
@@ -562,20 +629,17 @@ class FirestoreRoomController {
         private Character selectedCharacter;
         private ScenarioName selectedScenario;
         private String roomName;
-        private String[] characterNames;
 
         BatchWriteCreateRoomOnSuccessListener(Character selectedCharacter,
-                                              ScenarioName selectedScenario, String roomName,
-                                              String[] characterNames) {
+                                              ScenarioName selectedScenario, String roomName) {
             this.selectedCharacter = selectedCharacter;
             this.selectedScenario = selectedScenario;
             this.roomName = roomName;
-            this.characterNames = characterNames;
         }
 
         @Override
         public void onSuccess(Void aVoid) {
-            startMainPanelActivity(selectedCharacter, selectedScenario, roomName, characterNames);
+            startMainPanelActivity(selectedCharacter, selectedScenario, roomName);
         }
     }
 
@@ -630,6 +694,10 @@ class FirestoreRoomController {
                     failureMessage = "Error searching for room.";
                     break;
 
+                case CODE_REJOIN:
+                    failureMessage = "Error joining room.";
+                    break;
+
                 case CODE_LEAVE:
                     failureMessage = "Error trying to leave room.";
                     break;
@@ -650,10 +718,63 @@ class FirestoreRoomController {
         }
     }
 
+    private ScenarioName getScenarioName(int selectedScenario) {
+        switch (selectedScenario) {
+            case OUTBREAK:
+                return ScenarioName.OUTBREAK;
+
+            case BELOW_FREEZING_POINT:
+                return ScenarioName.BELOW_FREEZING_POINT;
+
+            case THE_HIVE:
+                return ScenarioName.THE_HIVE;
+
+            case HELLFIRE:
+                return ScenarioName.HELLFIRE;
+
+            case DECISIONS_DECISIONS:
+                return ScenarioName.DECISIONS_DECISIONS;
+
+            default:
+                return null;
+        }
+    }
+
+    private Character getCharacter(int selectedCharacter) {
+        switch (selectedCharacter) {
+            case ALYSSA:
+                return Character.ALYSSA;
+
+            case CINDY:
+                return Character.CINDY;
+
+            case DAVID:
+                return Character.DAVID;
+
+            case GEORGE:
+                return Character.GEORGE;
+
+            case JIM:
+                return Character.JIM;
+
+            case KEVIN:
+                return Character.KEVIN;
+
+            case MARK:
+                return Character.MARK;
+
+            case YOKO:
+                return Character.YOKO;
+
+            default:
+                return null;
+        }
+    }
+
     private void startMainPanelActivity(Character selectedPlayer, ScenarioName selectedScenario,
-                                        String roomName, String[] characterNames) {
+                                        String roomName) {
         Intent intent = ControlPanelActivity.newIntent(context, selectedPlayer, selectedScenario,
-                roomName, characterNames);
+                roomName);
         context.startActivity(intent);
     }
 }
