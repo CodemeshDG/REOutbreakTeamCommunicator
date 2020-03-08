@@ -41,7 +41,7 @@ class FirestoreRoomController {
     private static final String KEY_NUMBER_PLAYERS = "numberPlayers";
     private static final String KEY_SCENARIO = "scenario";
     private static final String KEY_CHARACTER = "character";
-    private static final String KEY_TASK_SET = "taskSet";
+    static final String KEY_TASK_SET = "taskSet";
     private static final String KEY_PLAYER_1_TASK_STATUS = "player1TaskStatus";
     private static final String KEY_PLAYER_2_TASK_STATUS = "player2TaskStatus";
     private static final String KEY_PLAYER_3_TASK_STATUS = "player3TaskStatus";
@@ -264,7 +264,7 @@ class FirestoreRoomController {
 
         creationBatch.commit()
                 .addOnSuccessListener(new BatchWriteCreateRoomOnSuccessListener(selectedCharacter,
-                        selectedScenario, roomName))
+                        selectedScenario, roomName, username))
                 .addOnFailureListener(new ActionFailureListener(CODE_CREATE));
     }
 
@@ -275,8 +275,8 @@ class FirestoreRoomController {
                                            CollectionReference tasksReference,
                                            ScenarioName scenarioName) {
         int[] taskNumbers = new TaskMaster().getTaskNumbers(scenarioName);
-        int taskSetsNumber = taskNumbers.length + 1;
-        for (int i = 1; i < taskSetsNumber; i++) {
+        int taskSetsNumber = taskNumbers.length;
+        for (int i = 0; i < taskSetsNumber; i++) {
             char j = 'a';
             for (int x = 0; x < taskNumbers[i]; x++) {
                 Map<String, Integer> mapTask = new HashMap<>();
@@ -285,7 +285,7 @@ class FirestoreRoomController {
                 mapTask.put(KEY_PLAYER_2_TASK_STATUS, 0);
                 mapTask.put(KEY_PLAYER_3_TASK_STATUS, 0);
                 mapTask.put(KEY_PLAYER_4_TASK_STATUS, 0);
-                String documentName = Integer.toString(i) + j;
+                String documentName = Integer.toString(i + 1) + j;
 
                 creationBatch.set(tasksReference.document(documentName), mapTask);
 
@@ -433,6 +433,7 @@ class FirestoreRoomController {
 
                 case CODE_DELETE:
                     // Search for all users' documents related to the room.
+                    // TODO: Fix this so it deletes the players and tasks collections.
                     roomsReference.document(roomName)
                             .collection("users")
                             .get()
@@ -519,8 +520,8 @@ class FirestoreRoomController {
                             mapRoomInfo.put(KEY_NUMBER_PLAYERS, FieldValue.increment(1));
 
                             joinBatch.set(masterUserReference.document(uid)
-                                            .collection("joinedRooms").document(roomName),
-                                    mapRoomInfo);
+                                            .collection("joinedRooms")
+                                            .document(roomName), mapRoomInfo);
 
                             new FirestorePlayerController().createPlayer(resources, joinBatch,
                                     playerReference, selectedCharacter,
@@ -528,12 +529,14 @@ class FirestoreRoomController {
 
                             joinBatch.commit()
                                     .addOnSuccessListener(new BatchWriteJoinRoomOnSuccessListener(
-                                            selectedCharacter, selectedScenario, roomName))
+                                            selectedCharacter, selectedScenario, roomName,
+                                            username))
                                     .addOnFailureListener(new ActionFailureListener(CODE_JOIN));
                         } else {
                             // User is rejoining this room and does not require his "joinedRooms"
                             // collection to be updated.
-                            startMainPanelActivity(selectedCharacter, selectedScenario, roomName);
+                            startMainPanelActivity(selectedCharacter, selectedScenario, roomName,
+                                    username);
                         }
                     } else {
                         // User entered the wrong password for the room.
@@ -607,17 +610,20 @@ class FirestoreRoomController {
         private Character selectedCharacter;
         private ScenarioName selectedScenario;
         private String roomName;
+        private String username;
 
         BatchWriteJoinRoomOnSuccessListener(Character selectedCharacter,
-                                            ScenarioName selectedScenario, String roomName) {
+                                            ScenarioName selectedScenario, String roomName,
+                                            String username) {
             this.selectedCharacter = selectedCharacter;
             this.selectedScenario = selectedScenario;
             this.roomName = roomName;
+            this.username = username;
         }
 
         @Override
         public void onSuccess(Void aVoid) {
-            startMainPanelActivity(selectedCharacter, selectedScenario, roomName);
+            startMainPanelActivity(selectedCharacter, selectedScenario, roomName, username);
         }
     }
 
@@ -629,17 +635,20 @@ class FirestoreRoomController {
         private Character selectedCharacter;
         private ScenarioName selectedScenario;
         private String roomName;
+        private String username;
 
         BatchWriteCreateRoomOnSuccessListener(Character selectedCharacter,
-                                              ScenarioName selectedScenario, String roomName) {
+                                              ScenarioName selectedScenario, String roomName,
+                                              String username) {
             this.selectedCharacter = selectedCharacter;
             this.selectedScenario = selectedScenario;
             this.roomName = roomName;
+            this.username = username;
         }
 
         @Override
         public void onSuccess(Void aVoid) {
-            startMainPanelActivity(selectedCharacter, selectedScenario, roomName);
+            startMainPanelActivity(selectedCharacter, selectedScenario, roomName, username);
         }
     }
 
@@ -772,9 +781,9 @@ class FirestoreRoomController {
     }
 
     private void startMainPanelActivity(Character selectedPlayer, ScenarioName selectedScenario,
-                                        String roomName) {
+                                        String roomName, String username) {
         Intent intent = ControlPanelActivity.newIntent(context, selectedPlayer, selectedScenario,
-                roomName);
+                roomName, username);
         context.startActivity(intent);
     }
 }

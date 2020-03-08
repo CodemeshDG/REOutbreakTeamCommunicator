@@ -59,7 +59,7 @@ public class JoinRoomFragment extends Fragment {
             }
         });
 
-        Button buttonJoinRoom = v.findViewById(R.id.buttonCreateRoom);
+        Button buttonJoinRoom = v.findViewById(R.id.buttonJoinRoom);
         buttonJoinRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

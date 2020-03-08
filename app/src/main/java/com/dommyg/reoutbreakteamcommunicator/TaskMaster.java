@@ -141,7 +141,7 @@ class TaskMaster {
     int[] getTaskNumbers(ScenarioName scenarioName) {
         switch (scenarioName) {
             case OUTBREAK:
-                return new int[]{6, 5, 3};
+                return new int[]{5, 4, 2};
 
             case BELOW_FREEZING_POINT:
                 return new int[]{3, 3, 5};

@@ -14,21 +14,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.DocumentReference;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class TaskAdapter extends FirestoreRecyclerAdapter<TaskItem, TaskAdapter.TaskViewHolder> {
 
-    private String[] characterNames;
     private Resources resources;
     private ControlPanelFragment controlPanelFragment;
+    private CollectionReference tasksReference;
+    private String[] characterNames;
 
     private final int CHECK_BOX_PLAN = 0;
     private final int CHECK_BOX_IN_PROGRESS = 1;
     private final int CHECK_BOX_COMPLETE = 2;
 
+    // TODO: Change this so that it is generated based on a value stored in Player.
     private final String KEY_PLAYER_STATUS = "player1TaskStatus";
 
     static class TaskViewHolder extends RecyclerView.ViewHolder {
@@ -47,19 +49,32 @@ public class TaskAdapter extends FirestoreRecyclerAdapter<TaskItem, TaskAdapter.
         }
     }
 
-    TaskAdapter(@NonNull FirestoreRecyclerOptions<TaskItem> options,
-                ControlPanelFragment controlPanelFragment, Resources resources,
+    TaskAdapter(@NonNull FirestoreRecyclerOptions<TaskItem> options, Resources resources,
+                ControlPanelFragment controlPanelFragment, CollectionReference tasksReference,
                 String[] characterNames) {
         super(options);
-        this.controlPanelFragment = controlPanelFragment;
         this.resources = resources;
+        this.controlPanelFragment = controlPanelFragment;
+        this.tasksReference = tasksReference;
         this.characterNames = characterNames;
     }
 
 
     @Override
-    protected void onBindViewHolder(@NonNull TaskViewHolder holder, int position, @NonNull TaskItem model) {
+    protected void onBindViewHolder(@NonNull TaskViewHolder holder, int position,
+                                    @NonNull TaskItem model) {
         holder.textViewTaskName.setText("Test the tasks" + position);
+
+        char charIndex = 'a';
+
+        for (int i = 0; i < position; i++) {
+            charIndex++;
+        }
+
+        String taskDocumentName = String.valueOf(
+                controlPanelFragment.getCurrentTaskSetToDisplay() + 1) + charIndex;
+
+        DocumentReference taskDocumentReference = tasksReference.document(taskDocumentName);
 
         int[] taskPlayerStatuses = {model.getPlayer1TaskStatus(), model.getPlayer2TaskStatus(),
                 model.getPlayer3TaskStatus(), model.getPlayer4TaskStatus()};
@@ -72,9 +87,12 @@ public class TaskAdapter extends FirestoreRecyclerAdapter<TaskItem, TaskAdapter.
             }
         }
 
-        holder.checkBoxes[CHECK_BOX_PLAN].setChecked(updateCheckBoxFromPlayerTaskProgress(position, CHECK_BOX_PLAN));
-        holder.checkBoxes[CHECK_BOX_IN_PROGRESS].setChecked(updateCheckBoxFromPlayerTaskProgress(position, CHECK_BOX_IN_PROGRESS));
-        holder.checkBoxes[CHECK_BOX_COMPLETE].setChecked(updateCheckBoxFromPlayerTaskProgress(position, CHECK_BOX_COMPLETE));
+        holder.checkBoxes[CHECK_BOX_PLAN].setChecked(
+                updateCheckBoxFromPlayerTaskProgress(position, CHECK_BOX_PLAN));
+        holder.checkBoxes[CHECK_BOX_IN_PROGRESS].setChecked(
+                updateCheckBoxFromPlayerTaskProgress(position, CHECK_BOX_IN_PROGRESS));
+        holder.checkBoxes[CHECK_BOX_COMPLETE].setChecked(
+                updateCheckBoxFromPlayerTaskProgress(position, CHECK_BOX_COMPLETE));
 
         if (holder.checkBoxListeners[0] != null) {
             for (CheckBoxListener checkBoxListener : holder.checkBoxListeners) {
@@ -84,7 +102,8 @@ public class TaskAdapter extends FirestoreRecyclerAdapter<TaskItem, TaskAdapter.
 
         for (int i = 0; i < holder.checkBoxes.length; i++) {
                 holder.checkBoxListeners[i] =
-                        new CheckBoxListener(i, position, holder.checkBoxes, holder.checkBoxListeners);
+                        new CheckBoxListener(i, position, holder.checkBoxes,
+                                holder.checkBoxListeners, taskDocumentReference);
                 holder.checkBoxes[i].setOnCheckedChangeListener(holder.checkBoxListeners[i]);
         }
     }
@@ -132,16 +151,16 @@ public class TaskAdapter extends FirestoreRecyclerAdapter<TaskItem, TaskAdapter.
         private CheckBox[] checkBoxes;
         private CheckBoxListener[] checkBoxListeners;
         private boolean ignoreEvents = false;
-
-        private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        private final CollectionReference tasksReference = db.collection("tasks");
+        private DocumentReference taskDocumentReference;
 
         CheckBoxListener(int checkBoxIndex, int taskPosition, CheckBox[] checkBoxes,
-                         CheckBoxListener[] checkBoxListeners) {
+                         CheckBoxListener[] checkBoxListeners,
+                         DocumentReference taskDocumentReference) {
             this.checkBoxIndex = checkBoxIndex;
             this.taskPosition = taskPosition;
             this.checkBoxes = checkBoxes;
             this.checkBoxListeners = checkBoxListeners;
+            this.taskDocumentReference = taskDocumentReference;
         }
 
         @Override
@@ -158,12 +177,12 @@ public class TaskAdapter extends FirestoreRecyclerAdapter<TaskItem, TaskAdapter.
                     int updateArray = checkBoxIndex + 1;
                     Map<String, Object> updateMap = new HashMap<>();
                     updateMap.put(KEY_PLAYER_STATUS, updateArray);
-                    tasksReference.document(String.valueOf(taskPosition + 1)).update(updateMap);
+                    taskDocumentReference.update(updateMap);
                 } else {
                     int updateArray = 0;
                     Map<String, Object> updateMap = new HashMap<>();
                     updateMap.put(KEY_PLAYER_STATUS, updateArray);
-                    tasksReference.document(String.valueOf(taskPosition + 1)).update(updateMap);
+                    taskDocumentReference.update(updateMap);
                 }
                 for (CheckBoxListener checkBoxListener : checkBoxListeners) {
                     checkBoxListener.setIgnoreEvents(false);

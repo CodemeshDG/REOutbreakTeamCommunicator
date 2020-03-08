@@ -69,10 +69,6 @@ class Player {
         return character.getName();
     }
 
-    String getHeadshot() {
-        return character.getHeadshotPath();
-    }
-
     boolean[][][] getTaskProgress() {
         return taskProgress;
     }

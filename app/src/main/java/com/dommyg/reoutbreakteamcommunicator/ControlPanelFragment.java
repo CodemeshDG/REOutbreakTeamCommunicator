@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -30,7 +31,6 @@ public class ControlPanelFragment extends Fragment {
     private StatusAdapter statusAdapter;
 
     private Room room;
-    private Player myCharacter;
 
     private TextView textViewRoomName;
     private TextView textViewCharacterName;
@@ -44,17 +44,12 @@ public class ControlPanelFragment extends Fragment {
     private ImageButton buttonNextTaskSet;
     private ImageButton buttonPreviousTaskSet;
 
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference playersReference = db.collection("players");
-    private CollectionReference tasksReference = db.collection("tasks");
-
     static ControlPanelFragment newInstance(Room room) {
         return new ControlPanelFragment(room);
     }
 
     private ControlPanelFragment(Room room) {
         this.room = room;
-        this.myCharacter = room.getPlayerUser();
     }
 
     @Nullable
@@ -76,6 +71,7 @@ public class ControlPanelFragment extends Fragment {
         super.onStart();
         statusAdapter.startListening();
         taskAdapter.startListening();
+        room.startListeningToPlayerReference();
     }
 
     @Override
@@ -83,6 +79,7 @@ public class ControlPanelFragment extends Fragment {
         super.onStop();
         statusAdapter.stopListening();
         taskAdapter.stopListening();
+        room.stopListeningToPlayerReference();
     }
 
     @Override
@@ -99,14 +96,16 @@ public class ControlPanelFragment extends Fragment {
     }
 
     private void updateStatus(StatusType statusType) {
-        myCharacter.getStatus().setStatusType(statusType);
+        room.getPlayerUser()
+                .getStatus()
+                .setStatusType(statusType);
     }
 
     /**
      * Sets up the recyclerView for the team's statuses.
      */
     private void setUpStatusRecyclerView(View v) {
-        Query query = playersReference;
+        Query query = room.getPlayersReference();
 
         FirestoreRecyclerOptions<StatusItem> options =
                 new FirestoreRecyclerOptions.Builder<StatusItem>()
@@ -259,20 +258,22 @@ public class ControlPanelFragment extends Fragment {
     private void setUpTaskSetRecyclerView(View v) {
         addToTaskSet();
 
-        Query query = tasksReference;
+        Query query = room.getTasksReference().whereEqualTo(FirestoreRoomController.KEY_TASK_SET,
+                currentTaskSetToDisplay);
 
         FirestoreRecyclerOptions<TaskItem> options =
                 new FirestoreRecyclerOptions.Builder<TaskItem>()
                         .setQuery(query, TaskItem.class)
                         .build();
 
-        taskAdapter = new TaskAdapter(options, this, getResources(),
-                room.getCharacterNames());
+        taskAdapter = new TaskAdapter(options, getResources(), this,
+                room.getTasksReference(), room.getCharacterNames());
 
         RecyclerView recyclerViewTasks = v.findViewById(R.id.recyclerViewTasks);
         recyclerViewTasks.setNestedScrollingEnabled(false);
 
-        RecyclerView.LayoutManager recyclerViewTasksLayoutManager = new LinearLayoutManager(getContext());
+        RecyclerView.LayoutManager recyclerViewTasksLayoutManager = new LinearLayoutManager(
+                getContext());
 
         recyclerViewTasks.setLayoutManager(recyclerViewTasksLayoutManager);
         recyclerViewTasks.setAdapter(taskAdapter);
@@ -283,10 +284,10 @@ public class ControlPanelFragment extends Fragment {
      */
     private void setUpTextViews(View v) {
         textViewRoomName = v.findViewById(R.id.textViewRoomName);
-        textViewRoomName.setText("ROOM: " + room.getName());
+        textViewRoomName.setText("ROOM: " + room.getRoomName());
 
         textViewCharacterName = v.findViewById(R.id.textViewPlayerCharacterName);
-        textViewCharacterName.setText(myCharacter.getCharacterName());
+        textViewCharacterName.setText(room.getPlayerUser().getCharacterName());
 
         textViewScenarioName = v.findViewById(R.id.textViewScenarioName);
         textViewScenarioName.setText(room.getScenario().getScenarioName());
@@ -298,10 +299,11 @@ public class ControlPanelFragment extends Fragment {
         String[] itemsWeapon = room.getScenario().getItemsWeapon();
         String[] itemsAmmo = room.getScenario().getItemsAmmo();
         String[] itemsKey = room.getScenario().getItemsKey();
-        boolean isYoko = (myCharacter.getCharacterName() == Character.YOKO.getName());
+        boolean isYoko = (room.getPlayerUser().getCharacterName() == Character.YOKO.getName());
 
-        return ChangeStatusActivity.newIntent(getContext(), "dom", getResources().getString(myCharacter.getCharacterName()), statusType, locations,
-                itemsHealing, itemsWeapon, itemsAmmo, itemsKey, isYoko);
+        return ChangeStatusActivity.newIntent(getContext(), room.getUsername(),
+                getResources().getString(room.getPlayerUser().getCharacterName()), statusType,
+                locations, itemsHealing, itemsWeapon, itemsAmmo, itemsKey, isYoko);
     }
 
     Room getRoom() {
