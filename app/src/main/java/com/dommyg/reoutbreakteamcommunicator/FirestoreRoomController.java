@@ -435,9 +435,9 @@ class FirestoreRoomController {
                     // Search for all users' documents related to the room.
                     // TODO: Fix this so it deletes the players and tasks collections.
                     roomsReference.document(roomName)
-                            .collection("users")
+                            .collection("players")
                             .get()
-                            .addOnCompleteListener(new ReadUsersOnCompleteListener(roomName));
+                            .addOnCompleteListener(new ReadPlayersOnCompleteListener(roomName));
             }
         }
     }
@@ -558,25 +558,62 @@ class FirestoreRoomController {
     }
 
     /**
-     * Listens for completion of searching for a room's user documents in the database, and then
-     * attempts to delete them, along with the room's document in both the "rooms" and
-     * "masterRoomsList" collections.
+     * Listens for completion of searching for a room's "players" documents in the database, and
+     * then places their deletion into a WriteBatch for further processing.
      */
-    private class ReadUsersOnCompleteListener implements OnCompleteListener<QuerySnapshot> {
+    private class ReadPlayersOnCompleteListener implements OnCompleteListener<QuerySnapshot> {
         private String roomName;
 
-        ReadUsersOnCompleteListener(String roomName) {
+        ReadPlayersOnCompleteListener(String roomName) {
             this.roomName = roomName;
         }
 
         @Override
         public void onComplete(@NonNull Task<QuerySnapshot> task) {
             if (task.isSuccessful()) {
-                // Was able to retrieve users' documents.
+                // Was able to retrieve "players" documents.
 
                 QuerySnapshot documents = task.getResult();
 
                 WriteBatch deletionBatch = db.batch();
+
+                for (QueryDocumentSnapshot document : documents) {
+                    deletionBatch.delete(document.getReference());
+                }
+
+                // Search for all users' documents related to the room.
+                roomsReference.document(roomName)
+                        .collection("tasks")
+                        .get()
+                        .addOnCompleteListener(new ReadTasksOnCompleteListener(deletionBatch,
+                                roomName));
+            } else {
+                Toast.makeText(context, "Error connecting to database.", Toast.LENGTH_SHORT)
+                        .show();
+            }
+        }
+    }
+
+    /**
+     * Listens for completion of searching for a room's "tasks" documents in the database, and then
+     * places their deletion into a WriteBatch, along with the room's document in both the "rooms"
+     * and "masterRoomsList" collections.
+     */
+    private class ReadTasksOnCompleteListener implements OnCompleteListener<QuerySnapshot> {
+        private WriteBatch deletionBatch;
+        private String roomName;
+
+        ReadTasksOnCompleteListener(WriteBatch deletionBatch, String roomName) {
+            this.deletionBatch = deletionBatch;
+            this.roomName = roomName;
+        }
+
+        @Override
+        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+            if (task.isSuccessful()) {
+                // Was able to retrieve "tasks" documents.
+
+                QuerySnapshot documents = task.getResult();
 
                 for (QueryDocumentSnapshot document : documents) {
                     deletionBatch.delete(document.getReference());
@@ -593,7 +630,6 @@ class FirestoreRoomController {
                 deletionBatch.commit()
                         .addOnSuccessListener(new BatchWriteDeleteRoomOnSuccessListener(roomName))
                         .addOnFailureListener(new ActionFailureListener(CODE_DELETE));
-
             } else {
                 Toast.makeText(context, "Error connecting to database.", Toast.LENGTH_SHORT)
                         .show();
