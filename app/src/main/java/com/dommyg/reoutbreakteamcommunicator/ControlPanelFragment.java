@@ -18,12 +18,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
 
-import java.util.ArrayList;
-
 public class ControlPanelFragment extends Fragment {
 
     private TaskAdapter taskAdapter;
-    private ArrayList<TaskItem> recyclerViewTaskNames = new ArrayList<>();
+    private RecyclerView recyclerViewTasks;
 
     private StatusAdapter statusAdapter;
 
@@ -231,30 +229,24 @@ public class ControlPanelFragment extends Fragment {
                 [currentTaskSetToDisplay]
                 .getName());
 
-        for (int i = recyclerViewTaskNames.size() - 1; recyclerViewTaskNames.size() != 0; i--) {
-            recyclerViewTaskNames.remove(i);
-        }
-
-        addToTaskSet();
-        taskAdapter.notifyDataSetChanged();
-    }
-
-    /**
-     * Adds TaskItems to recyclerViewTaskNames from Room's TaskMaster based upon currentTaskSetToDisplay.
-     */
-    private void addToTaskSet() {
-        TaskSet temp = room.getScenario()
-                .getTaskMaster()
-                .getTaskSets()
-                [currentTaskSetToDisplay];
-        for (int i = 0; i < temp.getTasksSize(); i++) {
-            recyclerViewTaskNames.add(new TaskItem(temp.getTasks()[i], null));
-        }
+        taskAdapter.stopListening();
+        updateTaskSetRecyclerView();
+        taskAdapter.startListening();
     }
 
     private void setUpTaskSetRecyclerView(View v) {
-        addToTaskSet();
+        recyclerViewTasks = v.findViewById(R.id.recyclerViewTasks);
+        recyclerViewTasks.setNestedScrollingEnabled(false);
 
+        RecyclerView.LayoutManager recyclerViewTasksLayoutManager = new LinearLayoutManager(
+                getContext());
+
+        recyclerViewTasks.setLayoutManager(recyclerViewTasksLayoutManager);
+
+        updateTaskSetRecyclerView();
+    }
+
+    private void updateTaskSetRecyclerView() {
         Query query = room.getTasksReference().whereEqualTo(FirestoreRoomController.KEY_TASK_SET,
                 currentTaskSetToDisplay);
 
@@ -263,16 +255,9 @@ public class ControlPanelFragment extends Fragment {
                         .setQuery(query, TaskItem.class)
                         .build();
 
-        taskAdapter = new TaskAdapter(options, getResources(), this,
+        taskAdapter = new TaskAdapter(options, getResources(), room, currentTaskSetToDisplay,
                 room.getTasksReference(), room.getCharacterNames());
 
-        RecyclerView recyclerViewTasks = v.findViewById(R.id.recyclerViewTasks);
-        recyclerViewTasks.setNestedScrollingEnabled(false);
-
-        RecyclerView.LayoutManager recyclerViewTasksLayoutManager = new LinearLayoutManager(
-                getContext());
-
-        recyclerViewTasks.setLayoutManager(recyclerViewTasksLayoutManager);
         recyclerViewTasks.setAdapter(taskAdapter);
     }
 
@@ -302,13 +287,5 @@ public class ControlPanelFragment extends Fragment {
                 getResources().getString(room.getPlayerUser().getCharacterName()),
                 room.getRoomName(), statusType, locations, itemsHealing, itemsWeapon, itemsAmmo,
                 itemsKey, isYoko);
-    }
-
-    Room getRoom() {
-        return room;
-    }
-
-    int getCurrentTaskSetToDisplay() {
-        return currentTaskSetToDisplay;
     }
 }

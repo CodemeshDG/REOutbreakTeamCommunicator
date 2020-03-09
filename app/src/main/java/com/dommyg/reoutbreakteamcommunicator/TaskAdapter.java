@@ -22,7 +22,8 @@ import java.util.Map;
 public class TaskAdapter extends FirestoreRecyclerAdapter<TaskItem, TaskAdapter.TaskViewHolder> {
 
     private Resources resources;
-    private ControlPanelFragment controlPanelFragment;
+    private Room room;
+    private int currentTaskSetToDisplay;
     private CollectionReference tasksReference;
     private String[] characterNames;
 
@@ -50,11 +51,12 @@ public class TaskAdapter extends FirestoreRecyclerAdapter<TaskItem, TaskAdapter.
     }
 
     TaskAdapter(@NonNull FirestoreRecyclerOptions<TaskItem> options, Resources resources,
-                ControlPanelFragment controlPanelFragment, CollectionReference tasksReference,
+                Room room, int currentTaskSetToDisplay, CollectionReference tasksReference,
                 String[] characterNames) {
         super(options);
         this.resources = resources;
-        this.controlPanelFragment = controlPanelFragment;
+        this.room = room;
+        this.currentTaskSetToDisplay = currentTaskSetToDisplay;
         this.tasksReference = tasksReference;
         this.characterNames = characterNames;
     }
@@ -63,11 +65,10 @@ public class TaskAdapter extends FirestoreRecyclerAdapter<TaskItem, TaskAdapter.
     @Override
     protected void onBindViewHolder(@NonNull TaskViewHolder holder, int position,
                                     @NonNull TaskItem model) {
-        TaskSet[] taskSets = controlPanelFragment.getRoom()
-                .getScenario()
+        TaskSet[] taskSets = room.getScenario()
                 .getTaskMaster()
                 .getTaskSets();
-        String[] tasks = taskSets[controlPanelFragment.getCurrentTaskSetToDisplay()]
+        String[] tasks = taskSets[currentTaskSetToDisplay]
                 .getTasks();
         String taskName = tasks[position];
         holder.textViewTaskName.setText(taskName);
@@ -78,8 +79,7 @@ public class TaskAdapter extends FirestoreRecyclerAdapter<TaskItem, TaskAdapter.
             charIndex++;
         }
 
-        String taskDocumentName = String.valueOf(
-                controlPanelFragment.getCurrentTaskSetToDisplay() + 1) + charIndex;
+        String taskDocumentName = String.valueOf(currentTaskSetToDisplay + 1) + charIndex;
 
         DocumentReference taskDocumentReference = tasksReference.document(taskDocumentName);
 
@@ -134,19 +134,17 @@ public class TaskAdapter extends FirestoreRecyclerAdapter<TaskItem, TaskAdapter.
     }
 
     private boolean updateCheckBoxFromPlayerTaskProgress(int position, int checkBox) {
-        return controlPanelFragment.getRoom()
-                .getPlayerUser()
+        return room.getPlayerUser()
                 .getTaskProgress()
-                [controlPanelFragment.getCurrentTaskSetToDisplay()]
+                [currentTaskSetToDisplay]
                 [position]
                 [checkBox];
     }
 
     private void updatePlayerTaskProgress(int position, int checkBox, boolean isChecked) {
-        controlPanelFragment.getRoom()
-                .getPlayerUser()
+        room.getPlayerUser()
                 .setTaskProgress(
-                        controlPanelFragment.getCurrentTaskSetToDisplay(),
+                        currentTaskSetToDisplay,
                         position,
                         checkBox,
                         isChecked);
