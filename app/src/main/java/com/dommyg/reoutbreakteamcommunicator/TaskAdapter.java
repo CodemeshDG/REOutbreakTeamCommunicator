@@ -63,7 +63,14 @@ public class TaskAdapter extends FirestoreRecyclerAdapter<TaskItem, TaskAdapter.
     @Override
     protected void onBindViewHolder(@NonNull TaskViewHolder holder, int position,
                                     @NonNull TaskItem model) {
-        holder.textViewTaskName.setText("Test the tasks" + position);
+        TaskSet[] taskSets = controlPanelFragment.getRoom()
+                .getScenario()
+                .getTaskMaster()
+                .getTaskSets();
+        String[] tasks = taskSets[controlPanelFragment.getCurrentTaskSetToDisplay()]
+                .getTasks();
+        String taskName = tasks[position];
+        holder.textViewTaskName.setText(taskName);
 
         char charIndex = 'a';
 

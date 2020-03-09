@@ -29,6 +29,9 @@ class TaskMaster {
         }
     }
 
+    /**
+     * Constructor used to call getTaskNumbers method.
+     */
     TaskMaster() {
 
     }
@@ -37,7 +40,7 @@ class TaskMaster {
         return taskSets;
     }
 
-    public int getTaskSetsSize() {
+    int getTaskSetsSize() {
         return taskSets.length;
     }
 
@@ -170,15 +173,15 @@ class TaskSet {
         this.tasks = tasks;
     }
 
-    public String getName() {
+    String getName() {
         return name;
     }
 
-    public String[] getTasks() {
+    String[] getTasks() {
         return tasks;
     }
 
-    public int getTasksSize() {
+    int getTasksSize() {
         return tasks.length;
     }
 }

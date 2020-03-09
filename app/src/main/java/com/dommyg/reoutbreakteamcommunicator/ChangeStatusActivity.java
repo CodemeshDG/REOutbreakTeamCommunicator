@@ -5,6 +5,9 @@ import android.content.Intent;
 
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 public class ChangeStatusActivity extends SingleFragmentActivity {
 
     private static final String EXTRA_SELECTED_STATUS = "com.dommyg.reoutbreakteamcommunicator.selected_status";
@@ -17,14 +20,17 @@ public class ChangeStatusActivity extends SingleFragmentActivity {
 
     private static final String EXTRA_USERNAME = "com.dommyg.reoutbreakteamcommunicator.username";
     private static final String EXTRA_CHARACTER_NAME = "com.dommyg.reoutbreakteamcommunicator.character_name";
+    private static final String EXTRA_ROOM_NAME = "com.dommyg.reoutbreakteamcommunicator.room_name";
 
-    private String USERNAME;
-    private String CHARACTER_NAME;
+    private String username;
+    private String characterName;
+    private String roomName;
 
     @Override
     protected Fragment createFragment() {
-        USERNAME = getIntent().getStringExtra(EXTRA_USERNAME);
-        CHARACTER_NAME = getIntent().getStringExtra(EXTRA_CHARACTER_NAME);
+        username = getIntent().getStringExtra(EXTRA_USERNAME);
+        characterName = getIntent().getStringExtra(EXTRA_CHARACTER_NAME);
+        roomName = getIntent().getStringExtra(EXTRA_ROOM_NAME);
         int selectedStatus = getIntent().getIntExtra(EXTRA_SELECTED_STATUS, 0);
         String[] locations = getIntent().getStringArrayExtra(EXTRA_LOCATIONS);
         String[] itemsHealing = getIntent().getStringArrayExtra(EXTRA_ITEMS_HEALING);
@@ -48,12 +54,13 @@ public class ChangeStatusActivity extends SingleFragmentActivity {
     }
 
     public static Intent newIntent(Context packageContext, String username, String characterName,
-                                   int selectedStatus, String[] locations, String[] itemsHealing,
-                                   String[] itemsWeapon, String[] itemsAmmo, String[] itemsKey,
-                                   boolean isYoko) {
+                                   String roomName, int selectedStatus, String[] locations,
+                                   String[] itemsHealing, String[] itemsWeapon, String[] itemsAmmo,
+                                   String[] itemsKey, boolean isYoko) {
         Intent intent = new Intent(packageContext, ChangeStatusActivity.class);
         intent.putExtra(EXTRA_USERNAME, username);
         intent.putExtra(EXTRA_CHARACTER_NAME, characterName);
+        intent.putExtra(EXTRA_ROOM_NAME, roomName);
         intent.putExtra(EXTRA_SELECTED_STATUS, selectedStatus);
         intent.putExtra(EXTRA_LOCATIONS, locations);
         intent.putExtra(EXTRA_ITEMS_HEALING, itemsHealing);
@@ -68,11 +75,16 @@ public class ChangeStatusActivity extends SingleFragmentActivity {
 
     void updateStatus(StatusType statusType, boolean[] data, String[] selectedItems,
                               String selectedLocation) {
-        String status = new StatusBuilder().create(getResources(), CHARACTER_NAME,
+        String status = new StatusBuilder().create(getResources(), characterName,
                 statusType);
         String subStatus = new SubStatusBuilder().create(data, selectedItems,
                 selectedLocation, statusType);
-        new FirestorePlayerController().updateStatus(this, statusType, USERNAME, status,
-                subStatus);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference playersDocument = db.collection("rooms")
+                .document(roomName)
+                .collection("players")
+                .document(username);
+        new FirestorePlayerController().updateStatus(this, statusType, playersDocument,
+                status, subStatus);
     }
 }

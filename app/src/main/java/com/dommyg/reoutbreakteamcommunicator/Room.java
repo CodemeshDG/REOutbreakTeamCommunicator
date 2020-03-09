@@ -63,7 +63,7 @@ class Room {
     }
 
     void startListeningToPlayerReference() {
-        firestorePlayerController = new FirestorePlayerController(this);
+        firestorePlayerController = new FirestorePlayerController(this, getRoomName());
     }
 
     void stopListeningToPlayerReference() {

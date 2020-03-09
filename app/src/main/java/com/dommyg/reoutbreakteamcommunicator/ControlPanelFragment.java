@@ -16,9 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
@@ -302,8 +299,9 @@ public class ControlPanelFragment extends Fragment {
         boolean isYoko = (room.getPlayerUser().getCharacterName() == Character.YOKO.getName());
 
         return ChangeStatusActivity.newIntent(getContext(), room.getUsername(),
-                getResources().getString(room.getPlayerUser().getCharacterName()), statusType,
-                locations, itemsHealing, itemsWeapon, itemsAmmo, itemsKey, isYoko);
+                getResources().getString(room.getPlayerUser().getCharacterName()),
+                room.getRoomName(), statusType, locations, itemsHealing, itemsWeapon, itemsAmmo,
+                itemsKey, isYoko);
     }
 
     Room getRoom() {

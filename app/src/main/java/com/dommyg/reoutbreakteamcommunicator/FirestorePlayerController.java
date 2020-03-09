@@ -1,11 +1,14 @@
 package com.dommyg.reoutbreakteamcommunicator;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -29,29 +32,29 @@ class FirestorePlayerController {
     private final String KEY_PLAYER_STATUS = "playerStatus";
     private final String KEY_PLAYER_SUB_STATUS = "playerSubStatus";
 
-    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private final CollectionReference playersReference = db.collection("players");
-    private final Query playersReferenceQuery = playersReference.orderBy(KEY_PLAYER_NUMBER,
-            Query.Direction.ASCENDING);
-
-    private final Room room;
-    private final ListenerRegistration registration;
+    private Room room = null;
+    private ListenerRegistration registration = null;
 
     /**
      * Constructor used to read and write to "players" collection through createPlayer() and
      * updateStatus().
      */
     FirestorePlayerController() {
-        this.room = null;
-        this.registration = null;
+
     }
 
     /**
      * Constructor used by a Room to listen to the "players" collection to update the Room's
      * characterNames.
      */
-    FirestorePlayerController(@NonNull Room room) {
+    FirestorePlayerController(@NonNull Room room, String roomName) {
         this.room = room;
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference playersReference = db.collection("rooms")
+                .document(roomName)
+                .collection("players");
+        Query playersReferenceQuery = playersReference.orderBy(KEY_PLAYER_NUMBER,
+                Query.Direction.ASCENDING);
         this.registration = playersReferenceQuery.addSnapshotListener(
                 new PlayersReferenceListener());
     }
@@ -72,22 +75,22 @@ class FirestorePlayerController {
         writeBatch.set(documentReference, mapPlayer);
     }
 
-    void updateStatus(ChangeStatusActivity activity, StatusType statusType, String username,
-                      String status, String subStatus) {
+    void updateStatus(ChangeStatusActivity activity, StatusType statusType,
+                      DocumentReference documentReference, String status, String subStatus) {
         Map<String, Object> data = new HashMap<>();
         data.put(KEY_PLAYER_STATUS, status);
         data.put(KEY_PLAYER_SUB_STATUS, subStatus);
 
-        playersReference.document(username)
-                .update(data)
-                .addOnSuccessListener(new UpdateListener(activity, statusType));
+        documentReference.update(data)
+                .addOnSuccessListener(new UpdateOnSuccessListener(activity, statusType))
+                .addOnFailureListener(new UpdateOnFailureListener(activity.getBaseContext()));
     }
 
-    private class UpdateListener implements OnSuccessListener<Void> {
+    private static class UpdateOnSuccessListener implements OnSuccessListener<Void> {
         ChangeStatusActivity activity;
         StatusType statusType;
 
-        UpdateListener(ChangeStatusActivity activity, StatusType statusType) {
+        UpdateOnSuccessListener(ChangeStatusActivity activity, StatusType statusType) {
             this.statusType = statusType;
             this.activity = activity;
         }
@@ -96,6 +99,21 @@ class FirestorePlayerController {
         public void onSuccess(Void aVoid) {
             activity.setResult(statusType.getType());
             activity.finish();
+        }
+    }
+
+    private static class UpdateOnFailureListener implements OnFailureListener {
+        private Context context;
+
+        UpdateOnFailureListener(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        public void onFailure(@NonNull Exception e) {
+            e.printStackTrace();
+            Toast.makeText(context, "Error attempting to update status.", Toast.LENGTH_SHORT)
+                    .show();
         }
     }
 
