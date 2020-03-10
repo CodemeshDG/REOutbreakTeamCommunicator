@@ -26,7 +26,7 @@ import java.util.Map;
 class FirestorePlayerController {
     private static final String TAG = "FirestorePlayerControll";
 
-    private final String KEY_PLAYER_NUMBER = "playerNumber";
+    final String KEY_PLAYER_NUMBER = "playerNumber";
     private final String KEY_CHARACTER_NAME = "characterName";
     private final String KEY_HEADSHOT_PATH = "headshotPath";
     private final String KEY_PLAYER_STATUS = "playerStatus";

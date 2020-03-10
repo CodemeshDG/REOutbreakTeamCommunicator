@@ -6,6 +6,7 @@ class JoinedRoomItem {
     private boolean isOwner;
     private int scenario;
     private int character;
+    private int playerNumber;
 
     public JoinedRoomItem() {
         // Empty constructor for Firestore RecyclerView use
@@ -49,5 +50,21 @@ class JoinedRoomItem {
 
     public void setCharacter(int character) {
         this.character = character;
+    }
+
+    public boolean isOwner() {
+        return isOwner;
+    }
+
+    public void setOwner(boolean owner) {
+        isOwner = owner;
+    }
+
+    public int getPlayerNumber() {
+        return playerNumber;
+    }
+
+    public void setPlayerNumber(int playerNumber) {
+        this.playerNumber = playerNumber;
     }
 }

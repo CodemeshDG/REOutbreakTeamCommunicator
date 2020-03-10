@@ -56,7 +56,7 @@ public class JoinedRoomAdapter extends FirestoreRecyclerAdapter<JoinedRoomItem,
             public void onClick(View view) {
                 new FirestoreRoomController(mainMenuFragment.getContext()).rejoinRoom(password,
                         mainMenuFragment.getUsername(), roomName, model.getCharacter(),
-                        model.getScenario());
+                        model.getScenario(), model.getPlayerNumber());
             }
         });
 

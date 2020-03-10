@@ -99,10 +99,11 @@ class FirestoreRoomController {
      * Processes a request to join a room which was previously joined.
      */
     void rejoinRoom(String password, String username, String roomName, int retrievedCharacter,
-                    int retrievedScenario) {
+                    int retrievedScenario, int playerNumber) {
         Character selectedCharacter = getCharacter(retrievedCharacter);
         ScenarioName selectedScenario = getScenarioName(retrievedScenario);
-        setInputPassword(selectedCharacter, selectedScenario, password, username, roomName);
+        setInputPassword(selectedCharacter, selectedScenario, password, username, roomName,
+                playerNumber);
     }
 
     /**
@@ -145,14 +146,16 @@ class FirestoreRoomController {
      * joining a room that was previously joined (and has not been left).
      */
     private void setInputPassword(Character selectedCharacter, ScenarioName selectedScenario,
-                                  String password, String username, String roomName) {
+                                  String password, String username, String roomName,
+                                  int playerNumber) {
         Map<String, String> mapInputPassword = new HashMap<>();
         mapInputPassword.put(KEY_INPUT_PASSWORD, password);
 
         masterUserReference.document(uid)
                 .set(mapInputPassword, SetOptions.merge())
                 .addOnSuccessListener(new WriteInputPasswordOnSuccessListener(CODE_REJOIN,
-                        selectedCharacter, selectedScenario, password, username, roomName))
+                        selectedCharacter, selectedScenario, password, username, roomName,
+                        playerNumber))
                 .addOnFailureListener(new ActionFailureListener(CODE_REJOIN));
     }
 
@@ -255,6 +258,7 @@ class FirestoreRoomController {
         mapRoomInfo.put(KEY_IS_OWNER, true);
         mapRoomInfo.put(KEY_CHARACTER, selectedCharacter.getNumber());
         mapRoomInfo.put(KEY_SCENARIO, selectedScenario.getLevel());
+        mapRoomInfo.put(new FirestorePlayerController().KEY_PLAYER_NUMBER, 1);
 
         creationBatch.set(masterUserReference
                         .document(uid)
@@ -264,7 +268,7 @@ class FirestoreRoomController {
 
         creationBatch.commit()
                 .addOnSuccessListener(new BatchWriteCreateRoomOnSuccessListener(selectedCharacter,
-                        selectedScenario, roomName, username))
+                        selectedScenario, roomName, username, 1))
                 .addOnFailureListener(new ActionFailureListener(CODE_CREATE));
     }
 
@@ -349,6 +353,7 @@ class FirestoreRoomController {
         private String password;
         private String username;
         private String roomName;
+        private int playerNumber;
 
         /**
          * Constructor used for joining a room for the first time (or rejoining one that was left).
@@ -369,13 +374,14 @@ class FirestoreRoomController {
          */
         WriteInputPasswordOnSuccessListener(int command, Character selectedCharacter,
                                             ScenarioName selectedScenario, String password,
-                                            String username, String roomName) {
+                                            String username, String roomName, int playerNumber) {
             this.command = command;
             this.selectedCharacter = selectedCharacter;
             this.selectedScenario = selectedScenario;
             this.password = password;
             this.username = username;
             this.roomName = roomName;
+            this.playerNumber = playerNumber;
         }
 
         /**
@@ -410,7 +416,7 @@ class FirestoreRoomController {
                     roomsReference.document(roomName).get()
                             .addOnCompleteListener(new ReadRoomsOnCompleteListener(
                                     selectedCharacter, selectedScenario, password, username,
-                                    roomName));
+                                    roomName, playerNumber));
                     break;
 
                 case CODE_LEAVE:
@@ -453,6 +459,7 @@ class FirestoreRoomController {
         private String password;
         private String username;
         private String roomName;
+        private int playerNumber;
         private boolean newJoin;
 
         /**
@@ -472,12 +479,14 @@ class FirestoreRoomController {
          * Constructor used for joining a room that was previously joined (and has not been left).
          */
         ReadRoomsOnCompleteListener(Character selectedCharacter, ScenarioName selectedScenario,
-                                    String password, String username, String roomName) {
+                                    String password, String username, String roomName,
+                                    int playerNumber) {
             this.selectedCharacter = selectedCharacter;
             this.selectedScenario = selectedScenario;
             this.password = password;
             this.username = username;
             this.roomName = roomName;
+            this.playerNumber = playerNumber;
             this.newJoin = false;
         }
 
@@ -507,9 +516,9 @@ class FirestoreRoomController {
                             // with the room (leaving room for non-owners and deleting the room for
                             // owners). Also stored is the character being played and the room's
                             // scenario, which must be read from the room first.
-                            Integer numberPlayers = (Integer) document.get(KEY_NUMBER_PLAYERS);
-                            Integer scenarioLevel = (Integer) document.get(KEY_SCENARIO);
-                            ScenarioName selectedScenario = getScenarioName(scenarioLevel);
+                            Long numberPlayers = (Long) document.get(KEY_NUMBER_PLAYERS);
+                            Long scenarioLevel = (Long) document.get(KEY_SCENARIO);
+                            ScenarioName selectedScenario = getScenarioName(scenarioLevel.intValue());
 
                             Map<String, Object> mapRoomInfo = new HashMap<>();
                             mapRoomInfo.put(KEY_ROOM_NAME, roomName);
@@ -525,18 +534,18 @@ class FirestoreRoomController {
 
                             new FirestorePlayerController().createPlayer(resources, joinBatch,
                                     playerReference, selectedCharacter,
-                                    numberPlayers + 1);
+                                    numberPlayers.intValue() + 1);
 
                             joinBatch.commit()
                                     .addOnSuccessListener(new BatchWriteJoinRoomOnSuccessListener(
                                             selectedCharacter, selectedScenario, roomName,
-                                            username))
+                                            username, numberPlayers.intValue() + 1))
                                     .addOnFailureListener(new ActionFailureListener(CODE_JOIN));
                         } else {
                             // User is rejoining this room and does not require his "joinedRooms"
                             // collection to be updated.
                             startMainPanelActivity(selectedCharacter, selectedScenario, roomName,
-                                    username);
+                                    username, playerNumber);
                         }
                     } else {
                         // User entered the wrong password for the room.
@@ -647,19 +656,22 @@ class FirestoreRoomController {
         private ScenarioName selectedScenario;
         private String roomName;
         private String username;
+        private int playerNumber;
 
         BatchWriteJoinRoomOnSuccessListener(Character selectedCharacter,
                                             ScenarioName selectedScenario, String roomName,
-                                            String username) {
+                                            String username, int playerNumber) {
             this.selectedCharacter = selectedCharacter;
             this.selectedScenario = selectedScenario;
             this.roomName = roomName;
             this.username = username;
+            this.playerNumber = playerNumber;
         }
 
         @Override
         public void onSuccess(Void aVoid) {
-            startMainPanelActivity(selectedCharacter, selectedScenario, roomName, username);
+            startMainPanelActivity(selectedCharacter, selectedScenario, roomName, username,
+                    playerNumber);
         }
     }
 
@@ -672,19 +684,22 @@ class FirestoreRoomController {
         private ScenarioName selectedScenario;
         private String roomName;
         private String username;
+        private int playerNumber;
 
         BatchWriteCreateRoomOnSuccessListener(Character selectedCharacter,
                                               ScenarioName selectedScenario, String roomName,
-                                              String username) {
+                                              String username, int playerNumber) {
             this.selectedCharacter = selectedCharacter;
             this.selectedScenario = selectedScenario;
             this.roomName = roomName;
             this.username = username;
+            this.playerNumber = playerNumber;
         }
 
         @Override
         public void onSuccess(Void aVoid) {
-            startMainPanelActivity(selectedCharacter, selectedScenario, roomName, username);
+            startMainPanelActivity(selectedCharacter, selectedScenario, roomName, username,
+                    playerNumber);
         }
     }
 
@@ -817,9 +832,9 @@ class FirestoreRoomController {
     }
 
     private void startMainPanelActivity(Character selectedPlayer, ScenarioName selectedScenario,
-                                        String roomName, String username) {
+                                        String roomName, String username, int playerNumber) {
         Intent intent = ControlPanelActivity.newIntent(context, selectedPlayer, selectedScenario,
-                roomName, username);
+                roomName, username, playerNumber);
         context.startActivity(intent);
     }
 }

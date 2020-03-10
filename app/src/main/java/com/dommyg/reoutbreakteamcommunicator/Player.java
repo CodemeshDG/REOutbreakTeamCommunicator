@@ -41,11 +41,13 @@ enum Character {
  * Contains information about a user's character and their status.
  */
 class Player {
+    private int playerNumber;
     private Status status;
     private Character character;
     private boolean[][][] taskProgress;
 
-    Player(Character character, TaskMaster taskMaster) {
+    Player(int playerNumber, Character character, TaskMaster taskMaster) {
+        this.playerNumber = playerNumber;
         this.character = character;
         this.status = new Status(StatusType.NONE);
         initializeTaskProgress(taskMaster);
@@ -59,6 +61,10 @@ class Player {
             int tasksSize = taskMaster.getTaskSets()[i].getTasksSize();
             taskProgress[i] = new boolean[tasksSize][3];
         }
+    }
+
+    int getPlayerNumber() {
+        return playerNumber;
     }
 
     Status getStatus() {

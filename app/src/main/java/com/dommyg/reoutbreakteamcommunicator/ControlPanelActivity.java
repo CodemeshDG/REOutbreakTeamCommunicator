@@ -6,46 +6,43 @@ import android.content.res.Resources;
 
 import androidx.fragment.app.Fragment;
 
-import com.google.firebase.firestore.CollectionReference;
-
 public class ControlPanelActivity extends SingleFragmentActivity {
     private static final String EXTRA_SELECTED_CHARACTER = "com.dommyg.reoutbreakteamcommunicator.selected_player";
     private static final String EXTRA_SELECTED_SCENARIO = "com.dommyg.reoutbreakteamcommunicator.selected_scenario";
     private static final String EXTRA_ROOM_NAME = "com.dommyg.reoutbreakteamcommunicator.room_name";
     private static final String EXTRA_USERNAME = "com.dommyg.reoutbreakteamcommunicator.username";
-//    private static final String EXTRA_CHARACTER_NAMES = "com.dommyg.reoutbreakteamcommunicator.character_names";
+    private static final String EXTRA_PLAYER_NUMBER = "com.dommyg.reoutbreakteamcommunicator.player_number";
 
     @Override
     protected Fragment createFragment() {
-//        Resources resources = getApplicationContext().getResources();
         Character selectedCharacter = (Character) getIntent()
                 .getSerializableExtra(EXTRA_SELECTED_CHARACTER);
         ScenarioName selectedScenario = (ScenarioName) getIntent()
                 .getSerializableExtra(EXTRA_SELECTED_SCENARIO);
         String roomName = getIntent().getStringExtra(EXTRA_ROOM_NAME);
-//        String[] characterNames = getIntent().getStringArrayExtra(EXTRA_CHARACTER_NAMES);
         String username = getIntent().getStringExtra(EXTRA_USERNAME);
+        int playerNumber = getIntent().getIntExtra(EXTRA_PLAYER_NUMBER, 4);
 
         return ControlPanelFragment.newInstance(initializeRoom(selectedCharacter, selectedScenario,
-                roomName, username));
+                roomName, username, playerNumber));
     }
 
     public static Intent newIntent(Context packageContext, Character selectedPlayer,
                                    ScenarioName selectedScenario, String roomName,
-                                   String username) {
+                                   String username, int playerNumber) {
         Intent intent = new Intent(packageContext, ControlPanelActivity.class);
         intent.putExtra(EXTRA_SELECTED_CHARACTER, selectedPlayer);
         intent.putExtra(EXTRA_SELECTED_SCENARIO, selectedScenario);
         intent.putExtra(EXTRA_ROOM_NAME, roomName);
         intent.putExtra(EXTRA_USERNAME, username);
-//        intent.putExtra(EXTRA_CHARACTER_NAMES, characterNames);
+        intent.putExtra(EXTRA_PLAYER_NUMBER, playerNumber);
         return intent;
     }
 
     private Room initializeRoom(Character selectedCharacter, ScenarioName selectedScenario,
-                                String roomName, String username) {
+                                String roomName, String username, int playerNumber) {
         Scenario scenario = initializeScenario(selectedScenario, getResources());
-        Player player = initializePlayer(selectedCharacter, scenario);
+        Player player = initializePlayer(playerNumber, selectedCharacter, scenario);
         return new Room(player, scenario, roomName, username);
     }
 
@@ -54,8 +51,8 @@ public class ControlPanelActivity extends SingleFragmentActivity {
      * @param selectedCharacter Selection made by the user with CreateRoomFragment's character radio
      *                       group.
      */
-    private Player initializePlayer(Character selectedCharacter, Scenario scenario) {
-        return new Player(selectedCharacter, scenario.getTaskMaster());
+    private Player initializePlayer(int playerNumber, Character selectedCharacter, Scenario scenario) {
+        return new Player(playerNumber, selectedCharacter, scenario.getTaskMaster());
     }
 
     /**

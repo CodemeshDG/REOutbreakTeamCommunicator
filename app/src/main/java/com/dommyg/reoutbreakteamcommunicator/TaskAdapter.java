@@ -31,8 +31,7 @@ public class TaskAdapter extends FirestoreRecyclerAdapter<TaskItem, TaskAdapter.
     private final int CHECK_BOX_IN_PROGRESS = 1;
     private final int CHECK_BOX_COMPLETE = 2;
 
-    // TODO: Change this so that it is generated based on a value stored in Player.
-    private final String KEY_PLAYER_STATUS = "player1TaskStatus";
+    final private String KEY_PLAYER_STATUS;
 
     static class TaskViewHolder extends RecyclerView.ViewHolder {
         CheckBox[] checkBoxes = new CheckBox[3];
@@ -59,8 +58,8 @@ public class TaskAdapter extends FirestoreRecyclerAdapter<TaskItem, TaskAdapter.
         this.currentTaskSetToDisplay = currentTaskSetToDisplay;
         this.tasksReference = tasksReference;
         this.characterNames = characterNames;
+        this.KEY_PLAYER_STATUS = buildKeyPlayerStatus();
     }
-
 
     @Override
     protected void onBindViewHolder(@NonNull TaskViewHolder holder, int position,
@@ -148,6 +147,10 @@ public class TaskAdapter extends FirestoreRecyclerAdapter<TaskItem, TaskAdapter.
                         position,
                         checkBox,
                         isChecked);
+    }
+
+    private String buildKeyPlayerStatus() {
+        return "player" + room.getPlayerUser().getPlayerNumber() + "TaskStatus";
     }
 
     private class CheckBoxListener implements CompoundButton.OnCheckedChangeListener {
