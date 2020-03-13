@@ -19,9 +19,11 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class StatusAdapter extends FirestoreRecyclerAdapter<StatusItem, StatusAdapter.StatusViewHolder> {
+public class StatusAdapter extends FirestoreRecyclerAdapter<StatusItem,
+        StatusAdapter.StatusViewHolder> {
 
     private Context context;
+    private ControlPanelFragment controlPanelFragment;
 
     static class StatusViewHolder extends RecyclerView.ViewHolder {
         TextView textViewPlayerStatus;
@@ -36,9 +38,11 @@ public class StatusAdapter extends FirestoreRecyclerAdapter<StatusItem, StatusAd
         }
     }
 
-    StatusAdapter(@NonNull FirestoreRecyclerOptions<StatusItem> options, Context context) {
+    StatusAdapter(@NonNull FirestoreRecyclerOptions<StatusItem> options, Context context,
+                  ControlPanelFragment controlPanelFragment) {
         super(options);
         this.context = context;
+        this.controlPanelFragment = controlPanelFragment;
     }
 
     @Override
@@ -63,5 +67,16 @@ public class StatusAdapter extends FirestoreRecyclerAdapter<StatusItem, StatusAd
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_status, parent, false);
         return new StatusViewHolder(v);
+    }
+
+    @Override
+    public int getItemCount() {
+        return super.getItemCount();
+    }
+
+    @Override
+    public void onDataChanged() {
+        super.onDataChanged();
+        controlPanelFragment.checkIfTeammatesExist();
     }
 }

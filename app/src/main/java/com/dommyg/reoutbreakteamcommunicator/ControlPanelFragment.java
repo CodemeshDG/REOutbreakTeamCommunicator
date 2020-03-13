@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,13 +26,17 @@ public class ControlPanelFragment extends Fragment {
     private RecyclerView recyclerViewTasks;
 
     private StatusAdapter statusAdapter;
+    private RecyclerView recyclerViewTeamStatus;
 
     private Room room;
+
+    private ConstraintLayout constraintLayout;
 
     private TextView textViewRoomName;
     private TextView textViewCharacterName;
     private TextView textViewScenarioName;
     private TextView textViewTaskSetName;
+    private TextView textViewNoTeammatesMsg;
     private int currentTaskSetToDisplay = 0;
 
     private Button buttonStatusPanic;
@@ -53,6 +59,7 @@ public class ControlPanelFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_control_panel, container, false);
 
+        constraintLayout = v.findViewById(R.id.constraintLayoutControlPanel);
         setUpTextViews(v);
         setUpStatusButtons(v);
         setUpStatusRecyclerView(v);
@@ -67,6 +74,7 @@ public class ControlPanelFragment extends Fragment {
         statusAdapter.startListening();
         taskAdapter.startListening();
         room.startListeningToPlayerReference();
+        checkIfTeammatesExist();
     }
 
     @Override
@@ -100,22 +108,48 @@ public class ControlPanelFragment extends Fragment {
      * Sets up the recyclerView for the team's statuses.
      */
     private void setUpStatusRecyclerView(View v) {
-        Query query = room.getPlayersReference();
+        int playerNumber = room.getPlayerUser().getPlayerNumber();
+
+        Query query = room.getPlayersReference()
+                .whereGreaterThan(FirestorePlayerController.KEY_PLAYER_NUMBER, playerNumber)
+                .whereLessThan(FirestorePlayerController.KEY_PLAYER_NUMBER, playerNumber);
 
         FirestoreRecyclerOptions<StatusItem> options =
                 new FirestoreRecyclerOptions.Builder<StatusItem>()
                 .setQuery(query, StatusItem.class)
                 .build();
 
-        statusAdapter = new StatusAdapter(options, getContext());
-
-        RecyclerView recyclerViewTeamStatus = v.findViewById(R.id.recyclerViewTeamStatus);
+        recyclerViewTeamStatus = v.findViewById(R.id.recyclerViewTeamStatus);
         recyclerViewTeamStatus.setNestedScrollingEnabled(false);
+
+        statusAdapter = new StatusAdapter(options, getContext(), this);
 
         RecyclerView.LayoutManager recyclerViewStatusesLayoutManager = new LinearLayoutManager(getContext());
 
         recyclerViewTeamStatus.setLayoutManager(recyclerViewStatusesLayoutManager);
         recyclerViewTeamStatus.setAdapter(statusAdapter);
+    }
+
+    /**
+     * Checks if there are any other players in the room and appropriately sets the visibility of
+     * the recyclerView and the associated message.
+     */
+    void checkIfTeammatesExist() {
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        if (statusAdapter.getItemCount() > 0) {
+            textViewNoTeammatesMsg.setVisibility(View.GONE);
+            recyclerViewTeamStatus.setVisibility(View.VISIBLE);
+            constraintSet.connect(R.id.textViewYourStatus, ConstraintSet.TOP,
+                    R.id.recyclerViewTeamStatus, ConstraintSet.BOTTOM);
+            constraintSet.applyTo(constraintLayout);
+        } else {
+            recyclerViewTeamStatus.setVisibility(View.GONE);
+            textViewNoTeammatesMsg.setVisibility(View.VISIBLE);
+            constraintSet.connect(R.id.textViewYourStatus, ConstraintSet.TOP,
+                    R.id.textViewNoPlayersMsg, ConstraintSet.BOTTOM);
+            constraintSet.applyTo(constraintLayout);
+        }
     }
 
     /**
@@ -247,8 +281,8 @@ public class ControlPanelFragment extends Fragment {
     }
 
     private void updateTaskSetRecyclerView() {
-        Query query = room.getTasksReference().whereEqualTo(FirestoreRoomController.KEY_TASK_SET,
-                currentTaskSetToDisplay);
+        Query query = room.getTasksReference()
+                .whereEqualTo(FirestoreRoomController.KEY_TASK_SET, currentTaskSetToDisplay);
 
         FirestoreRecyclerOptions<TaskItem> options =
                 new FirestoreRecyclerOptions.Builder<TaskItem>()
@@ -273,6 +307,8 @@ public class ControlPanelFragment extends Fragment {
 
         textViewScenarioName = v.findViewById(R.id.textViewScenarioName);
         textViewScenarioName.setText(room.getScenario().getScenarioName());
+
+        textViewNoTeammatesMsg = v.findViewById(R.id.textViewNoPlayersMsg);
     }
 
     private Intent createIntentForChangeStatusActivity(int statusType) {

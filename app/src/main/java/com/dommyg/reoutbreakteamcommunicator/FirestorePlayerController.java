@@ -26,11 +26,11 @@ import java.util.Map;
 class FirestorePlayerController {
     private static final String TAG = "FirestorePlayerControll";
 
-    final String KEY_PLAYER_NUMBER = "playerNumber";
-    private final String KEY_CHARACTER_NAME = "characterName";
-    private final String KEY_HEADSHOT_PATH = "headshotPath";
-    private final String KEY_PLAYER_STATUS = "playerStatus";
-    private final String KEY_PLAYER_SUB_STATUS = "playerSubStatus";
+    static final String KEY_PLAYER_NUMBER = "playerNumber";
+    private static final String KEY_CHARACTER_NAME = "characterName";
+    private static final String KEY_HEADSHOT_PATH = "headshotPath";
+    private static final String KEY_PLAYER_STATUS = "playerStatus";
+    private static final String KEY_PLAYER_SUB_STATUS = "playerSubStatus";
 
     private Room room = null;
     private ListenerRegistration registration = null;

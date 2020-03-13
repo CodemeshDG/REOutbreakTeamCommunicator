@@ -238,8 +238,8 @@ public class MainMenuFragment extends Fragment {
     }
 
     /**
-     * Checks if the user has any previously joined rooms and appropriately sets visibility of the
-     * recyclerView.
+     * Checks if the user has any previously joined rooms and appropriately sets the visibility of
+     * the recyclerView and the associated message.
      */
     private void checkIfJoinedRoomsExist() {
         if (joinedRoomAdapter.getItemCount() > 0) {
@@ -306,5 +306,13 @@ public class MainMenuFragment extends Fragment {
 
     String getUsername() {
         return username;
+    }
+
+    RecyclerView getRecyclerViewJoinedRooms() {
+        return recyclerViewJoinedRooms;
+    }
+
+    TextView getTextViewNoRoomsMsg() {
+        return textViewNoRoomsMsg;
     }
 }

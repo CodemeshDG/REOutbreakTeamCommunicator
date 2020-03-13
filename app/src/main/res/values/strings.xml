@@ -38,10 +38,12 @@
     <string name="heading_team_status">TEAM STATUS</string>
     <string name="heading_your_status">YOUR STATUS:</string>
     <string name="heading_scenario_tasks">SCENARIO TASKS:</string>
+    <string name="text_status_fine">FINE</string>
     <string name="button_status_panic">PANIC</string>
     <string name="button_status_need">NEED</string>
     <string name="button_status_dead">DEAD</string>
     <string name="test_status">%s - %s</string>
+    <string name="text_no_players">There are no other players on your team yet&#8230;</string>
 
     <string name="heading_panic_status">PANIC STATUS</string>
     <string name="subheading_provide_info">OPTIONAL: Provide additional info&#8230;</string>

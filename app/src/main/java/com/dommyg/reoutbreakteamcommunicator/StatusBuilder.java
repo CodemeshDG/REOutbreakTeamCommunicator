@@ -8,11 +8,9 @@ class StatusBuilder {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(characterName.toUpperCase());
 
-        if (!statusType.equals(StatusType.NONE)) {
-            String statusName = resources.getString(statusType.getName());
-            stringBuilder.append(" - ")
-                    .append(statusName);
-        }
+        String statusName = resources.getString(statusType.getName());
+        stringBuilder.append(" - ")
+                .append(statusName);
 
         return stringBuilder.toString();
     }

@@ -86,4 +86,16 @@ public class JoinedRoomAdapter extends FirestoreRecyclerAdapter<JoinedRoomItem,
     public int getItemCount() {
         return super.getItemCount();
     }
+
+    @Override
+    public void onDataChanged() {
+        super.onDataChanged();
+        if (getItemCount() > 0) {
+            mainMenuFragment.getTextViewNoRoomsMsg().setVisibility(View.GONE);
+            mainMenuFragment.getRecyclerViewJoinedRooms().setVisibility(View.VISIBLE);
+        } else {
+            mainMenuFragment.getRecyclerViewJoinedRooms().setVisibility(View.GONE);
+            mainMenuFragment.getTextViewNoRoomsMsg().setVisibility(View.VISIBLE);
+        }
+    }
 }
