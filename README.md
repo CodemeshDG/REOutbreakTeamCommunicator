@@ -1,11 +1,11 @@
-# REOutbreakTeamCommunicator
+# RE Outbreak Team Communicator
 Allows for essential and easy communication between teammembers playing Resident Evil Outbreak.
 
-## WHAT IS IT?
+## What is it?
 
 This is a multi-user app which allows players of the Resident Evil Outbreak video game to share online relevant information to their teammates. The game was released in 2003 and still is played online by a small community. Unlike modern games, there are no ways to truly communicate in game on an omnipresent team level. This app allows teammates to create a password-protected room where they can easily share their character's status and collaborate to complete level goals.
 
-## WHAT DID I PRACTICE?
+## What did I practice?
 
 ### Cloud Firestore & FirebaseUI / FirebaseAuth & AuthUI
 The backbone of this app is the usage of Cloud Firestore to send and retrieve data from a database. I had to create methods which write to the database and retrieve/handle data. I needed to use associated listeners to anticipate and handle possible outcomes (success, failure, completion). Moreover, I utilized two libraries (FirebaseUI & AuthUI) to support login functions and populating RecyclerViews with database items.
